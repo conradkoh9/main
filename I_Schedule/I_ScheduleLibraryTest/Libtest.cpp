@@ -6,7 +6,7 @@ using namespace std;
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 namespace I_ScheduleLibraryTest
-{	Storage* storage = new Storage();
+{	Storage* storage = new Storage("Unit_test_IO.txt");
 	
 	TEST_CLASS(myLibTest)
 	{
@@ -48,7 +48,6 @@ namespace I_ScheduleLibraryTest
 				++iter2;
 			}
 
-			//Assert::AreEqual(all_feedback, expected_all_feedback);
 			
 			 
 		}

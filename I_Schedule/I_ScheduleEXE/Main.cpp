@@ -5,7 +5,7 @@ using namespace std;
 void printVect(vector<string> input);
 
 int main(){
-	
+	Storage* storage = new Storage();
 	system("pause");
 	return 0;
 }
