@@ -5,6 +5,10 @@ VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "I_Schedule", "I_Schedule\I_Schedule.vcxproj", "{03509750-C502-4C08-932D-0C427E9A9397}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "I_ScheduleEXE", "I_ScheduleEXE\I_ScheduleEXE.vcxproj", "{14578180-510F-452B-8CB3-D382D564B7D9}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "I_ScheduleLibraryTest", "I_ScheduleLibraryTest\I_ScheduleLibraryTest.vcxproj", "{140EAB16-6AEF-4518-862D-252DE7042461}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -15,6 +19,14 @@ Global
 		{03509750-C502-4C08-932D-0C427E9A9397}.Debug|Win32.Build.0 = Debug|Win32
 		{03509750-C502-4C08-932D-0C427E9A9397}.Release|Win32.ActiveCfg = Release|Win32
 		{03509750-C502-4C08-932D-0C427E9A9397}.Release|Win32.Build.0 = Release|Win32
+		{14578180-510F-452B-8CB3-D382D564B7D9}.Debug|Win32.ActiveCfg = Debug|Win32
+		{14578180-510F-452B-8CB3-D382D564B7D9}.Debug|Win32.Build.0 = Debug|Win32
+		{14578180-510F-452B-8CB3-D382D564B7D9}.Release|Win32.ActiveCfg = Release|Win32
+		{14578180-510F-452B-8CB3-D382D564B7D9}.Release|Win32.Build.0 = Release|Win32
+		{140EAB16-6AEF-4518-862D-252DE7042461}.Debug|Win32.ActiveCfg = Debug|Win32
+		{140EAB16-6AEF-4518-862D-252DE7042461}.Debug|Win32.Build.0 = Debug|Win32
+		{140EAB16-6AEF-4518-862D-252DE7042461}.Release|Win32.ActiveCfg = Release|Win32
+		{140EAB16-6AEF-4518-862D-252DE7042461}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
