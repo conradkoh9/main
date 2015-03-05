@@ -1,4 +1,5 @@
 #pragma once
+using namespace std;
 class Logic
 {
 public:
@@ -6,10 +7,10 @@ public:
 	~Logic();
 
 	//methods
-	addContent();
-	deleteContent();
-	searchKeyWord();
-	displayAll();
+	void addContent();
+	void deleteContent();
+	void searchKeyWord();
+	void displayAll();
 
 private:
 	enum COMMAND{};

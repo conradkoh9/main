@@ -1,13 +1,15 @@
 #pragma once
+#include <string>
+using namespace std;
 class Parser
 {
 public:
 	Parser();
 	~Parser();
 	//methods
-	integerLiteral(string);
-	identifierLiteral(string);
-	stringLiteral(string);
+	string integerLiteral(string);
+	string identifierLiteral(string);
+	string stringLiteral(string);
 
 private:
 
