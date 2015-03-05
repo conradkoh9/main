@@ -66,12 +66,16 @@
   <ItemGroup>
     <ClInclude Include="Logic.h" />
     <ClInclude Include="Parser.h" />
+    <ClInclude Include="Smartstring.h" />
     <ClInclude Include="Storage.h" />
+    <ClInclude Include="Task.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Logic.cpp" />
     <ClCompile Include="Parser.cpp" />
+    <ClCompile Include="Smartstring.cpp" />
     <ClCompile Include="Storage.cpp" />
+    <ClCompile Include="Task.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
