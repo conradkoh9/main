@@ -1,4 +1,5 @@
 #pragma once
+//test
 using namespace std;
 class Logic
 {
