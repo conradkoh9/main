@@ -10,13 +10,13 @@ int main(){
 	const string FIELD_ENDDATE = "by:";
 	const string FIELD_PRIORITY = "priority:";
 	const string FIELD_DESCRIPTION = "add";
-
-	//parser test
-	string myinput = "add homework by Monday priority: 1 end: Friday";
 	Parser* parser = new Parser();
+	string myinput = "add homework from: Monday priority: 1 end: Friday";
 	vector<string> output = parser->Identify(myinput);
 	printVect(output);
-
+	Smartstring mys;
+	cout << mys << endl;
+	
 	system("pause");
 	return 0;
 }

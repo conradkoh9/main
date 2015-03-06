@@ -1,19 +1,18 @@
 #include "stdafx.h"
-#include "Storage.h"
 #include "CppUnitTest.h"
 
 using namespace std;
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
-namespace I_ScheduleLibraryTest
-{	Storage* storage = new Storage("Unit_test_IO.txt");
+namespace I_ScheduleLibraryTest{	
+	Storage* storage = new Storage("Unit_test_IO.txt");
+	Parser* parser = new Parser();
 	
 	TEST_CLASS(myLibTest)
 	{
 	public:
 		
-		TEST_METHOD(Storage)
-		{
+		TEST_METHOD(Storage){
 			const string _FEEDBACK_GENERIC_SUCCESS = "STORAGE SUCCESS";
 			const string _FEEDBACK_GENERIC_FAILURE = "STORAGE FAILED";
 			const string _FEEDBACK_LOAD_SUCCESS = "LOAD SUCCESS";
@@ -48,9 +47,16 @@ namespace I_ScheduleLibraryTest
 				++iter2;
 			}
 
-			
-			 
 		}
 
+		TEST_METHOD(Parser){
+			//parser test
+			string myinput = "add homework from: Monday priority: 1 end: Friday";
+			vector<string> output = parser->Identify(myinput);
+			Assert::AreEqual(output[Smartstring::DESCRIPTION].c_str(), "homework");
+			//Assert::AreEqual(output[Smartstring::STARTDATE].c_str(), "Monday"); //NEED TO CHANGE FORMAT FOR FINAL TEST
+			Assert::AreEqual(output[Smartstring::PRIORITY].c_str(), "1");
+			Assert::AreEqual(output[Smartstring::ENDDATE].c_str(), "Friday"); //NEED TO CHANGE FORMAT FOR FINAL TEST
+		}
 	};
 }

@@ -2,22 +2,41 @@
 #include <string>
 #include <sstream>
 #include <vector>
+#include <cassert>
 using namespace std;
 class Smartstring
 {
 private: 
-	string description;
+	
 public:
+	string description;
 	enum COMMAND { ADD, DELETE, DISPLAY, SEARCH, CLEAR, INVALID_CMD };
 	enum FIELD { DESCRIPTION, STARTDATE, ENDDATE, PRIORITY, INVALID_FLD };
-	static const char* commands[];
-	static const char* keywords[];
-	static const int numberOfCommands;
-	static const int numberOfFields;
+	vector<string> commands;
+	vector<string> keywords;
+	const string COMMAND_ADD = "add";
+	const string COMMAND_DELETE = "delete";
+	const string COMMAND_DISPLAY = "display";
+	const string COMMAND_SEARCH = "search";
+	const string COMMAND_CLEAR = "clear";
+	const string KEYWORD_DATE_1 = "date:";
+	const string KEYWORD_ENDDATE_1 = "by";
+	const string KEYWORD_ENDDATE_2 = "by:";
+	const string KEYWORD_ENDDATE_3 = "date:";
+	const string KEYWORD_ENDDATE_4 = "end:";
+	const string KEYWORD_PRIORITY_1 = "priority:";
+	const string KEYWORD_PRIORITY_2 = "priority";
+	const string KEYWORD_STARTDATE_1 = "from";
+	const string KEYWORD_STARTDATE_2 = "from:";
+	const string KEYWORD_DESCRIPTION_1 = "description:";
+
+	int numberOfCommands;
+	int numberOfKeywords;
 
 	Smartstring();
 	Smartstring(string input);
 	~Smartstring();
+	void Initialize();
 	COMMAND Command();
 	FIELD Field();
 	bool IsCommand();

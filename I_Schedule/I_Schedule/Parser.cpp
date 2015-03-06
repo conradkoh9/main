@@ -15,17 +15,19 @@ vector<string> Parser::Identify(string input){
 	string info;
 	istringstream in(input);
 	Smartstring::FIELD field = Smartstring::FIELD::DESCRIPTION;
-	vector<string> output(Smartstring::numberOfFields);
+	vector<string> output(word.numberOfKeywords);
 	
 	while (in >> word){
 		if (word.IsKeyword()){
 			field = word.Field();
+			info = "";
 		}
 		else{
 			info = info + " " + word;
 			output[field] = info;
 		}
 	}
+	
 	return output;
 }
 

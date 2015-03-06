@@ -12,3 +12,7 @@
 
 // TODO: reference additional headers your program requires here
 #include "Storage.h"
+#include "Parser.h"
+#include "Smartstring.h"
+#include "Task.h"
+#include "Logic.h"
