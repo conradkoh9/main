@@ -15,7 +15,12 @@ vector<string> Parser::Identify(string input){
 	string info;
 	istringstream in(input);
 	Smartstring::FIELD field = Smartstring::FIELD::DESCRIPTION;
-	vector<string> output(word.numberOfKeywords);
+	int vectorSize = word.numberOfKeywords;
+	string blank = " ";
+	vector<string> output;
+	for (int j = 0; j < vectorSize; ++j){
+		output.push_back(blank);
+	}
 	
 	while (in >> word){
 		if (word.IsKeyword()){
@@ -23,11 +28,15 @@ vector<string> Parser::Identify(string input){
 			info = "";
 		}
 		else{
-			info = info + " " + word;
-			output[field] = info;
+			if (info == ""){
+				info = word.ToString();
+			}
+			else{
+				info = info + " " + word.ToString();
+			}
+			output[field] = info; //????
 		}
 	}
-	
 	return output;
 }
 
@@ -40,4 +49,9 @@ vector<string> Parser::Tokenize(string input){
 	}
 
 	return tokens;
+}
+
+void Parser::InitializeVect(vector<string> &input){
+	
+	return;
 }

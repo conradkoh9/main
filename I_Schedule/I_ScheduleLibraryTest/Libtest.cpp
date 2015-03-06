@@ -49,14 +49,26 @@ namespace I_ScheduleLibraryTest{
 
 		}
 
-		TEST_METHOD(Parser){
+
+		TEST_METHOD(Parser_Keywords_different_lengths){
+			
+			string myinput = "go to school on monday priority 1 from: today";
+			vector<string> output = parser->Identify(myinput);
+			Assert::AreEqual(output[Smartstring::DESCRIPTION].c_str(), "go to school");
+			Assert::AreEqual(output[Smartstring::STARTDATE].c_str(), "today"); //NEED TO CHANGE FORMAT FOR FINAL TEST
+			Assert::AreEqual(output[Smartstring::PRIORITY].c_str(), "1");
+			Assert::AreEqual(output[Smartstring::ENDDATE].c_str(), "monday"); //NEED TO CHANGE FORMAT FOR FINAL TEST
+		}
+
+		TEST_METHOD(Parser_Keywords_length_1){
 			//parser test
-			string myinput = "add homework from: Monday priority: 1 end: Friday";
+			string myinput = "homework from: Monday priority: 1 end: Friday";
 			vector<string> output = parser->Identify(myinput);
 			Assert::AreEqual(output[Smartstring::DESCRIPTION].c_str(), "homework");
-			//Assert::AreEqual(output[Smartstring::STARTDATE].c_str(), "Monday"); //NEED TO CHANGE FORMAT FOR FINAL TEST
+			Assert::AreEqual(output[Smartstring::STARTDATE].c_str(), "Monday"); //NEED TO CHANGE FORMAT FOR FINAL TEST
 			Assert::AreEqual(output[Smartstring::PRIORITY].c_str(), "1");
 			Assert::AreEqual(output[Smartstring::ENDDATE].c_str(), "Friday"); //NEED TO CHANGE FORMAT FOR FINAL TEST
 		}
+
 	};
 }

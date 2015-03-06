@@ -19,6 +19,8 @@ public:
 	vector<string> Identify(string input);
 	vector<string> Tokenize(string input);
 
+	//Helper methods
+	void Parser::InitializeVect(vector<string> &input);
 
 private:
 
