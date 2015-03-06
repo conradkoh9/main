@@ -18,6 +18,11 @@ const string Smartstring:: KEYWORD_PRIORITY_2 = "priority";
 const string Smartstring:: KEYWORD_STARTDATE_1 = "from";
 const string Smartstring:: KEYWORD_STARTDATE_2 = "from:";
 const string Smartstring:: KEYWORD_DESCRIPTION_1 = "description:";
+bool Smartstring::classInitialized = false;
+int Smartstring::numberOfCommands;
+int Smartstring::numberOfKeywords;
+vector<string> Smartstring::commands;
+vector<string> Smartstring::keywords;
 
 Smartstring::Smartstring(){
 	description = "";
@@ -32,7 +37,7 @@ Smartstring::Smartstring(string input){
 }
 
 void Smartstring::Initialize(){
-
+	if (!classInitialized){
 		commands.push_back(COMMAND_ADD);
 		commands.push_back(COMMAND_CLEAR);
 		commands.push_back(COMMAND_DELETE);
@@ -51,7 +56,9 @@ void Smartstring::Initialize(){
 		keywords.push_back(KEYWORD_DESCRIPTION_1);
 		numberOfCommands = commands.size();
 		numberOfKeywords = keywords.size();
-
+		classInitialized = true;
+	}
+		
 	return;
 }
 

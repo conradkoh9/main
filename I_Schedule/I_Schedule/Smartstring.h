@@ -12,8 +12,12 @@ public:
 	string description;
 	enum COMMAND { ADD, DELETE, DISPLAY, SEARCH, CLEAR, INVALID_CMD };
 	enum FIELD { DESCRIPTION, STARTDATE, ENDDATE, PRIORITY, INVALID_FLD };
-	vector<string> commands;
-	vector<string> keywords;
+
+	static bool classInitialized;
+	static int numberOfCommands;
+	static int numberOfKeywords;
+	static vector<string> commands;
+	static vector<string> keywords;
 	static const string COMMAND_ADD;
 	static const string COMMAND_DELETE;
 	static const string COMMAND_DISPLAY;
@@ -31,8 +35,6 @@ public:
 	static const string KEYWORD_STARTDATE_2;
 	static const string KEYWORD_DESCRIPTION_1;
 
-	int numberOfCommands;
-	int numberOfKeywords;
 	
 
 	Smartstring();
