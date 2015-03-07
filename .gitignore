@@ -1,3 +1,4 @@
+
 *.suo
 *.sdf
 *.opensdf
@@ -17,6 +18,7 @@
 *.bak
 *.[Cc]ache
 *.ilk
+*.tlog
 *.log
 *.lib
 *.sbr
