@@ -16,11 +16,11 @@ public:
 	string stringLiteral(string);
 	
 	//suggestions for methods by Conrad
-	vector<string> Identify(string input);
+	Smartstring::COMMAND IdentifyCommand(string input);
+	vector<string> IdentifyTaskFields(string input);
+	string RemoveCommand(string input);
 	vector<string> Tokenize(string input);
 
-	//Helper methods
-	void Parser::InitializeVect(vector<string> &input);
 
 private:
 

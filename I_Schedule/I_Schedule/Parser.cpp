@@ -10,7 +10,40 @@ Parser::~Parser()
 {
 }
 
-vector<string> Parser::Identify(string input){
+Smartstring::COMMAND Parser::IdentifyCommand(string input){
+	Smartstring expectedCMD;
+	istringstream in(input);
+	if (in >> expectedCMD){
+		return expectedCMD.Command();
+	}
+	else{
+		return Smartstring::COMMAND::INVALID_CMD;
+	}
+	
+	
+}
+
+string Parser::RemoveCommand(string input){
+	string buffer;
+	string remainder;
+	istringstream in(input);
+	if (in >> buffer){
+		if (getline(in, remainder)){
+			int endIdx = remainder.length() - 1;
+			remainder = remainder.substr(1, endIdx); //remove white space
+		}
+		else{
+			remainder = ""; //manage unwanted values for remainder if getline or in fails
+		}
+	}
+	else{
+		remainder = ""; //manage unwanted values for remainder if getline or in fails
+	}
+	return remainder;
+	
+}
+
+vector<string> Parser::IdentifyTaskFields(string input){
 	Smartstring word;
 	string info;
 	istringstream in(input);
@@ -29,12 +62,12 @@ vector<string> Parser::Identify(string input){
 		}
 		else{
 			if (info == ""){
-				info = word.ToString();
+				info = word.ToString(); //if statement ensures that no leading whitespace is added to task description
 			}
 			else{
 				info = info + " " + word.ToString();
 			}
-			output[field] = info; //????
+			output[field] = info;
 		}
 	}
 	return output;
@@ -49,9 +82,4 @@ vector<string> Parser::Tokenize(string input){
 	}
 
 	return tokens;
-}
-
-void Parser::InitializeVect(vector<string> &input){
-	
-	return;
 }

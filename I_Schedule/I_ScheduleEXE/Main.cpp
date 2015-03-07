@@ -14,7 +14,7 @@ int main(){
 	
 	string myinput = "homework school from: Monday priority: 1 on Friday";
 	myinput = "go to school on monday priority 1";
-	vector<string> output = parser->Identify(myinput);
+	vector<string> output = parser->IdentifyTaskFields(myinput);
 	printVect(output);
 	Smartstring mys;
 	Smartstring my2;

@@ -50,24 +50,78 @@ namespace I_ScheduleLibraryTest{
 		}
 
 
-		TEST_METHOD(Parser_Keywords_different_lengths){
-			
-			string myinput = "go to school on monday priority 1 from: today";
-			vector<string> output = parser->Identify(myinput);
+		TEST_METHOD(Parser_IdentifyTaskFields){
+			//Case: fields with varied length 1
+			string input = "go to school on monday priority 1 from: today";
+			vector<string> output = parser->IdentifyTaskFields(input);
 			Assert::AreEqual(output[Smartstring::DESCRIPTION].c_str(), "go to school");
 			Assert::AreEqual(output[Smartstring::STARTDATE].c_str(), "today"); //NEED TO CHANGE FORMAT FOR FINAL TEST
 			Assert::AreEqual(output[Smartstring::PRIORITY].c_str(), "1");
 			Assert::AreEqual(output[Smartstring::ENDDATE].c_str(), "monday"); //NEED TO CHANGE FORMAT FOR FINAL TEST
-		}
-
-		TEST_METHOD(Parser_Keywords_length_1){
-			//parser test
-			string myinput = "homework from: Monday priority: 1 end: Friday";
-			vector<string> output = parser->Identify(myinput);
+			
+			//Case: fields with length 1
+			input = "homework from: Monday priority: 1 end: Friday";
+			output.clear();
+			output = parser->IdentifyTaskFields(input);
 			Assert::AreEqual(output[Smartstring::DESCRIPTION].c_str(), "homework");
 			Assert::AreEqual(output[Smartstring::STARTDATE].c_str(), "Monday"); //NEED TO CHANGE FORMAT FOR FINAL TEST
 			Assert::AreEqual(output[Smartstring::PRIORITY].c_str(), "1");
 			Assert::AreEqual(output[Smartstring::ENDDATE].c_str(), "Friday"); //NEED TO CHANGE FORMAT FOR FINAL TEST
+		}
+
+
+		TEST_METHOD(Parser_IdentifyCommand){
+			//Case: ADD
+			string input = "add homework from: Monday priority: 1 end: Friday";
+			int expected = Smartstring::COMMAND::ADD;
+			int actual = parser->IdentifyCommand(input);
+			Assert::AreEqual(expected, actual);
+
+			//Case: SEARCH
+			input = "search homework";
+			expected = Smartstring::COMMAND::SEARCH;
+			actual  = parser->IdentifyCommand(input);
+			Assert::AreEqual(expected, actual);
+
+			//Case: DISPLAY
+			input = "display all items";
+			expected = Smartstring::COMMAND::DISPLAY;
+			actual  = parser->IdentifyCommand(input);
+			Assert::AreEqual(expected, actual);
+
+			//Case: CLEAR
+			input = "clear file";
+			expected = Smartstring::COMMAND::CLEAR;
+			actual  = parser->IdentifyCommand(input);
+			Assert::AreEqual(expected, actual);
+
+			//Case: Delete
+			input = "delete homework everyday";
+			expected = Smartstring::COMMAND::DELETE;
+			actual  = parser->IdentifyCommand(input);
+			Assert::AreEqual(expected, actual);
+		}
+
+		TEST_METHOD(Parser_RemoveCommand){
+			//Case: Test empty
+			string input = "";
+			string expected = "";
+			string actual = parser->RemoveCommand(input);
+			Assert::AreEqual(expected, actual);
+
+			//Case: Test one word input
+			input = "search";
+			expected = "";
+			actual = parser->RemoveCommand(input);
+			Assert::AreEqual(expected, actual);
+
+			//Case: Test more than one word input
+			input = "search for homework";
+			expected = "for homework";
+			actual = parser->RemoveCommand(input);
+			Assert::AreEqual(expected, actual);
+
+			
 		}
 
 	};
