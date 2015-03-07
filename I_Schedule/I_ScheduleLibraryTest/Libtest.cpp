@@ -80,29 +80,37 @@ namespace I_ScheduleLibraryTest{
 			int actual = parser->IdentifyCommand(input);
 			Assert::AreEqual(expected, actual);
 
-			//Case: SEARCH
-			input = "search homework";
-			expected = Smartstring::COMMAND::SEARCH;
-			actual  = parser->IdentifyCommand(input);
+			//Case: CLEAR
+			input = "clear file";
+			expected = Smartstring::COMMAND::CLEAR;
+			actual = parser->IdentifyCommand(input);
+			Assert::AreEqual(expected, actual);
+
+			//Case: DELETE
+			input = "delete homework everyday";
+			expected = Smartstring::COMMAND::DELETE;
+			actual = parser->IdentifyCommand(input);
 			Assert::AreEqual(expected, actual);
 
 			//Case: DISPLAY
 			input = "display all items";
 			expected = Smartstring::COMMAND::DISPLAY;
-			actual  = parser->IdentifyCommand(input);
+			actual = parser->IdentifyCommand(input);
 			Assert::AreEqual(expected, actual);
 
-			//Case: CLEAR
-			input = "clear file";
-			expected = Smartstring::COMMAND::CLEAR;
-			actual  = parser->IdentifyCommand(input);
+			//Case: EDIT
+			input = "edit this item";
+			expected = Smartstring::COMMAND::EDIT;
+			actual = parser->IdentifyCommand(input);
 			Assert::AreEqual(expected, actual);
 
-			//Case: Delete
-			input = "delete homework everyday";
-			expected = Smartstring::COMMAND::DELETE;
-			actual  = parser->IdentifyCommand(input);
+
+			//Case: SEARCH
+			input = "search homework";
+			expected = Smartstring::COMMAND::SEARCH;
+			actual = parser->IdentifyCommand(input);
 			Assert::AreEqual(expected, actual);
+
 		}
 
 		TEST_METHOD(Parser_RemoveCommand){
@@ -151,7 +159,7 @@ namespace I_ScheduleLibraryTest{
 		TEST_METHOD(LOGIC){
 			Logic* logic = new Logic();
 			string myinput = "add homework from monday on: tuesday priority 1";
-			string expected = "Description: homework\nStart Date: monday\nEnd Date: tuesday\nPriority: 1\n";
+			string expected = "Description: homework\nStart Date: monday\nEnd Date: tuesday\nPriority: 1";
 			string feedback;
 			feedback = logic->Run(myinput);
 			

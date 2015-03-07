@@ -70,7 +70,7 @@ string Task::ToString(){
 	out << FIELD_DESCRIPTION << description << endl;
 	out << FIELD_STARTDATE << startdate << endl;
 	out << FIELD_ENDDATE << enddate << endl;
-	out << FIELD_PRIORITY << priority << endl;
+	out << FIELD_PRIORITY << priority;
 	return out.str();
 }
 

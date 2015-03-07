@@ -3,15 +3,21 @@
 //note: static fields always need to be redeclared in cpp file
 
 //adding commands or keywords here
+//IMPORTANT: PLEASE ADD COMMANDS IN ALPHABETICAL ORDER AND FOLLOW THE ORDERING IN ALL FILES
 //1. add a static string in header
-//2. define string in cpp file as shown below
+//2. define command or keyword in the list of const strings
 //3. push the string into commands and keywords vectors respectively in Initialize() function
 //4. change Command and Field functions for commands and keywords respectively
+//5. check the enum within smartstring to check if it matches the cases
+//6. add to the current test cases in Libtest
 const string Smartstring:: COMMAND_ADD = "add";
+const string Smartstring::COMMAND_CLEAR = "clear";
 const string Smartstring:: COMMAND_DELETE = "delete";
 const string Smartstring:: COMMAND_DISPLAY = "display";
+const string Smartstring::COMMAND_EDIT = "edit";
+const string Smartstring::COMMAND_EXIT = "exit";
 const string Smartstring:: COMMAND_SEARCH = "search";
-const string Smartstring:: COMMAND_CLEAR = "clear";
+
 const string Smartstring:: KEYWORD_DATE_1 = "date:";
 const string Smartstring:: KEYWORD_ENDDATE_1 = "by";
 const string Smartstring:: KEYWORD_ENDDATE_2 = "by:";
@@ -50,7 +56,10 @@ void Smartstring::Initialize(){
 		commands.push_back(COMMAND_CLEAR);
 		commands.push_back(COMMAND_DELETE);
 		commands.push_back(COMMAND_DISPLAY);
+		commands.push_back(COMMAND_EDIT);
+		commands.push_back(COMMAND_EXIT);
 		commands.push_back(COMMAND_SEARCH);
+
 		keywords.push_back(KEYWORD_DATE_1);
 		keywords.push_back(KEYWORD_ENDDATE_1);
 		keywords.push_back(KEYWORD_ENDDATE_2);
@@ -107,6 +116,9 @@ Smartstring::COMMAND Smartstring::Command(){
 	}
 	if (description == COMMAND_DISPLAY){
 		return Smartstring::COMMAND::DISPLAY;
+	}
+	if (description == COMMAND_EDIT){
+		return Smartstring::COMMAND::EDIT;
 	}
 	if (description == COMMAND_SEARCH){
 		return Smartstring::COMMAND::SEARCH;

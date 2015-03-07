@@ -10,7 +10,7 @@ private:
 	
 public:
 	string description;
-	enum COMMAND { ADD, DELETE, DISPLAY, SEARCH, CLEAR, INVALID_CMD };
+	enum COMMAND { ADD, CLEAR, DELETE, DISPLAY, EDIT, EXIT, SEARCH, INVALID_CMD };
 	enum FIELD { DESCRIPTION, STARTDATE, ENDDATE, PRIORITY, INVALID_FLD };
 
 	static bool classInitialized;
@@ -19,10 +19,14 @@ public:
 	static vector<string> commands;
 	static vector<string> keywords;
 	static const string COMMAND_ADD;
+	static const string COMMAND_CLEAR;
 	static const string COMMAND_DELETE;
 	static const string COMMAND_DISPLAY;
+	static const string COMMAND_EDIT;
+	static const string COMMAND_EXIT;
 	static const string COMMAND_SEARCH;
-	static const string COMMAND_CLEAR;
+
+
 	static const string KEYWORD_DATE_1;
 	static const string KEYWORD_ENDDATE_1;
 	static const string KEYWORD_ENDDATE_2;

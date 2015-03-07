@@ -49,7 +49,7 @@ vector<string> Parser::IdentifyTaskFields(string input){
 	istringstream in(input);
 	Smartstring::FIELD field = Smartstring::FIELD::DESCRIPTION;
 	int vectorSize = word.numberOfKeywords;
-	string blank = " ";
+	string blank = "";
 	vector<string> output;
 	for (int j = 0; j < vectorSize; ++j){
 		output.push_back(blank);
