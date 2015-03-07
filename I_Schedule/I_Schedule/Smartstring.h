@@ -29,6 +29,9 @@ public:
 	static const string KEYWORD_ENDDATE_3;
 	static const string KEYWORD_ENDDATE_4;
 	static const string KEYWORD_ENDDATE_5;
+	static const string KEYWORD_ENDDATE_6;
+	static const string KEYWORD_ENDDATE_7;
+	static const string KEYWORD_ENDDATE_8;
 	static const string KEYWORD_PRIORITY_1;
 	static const string KEYWORD_PRIORITY_2;
 	static const string KEYWORD_STARTDATE_1;

@@ -8,6 +8,7 @@ namespace I_ScheduleLibraryTest{
 	TEST_CLASS(myLibTest)
 	{
 	public:
+		Logic* logic = new Logic();
 		Storage* storage = new Storage("Unit_test_IO.txt");
 		Parser* parser = new Parser();
 		Task* task = new Task();
@@ -54,7 +55,7 @@ namespace I_ScheduleLibraryTest{
 		TEST_METHOD(Parser_IdentifyTaskFields){
 			
 			//Case: fields with varied length 1
-			string input = "go to school on monday priority 1 from: today";
+			string input = "go to school on: monday priority 1 from: today";
 			vector<string> output = parser->IdentifyTaskFields(input);
 			Assert::AreEqual(output[Smartstring::DESCRIPTION].c_str(), "go to school");
 			Assert::AreEqual(output[Smartstring::STARTDATE].c_str(), "today"); //NEED TO CHANGE FORMAT FOR FINAL TEST
@@ -147,5 +148,14 @@ namespace I_ScheduleLibraryTest{
 
 		}
 
+		TEST_METHOD(LOGIC){
+			Logic* logic = new Logic();
+			string myinput = "add homework from monday on: tuesday priority 1";
+			string expected = "Description: homework\nStart Date: monday\nEnd Date: tuesday\nPriority: 1\n";
+			string feedback;
+			feedback = logic->Run(myinput);
+			
+			Assert::AreEqual(expected, feedback);
+		}
 	};
 }

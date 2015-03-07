@@ -2,6 +2,11 @@
 #include <iostream>
 //note: static fields always need to be redeclared in cpp file
 
+//adding commands or keywords here
+//1. add a static string in header
+//2. define string in cpp file as shown below
+//3. push the string into commands and keywords vectors respectively in Initialize() function
+//4. change Command and Field functions for commands and keywords respectively
 const string Smartstring:: COMMAND_ADD = "add";
 const string Smartstring:: COMMAND_DELETE = "delete";
 const string Smartstring:: COMMAND_DISPLAY = "display";
@@ -12,7 +17,10 @@ const string Smartstring:: KEYWORD_ENDDATE_1 = "by";
 const string Smartstring:: KEYWORD_ENDDATE_2 = "by:";
 const string Smartstring:: KEYWORD_ENDDATE_3 = "date:";
 const string Smartstring:: KEYWORD_ENDDATE_4 = "end:";
-const string Smartstring:: KEYWORD_ENDDATE_5 = "on";
+const string Smartstring:: KEYWORD_ENDDATE_5 = "on:";
+const string Smartstring::KEYWORD_ENDDATE_6 = "to:";
+const string Smartstring::KEYWORD_ENDDATE_7 = "till:";
+const string Smartstring::KEYWORD_ENDDATE_8 = "till";
 const string Smartstring:: KEYWORD_PRIORITY_1 = "priority:";
 const string Smartstring:: KEYWORD_PRIORITY_2 = "priority";
 const string Smartstring:: KEYWORD_STARTDATE_1 = "from";
@@ -49,6 +57,9 @@ void Smartstring::Initialize(){
 		keywords.push_back(KEYWORD_ENDDATE_3);
 		keywords.push_back(KEYWORD_ENDDATE_4);
 		keywords.push_back(KEYWORD_ENDDATE_5);
+		keywords.push_back(KEYWORD_ENDDATE_6);
+		keywords.push_back(KEYWORD_ENDDATE_7);
+		keywords.push_back(KEYWORD_ENDDATE_8);
 		keywords.push_back(KEYWORD_PRIORITY_1);
 		keywords.push_back(KEYWORD_PRIORITY_2);
 		keywords.push_back(KEYWORD_STARTDATE_1);
@@ -114,7 +125,7 @@ Smartstring::FIELD Smartstring::Field(){
 	if (description == KEYWORD_PRIORITY_1 || description == KEYWORD_PRIORITY_2){
 		return Smartstring::FIELD::PRIORITY;
 	}
-	if (description == KEYWORD_ENDDATE_1 || description == KEYWORD_ENDDATE_2 || description == KEYWORD_ENDDATE_3 || description == KEYWORD_ENDDATE_4 || description == KEYWORD_ENDDATE_5){
+	if (description == KEYWORD_ENDDATE_1 || description == KEYWORD_ENDDATE_2 || description == KEYWORD_ENDDATE_3 || description == KEYWORD_ENDDATE_4 || description == KEYWORD_ENDDATE_5 || description == KEYWORD_ENDDATE_6 || description == KEYWORD_ENDDATE_7){
 		return Smartstring::FIELD::ENDDATE;
 	}
 	if (description == KEYWORD_DESCRIPTION_1){
