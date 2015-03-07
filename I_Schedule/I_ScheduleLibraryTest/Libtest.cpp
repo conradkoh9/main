@@ -4,15 +4,16 @@
 using namespace std;
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
-namespace I_ScheduleLibraryTest{	
-	Storage* storage = new Storage("Unit_test_IO.txt");
-	Parser* parser = new Parser();
-	
+namespace I_ScheduleLibraryTest{		
 	TEST_CLASS(myLibTest)
 	{
 	public:
-		
-		TEST_METHOD(Storage){
+		Storage* storage = new Storage("Unit_test_IO.txt");
+		Parser* parser = new Parser();
+		Task* task = new Task();
+
+		TEST_METHOD(STORAGE){
+			
 			const string _FEEDBACK_GENERIC_SUCCESS = "STORAGE SUCCESS";
 			const string _FEEDBACK_GENERIC_FAILURE = "STORAGE FAILED";
 			const string _FEEDBACK_LOAD_SUCCESS = "LOAD SUCCESS";
@@ -51,6 +52,7 @@ namespace I_ScheduleLibraryTest{
 
 
 		TEST_METHOD(Parser_IdentifyTaskFields){
+			
 			//Case: fields with varied length 1
 			string input = "go to school on monday priority 1 from: today";
 			vector<string> output = parser->IdentifyTaskFields(input);
@@ -119,9 +121,30 @@ namespace I_ScheduleLibraryTest{
 			input = "search for homework";
 			expected = "for homework";
 			actual = parser->RemoveCommand(input);
-			Assert::AreEqual(expected, actual);
+			Assert::AreEqual(expected, actual);			
+		}
 
+		TEST_METHOD(TASK){
+			//default constructor test
+			Task* task = new Task();
+			Assert::AreEqual("", task->GetDescription().c_str());
+			Assert::AreEqual("", task->GetStartDate().c_str());
+			Assert::AreEqual("", task->GetEndDate().c_str());
+			Assert::AreEqual("", task->GetPriority().c_str());
 			
+			//vector constructor test
+			vector<string> testinput;
+			testinput.push_back("do my homework");
+			testinput.push_back("today");
+			testinput.push_back("tomorrow");
+			testinput.push_back("1");
+
+			Task* vectTask = new Task(testinput);
+			Assert::AreEqual("do my homework", vectTask->GetDescription().c_str());
+			Assert::AreEqual("today", vectTask->GetStartDate().c_str());
+			Assert::AreEqual("tomorrow", vectTask->GetEndDate().c_str());
+			Assert::AreEqual("1", vectTask->GetPriority().c_str());
+
 		}
 
 	};
