@@ -22,6 +22,7 @@ string Storage::Add(Task* task){
 
 string Storage::Load(){
 	try{
+		ClearVectors();
 		LoadFileContent();
 		LoadTaskList();
 	}
@@ -68,14 +69,12 @@ string Storage::LoadTaskList(){
 	int currentfield = startfield;
 	int fieldcount = Smartstring::NUMBER_OF_FIELDS;
 	vector<string>::iterator iter;
-	Task* taskptr = nullptr;
+	Task* taskptr = new Task();
 	try{
 		for (iter = _filecontent.begin(); iter != _filecontent.end(); ++iter){
 			if (currentfield == Smartstring::FIELD::DESCRIPTION){
-				if (taskptr != nullptr){
-					taskList.push_back(taskptr);
-				}
 				taskptr = new Task();
+				taskList.push_back(taskptr);
 			}
 			switch (currentfield){
 			case Smartstring::FIELD::DESCRIPTION:{
@@ -106,34 +105,10 @@ string Storage::LoadTaskList(){
 	return _FEEDBACK_LOAD_SUCCESS;
 }
 
-string Storage::WriteToFile(string input){
-	ofstream out;
-	out.open(_filename.c_str(), ofstream::out | ofstream::app);
-	if (out.is_open()){
-		out << input;
-		out.close();
-		return _FEEDBACK_WRITE_SUCCESS;
-	}
-	
-	return _FEEDBACK_WRITE_FAILURE;
-}
-
 string Storage::Rewrite(){
-	ostringstream out;
-	ofstream of;
-	of.open(_filename.c_str());
-	vector<Task*>::iterator iter;
-	try{
-		for (iter = taskList.begin(); iter != taskList.end(); ++iter){
-			out << (*iter)->ToString() << endl;
-		}
-		of << out.str();
-	}
-	catch (out_of_range){
-		return _FEEDBACK_WRITE_FAILURE;
-	}
-
-	return _FEEDBACK_WRITE_SUCCESS;
+	ClearFile();
+	string feedback = WriteVectors();
+	return feedback;
 }
 
 string Storage::ToString(){
@@ -152,15 +127,45 @@ string Storage::ToString(){
 	return out.str();
 }
 
+string Storage::Clear(){
+	ClearFile();
+	ClearVectors();
+	return _FEEDBACK_CLEAR_SUCCESS;
+}
 
 string Storage::ClearFile(){
-	ofstream out(_filename);
-	if (out.is_open()){
-		return _FEEDBACK_CLEAR_SUCCESS;
-	}
-	return _FEEDBACK_CLEAR_FAILURE;
+	ofstream out(_filename, ofstream::trunc);
+	return _FEEDBACK_CLEAR_SUCCESS;
 }
 vector<string> Storage::GetContent(){
 	return _filecontent;
 }
 
+string Storage::ClearVectors(){
+	taskList.clear();
+	_filecontent.clear();
+	return _FEEDBACK_CLEAR_SUCCESS;
+}
+
+vector<Task*> Storage::GetTaskList(){
+	return taskList;
+}
+
+string Storage::WriteVectors(){
+	ostringstream out;
+	ofstream of;
+	of.open(_filename.c_str(), ios::app);
+	vector<Task*>::iterator iter;
+	try{
+		for (iter = taskList.begin(); iter != taskList.end(); ++iter){
+			out << (*iter)->ToString() << endl;
+		}
+		of << out.str();
+	}
+	catch (out_of_range){
+		throw out_of_range(_FEEDBACK_WRITE_FAILURE);
+		return _FEEDBACK_WRITE_FAILURE;
+	}
+
+	return _FEEDBACK_WRITE_SUCCESS;
+}

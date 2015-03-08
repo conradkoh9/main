@@ -1,8 +1,8 @@
 #include "Task.h"
 
 const string Task::FIELD_DESCRIPTION = "Description: ";
-const string Task::FIELD_STARTDATE = "Start Date: ";
-const string Task::FIELD_ENDDATE = "End Date: ";
+const string Task::FIELD_STARTDATE = "Start: ";
+const string Task::FIELD_ENDDATE = "End: ";
 const string Task::FIELD_PRIORITY = "Priority: ";
 
 

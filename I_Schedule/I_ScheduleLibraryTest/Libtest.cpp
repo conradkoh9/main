@@ -13,40 +13,73 @@ namespace I_ScheduleLibraryTest{
 		Parser* parser = new Parser();
 		Task* task = new Task();
 
-		TEST_METHOD(STORAGE){
-			
-			const string _FEEDBACK_GENERIC_SUCCESS = "STORAGE SUCCESS";
-			const string _FEEDBACK_GENERIC_FAILURE = "STORAGE FAILED";
-			const string _FEEDBACK_LOAD_SUCCESS = "LOAD SUCCESS";
-			const string _FEEDBACK_LOAD_FAILURE = "LOAD FAILED";
-			const string _FEEDBACK_WRITE_SUCCESS = "WRITE SUCCESS";
-			const string _FEEDBACK_WRITE_FAILURE = "WRITE FAILED";
-			const string _FEEDBACK_CLEAR_SUCCESS = "CLEAR SUCCESS";
-			const string _FEEDBACK_CLEAR_FAILURE = "CLEAR FAILED";
-			const string _FEEDBACK_FILE_EMPTY = "FILE EMPTY";
-			const string _EMPTY_STRING = "";
+		TEST_METHOD(STORAGE_ADD){
+			Storage* storage = new Storage("Storage_Add.txt");
+			storage->Clear();
+			Task* task = new Task();
+			task->SetDescription("do homework");
+			task->SetEndDate("tomorrow");
+			task->SetStartDate("today");
+			task->SetPriority("1");
+			storage->Add(task);
 
-			vector<string> expected_all_feedback;
-			expected_all_feedback.push_back("hello world");
+			Task* task2 = new Task();
+			task2->SetDescription("do homework 2");
+			task2->SetEndDate("tomorrow2");
+			task2->SetStartDate("today2");
+			task2->SetPriority("12");
+			storage->Add(task2);
 
-			vector<string> all_feedback;
-			string feedback;
-			feedback = storage->ClearFile();
-			Assert::AreEqual(feedback, _FEEDBACK_CLEAR_SUCCESS);
-			all_feedback.push_back(feedback);
-			feedback = storage->WriteToFile("Description: hello world");
-			Assert::AreEqual(feedback, _FEEDBACK_WRITE_SUCCESS);
-			all_feedback.push_back(feedback);
-			feedback = storage->LoadFileContent();
-			Assert::AreEqual(feedback, _FEEDBACK_LOAD_SUCCESS);
-			all_feedback.push_back(feedback);
+			vector<Task*> tasklist = storage->GetTaskList();
+			string expected[2];
+			expected[0] = "Description: do homework\nStart: today\nEnd: tomorrow\nPriority: 1";
+			expected[1] = "Description: do homework 2\nStart: today2\nEnd: tomorrow2\nPriority: 12";
+			Assert::AreEqual(tasklist[0]->ToString(), expected[0]);
+			Assert::AreEqual(tasklist[1]->ToString(), expected[1]);
+			tasklist.clear();
+						
+		}
 
-			vector<string>::iterator iter, iter2;
-			iter2 = expected_all_feedback.begin();
-			vector<string> content = storage->GetContent();
-			for (iter = content.begin(); iter != content.end(); ++iter){
-				Assert::AreEqual(*iter ,*iter2);
-				++iter2;
+		TEST_METHOD(STORAGE_REWRITE_LOAD){
+
+			//Load(), Rewrite()
+			Storage* storage = new Storage("Unit_test_IO2.txt");
+			storage->Clear();
+			Task* task = new Task();
+			task->SetDescription("do homework");
+			task->SetEndDate("tomorrow");
+			task->SetStartDate("today");
+			task->SetPriority("1");
+			storage->Add(task);
+
+			task = new Task();
+			task->SetDescription("do homework 2");
+			task->SetEndDate("tomorrow2");
+			task->SetStartDate("today2");
+			task->SetPriority("12");
+			storage->Add(task);
+
+			storage->Rewrite();
+
+			delete storage;
+			storage = new Storage("Unit_test_IO2.txt");
+		
+			vector<Task*>::iterator tIter;
+			vector<Task*> taskList = storage->GetTaskList();
+			if (taskList.empty()){
+				Assert::AreEqual(1, 0);
+			}
+			string expected[2];
+			expected[0] = "Description: do homework\nStart: today\nEnd: tomorrow\nPriority: 1";
+			expected[1] = "Description: do homework 2\nStart: today2\nEnd: tomorrow2\nPriority: 12";
+			int i = 0;
+
+			for (tIter = (storage->taskList).begin(); tIter != storage->taskList.end(); ++tIter){
+				Task* taskptr;
+				taskptr = *tIter;
+				string actual = taskptr->ToString();
+				Assert::AreEqual(expected[i], actual);
+				i++;
 			}
 
 		}
@@ -159,7 +192,7 @@ namespace I_ScheduleLibraryTest{
 		TEST_METHOD(LOGIC){
 			Logic* logic = new Logic();
 			string myinput = "add homework from monday on: tuesday priority 1";
-			string expected = "Description: homework\nStart Date: monday\nEnd Date: tuesday\nPriority: 1";
+			string expected = "Description: homework\nStart: monday\nEnd: tuesday\nPriority: 1";
 			string feedback;
 			feedback = logic->Run(myinput);
 			

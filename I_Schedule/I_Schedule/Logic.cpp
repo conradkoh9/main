@@ -55,6 +55,11 @@ string Logic::Execute(string input){
 			feedback = Clear();
 			break;
 		}
+
+		case (Smartstring::COMMAND::EXIT) : {
+			exit = true;
+			break;
+		}
 	}
 	return feedback;
 }
@@ -129,5 +134,6 @@ string Logic::Search(string taskInput){
 }
 
 string Logic::Clear(){
-	return "function not defined";
+	string feedback = storage->Clear();
+	return feedback;
 }

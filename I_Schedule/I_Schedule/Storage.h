@@ -13,21 +13,20 @@ class Storage
 public:
 	//VARIABLES
 	vector<Task*> taskList;
+
 	//METHODS
 	Storage();
 	Storage(string filename);
 	~Storage();
 	string Add(Task* task);
 	string Load();
-	string LoadFileContent();
-	string LoadTaskList();
-	string WriteToFile(string input);
 	string Rewrite();
 	string ToString();
-	string ClearFile();
+	string Clear();
 	vector<string> GetContent();
 	vector<Task*> GetTaskList();
 	
+
 private:
 	//VARIABLES
 	string _filename;
@@ -45,7 +44,12 @@ private:
 	const string _EMPTY_STRING = "";
 
 	//METHODS
-	
+
+	string ClearFile();
+	string ClearVectors();
+	string LoadFileContent();
+	string LoadTaskList();
+	string WriteVectors();
 
 };
 

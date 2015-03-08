@@ -29,7 +29,7 @@ public:
 	static const int NUMBER_OF_FIELDS;
 
 
-	static const string KEYWORD_DATE_1;
+
 	static const string KEYWORD_ENDDATE_1;
 	static const string KEYWORD_ENDDATE_2;
 	static const string KEYWORD_ENDDATE_3;
@@ -42,9 +42,9 @@ public:
 	static const string KEYWORD_PRIORITY_2;
 	static const string KEYWORD_STARTDATE_1;
 	static const string KEYWORD_STARTDATE_2;
+	static const string KEYWORD_STARTDATE_3;
+	static const string KEYWORD_STARTDATE_4;
 	static const string KEYWORD_DESCRIPTION_1;
-
-	
 
 	Smartstring();
 	Smartstring(string input);
@@ -56,8 +56,6 @@ public:
 	bool IsKeyword();
 
 	string ToString();
-
-
 
 	friend istream& operator>>(istream& is, Smartstring& ss);
 	friend ostream& operator<< (ostream& os, Smartstring& ss);

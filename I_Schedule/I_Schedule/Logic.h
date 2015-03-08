@@ -12,6 +12,7 @@ public:
 	Logic();
 	Logic(string input);
 	~Logic();
+	bool exit = false;
 	Parser* parser;
 	Storage* storage;
 	vector<Task*> activeTaskList;

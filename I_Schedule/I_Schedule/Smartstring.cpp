@@ -19,7 +19,7 @@ const string Smartstring::COMMAND_EDIT = "edit";
 const string Smartstring::COMMAND_EXIT = "exit";
 const string Smartstring:: COMMAND_SEARCH = "search";
 
-const string Smartstring:: KEYWORD_DATE_1 = "date:";
+
 const string Smartstring:: KEYWORD_ENDDATE_1 = "by";
 const string Smartstring:: KEYWORD_ENDDATE_2 = "by:";
 const string Smartstring:: KEYWORD_ENDDATE_3 = "date:";
@@ -32,6 +32,8 @@ const string Smartstring:: KEYWORD_PRIORITY_1 = "priority:";
 const string Smartstring:: KEYWORD_PRIORITY_2 = "priority";
 const string Smartstring:: KEYWORD_STARTDATE_1 = "from";
 const string Smartstring:: KEYWORD_STARTDATE_2 = "from:";
+const string Smartstring::KEYWORD_STARTDATE_3 = "date:";
+const string Smartstring::KEYWORD_STARTDATE_4 = "start:";
 const string Smartstring:: KEYWORD_DESCRIPTION_1 = "description:";
 bool Smartstring::classInitialized = false;
 int Smartstring::numberOfCommands;
@@ -62,7 +64,6 @@ void Smartstring::Initialize(){
 		commands.push_back(COMMAND_EXIT);
 		commands.push_back(COMMAND_SEARCH);
 
-		keywords.push_back(KEYWORD_DATE_1);
 		keywords.push_back(KEYWORD_ENDDATE_1);
 		keywords.push_back(KEYWORD_ENDDATE_2);
 		keywords.push_back(KEYWORD_ENDDATE_3);
@@ -75,6 +76,8 @@ void Smartstring::Initialize(){
 		keywords.push_back(KEYWORD_PRIORITY_2);
 		keywords.push_back(KEYWORD_STARTDATE_1);
 		keywords.push_back(KEYWORD_STARTDATE_2);
+		keywords.push_back(KEYWORD_STARTDATE_3);
+		keywords.push_back(KEYWORD_STARTDATE_4);
 		keywords.push_back(KEYWORD_DESCRIPTION_1);
 		numberOfCommands = commands.size();
 		numberOfKeywords = keywords.size();
@@ -128,12 +131,15 @@ Smartstring::COMMAND Smartstring::Command(){
 	if (description == COMMAND_CLEAR){
 		return Smartstring::COMMAND::CLEAR;
 	}
+	if (description == COMMAND_EXIT){
+		return Smartstring::COMMAND::EXIT;
+	}
 	assert(!IsCommand()); //takes care of the case when we add cases to field but did not update static list commands[];
 	return Smartstring::COMMAND::INVALID_CMD;
 }
 
 Smartstring::FIELD Smartstring::Field(){
-	if (description == KEYWORD_STARTDATE_1 || description == KEYWORD_STARTDATE_2){
+	if (description == KEYWORD_STARTDATE_1 || description == KEYWORD_STARTDATE_2 || description == KEYWORD_STARTDATE_3 || description == KEYWORD_STARTDATE_4){
 		return Smartstring::FIELD::STARTDATE;
 	}
 	if (description == KEYWORD_PRIORITY_1 || description == KEYWORD_PRIORITY_2){

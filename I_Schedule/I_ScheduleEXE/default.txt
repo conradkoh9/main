@@ -1,12 +1,8 @@
 Description: homework
-Start Date: Date: monday
-End Date: Date: tuesday
+Start: monday
+End: tuesday
 Priority: 1
 Description: homework
-Start Date: monday
-End Date: tuesday
+Start: monday
+End: tuesday
 Priority: 1
-Description: school
-Start Date: 
-End Date: friday
-Priority: 

@@ -14,9 +14,10 @@ int main(){
 	string feedback;
 	feedback = logic->Run(myinput);
 	cout << feedback << endl;
-
+	
 	string input;
-	while (getline(cin, input)){
+
+	while (!logic->exit && getline(cin, input)){
 		string output = logic->Run(input);
 		cout << output << endl;
 	}
