@@ -16,6 +16,7 @@ public:
 	static bool classInitialized;
 	static int numberOfCommands;
 	static int numberOfKeywords;
+	
 	static vector<string> commands;
 	static vector<string> keywords;
 	static const string COMMAND_ADD;
@@ -25,6 +26,7 @@ public:
 	static const string COMMAND_EDIT;
 	static const string COMMAND_EXIT;
 	static const string COMMAND_SEARCH;
+	static const int NUMBER_OF_FIELDS;
 
 
 	static const string KEYWORD_DATE_1;

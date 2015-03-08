@@ -62,7 +62,8 @@ string Logic::Execute(string input){
 string Logic::Add(string taskInput){
 	vector<string> taskinfo = parser->IdentifyTaskFields(taskInput);
 	Task* task = new Task(taskinfo);
-	taskList.push_back(task);
+	string feedback = storage->Add(task);
+	
 	return task->ToString();
 }
 string Logic::Delete(string taskInput){
@@ -70,19 +71,8 @@ string Logic::Delete(string taskInput){
 }
 
 string Logic::Display(string taskInput){
-	ostringstream out;
-	int index = 0;
-	vector<Task*>::iterator iter;
-	for (iter = taskList.begin(); iter != taskList.end(); ++iter){
-		++index;
-		if (iter + 1 != taskList.end()){
-			out << index << ": " << (*iter)->GetDescription() << endl;
-		}
-		else{
-			out << index << ": " << (*iter)->GetDescription();
-		}	
-	}
-	return out.str();
+	string output = storage->ToString();
+	return output;
 }
 
 string Logic::Edit(string taskInput){
@@ -93,9 +83,9 @@ string Logic::Edit(string taskInput){
 	istringstream in(taskInput);
 	in >> indexstr;
 	int index = atoi(indexstr.c_str());
-	if (index <= taskList.size() && index>0){
+	if (index <= storage->taskList.size() && index>0){
 		index = index - 1; //converting from user index to vector index
-		taskptr = taskList[index];
+		taskptr = storage->taskList[index];
 	}
 	else{
 		return _FEEDBACK_ERROR_INVALID_INDEX;

@@ -43,6 +43,22 @@ string Parser::RemoveCommand(string input){
 	
 }
 
+string Parser::RemoveKeywords(string input){
+	istringstream in(input);
+
+	Smartstring current;
+	string output;
+	while (in >> current){
+		if (!current.IsKeyword()){
+			output = current.ToString() + " ";
+		}
+	}
+	int endIdx = output.length() - 1;
+	output.substr(0, endIdx - 1); // remove white space at the end
+
+	return output;
+}
+
 vector<string> Parser::IdentifyTaskFields(string input){
 	Smartstring word;
 	string info;

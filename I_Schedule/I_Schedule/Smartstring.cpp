@@ -10,6 +10,7 @@
 //4. change Command and Field functions for commands and keywords respectively
 //5. check the enum within smartstring to check if it matches the cases
 //6. add to the current test cases in Libtest
+
 const string Smartstring:: COMMAND_ADD = "add";
 const string Smartstring::COMMAND_CLEAR = "clear";
 const string Smartstring:: COMMAND_DELETE = "delete";
@@ -35,6 +36,7 @@ const string Smartstring:: KEYWORD_DESCRIPTION_1 = "description:";
 bool Smartstring::classInitialized = false;
 int Smartstring::numberOfCommands;
 int Smartstring::numberOfKeywords;
+const int Smartstring::NUMBER_OF_FIELDS = 4;
 vector<string> Smartstring::commands;
 vector<string> Smartstring::keywords;
 
@@ -148,9 +150,12 @@ Smartstring::FIELD Smartstring::Field(){
 	return Smartstring::FIELD::INVALID_FLD;
 }
 
+
 string Smartstring::ToString(){
 	return description;
 }
+
+
 
 //operator overloading
 ostream& operator<<(ostream& os, Smartstring& ss){

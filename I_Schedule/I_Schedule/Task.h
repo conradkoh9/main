@@ -11,16 +11,18 @@ private:
 	string startdate;
 	string enddate;
 	string priority;
-
+	
 public:
 	Task();
 	Task(vector<string> input);
 	~Task();
-	
+	int numberOfFields;
+
 	static const string FIELD_DESCRIPTION;
 	static const string FIELD_STARTDATE;
 	static const string FIELD_ENDDATE;
 	static const string FIELD_PRIORITY;
+
 
 	static const string _FEEDBACK_DESCRIPTION_SET;
 	static const string _FEEDBACK_STARTDATE_SET;

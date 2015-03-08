@@ -4,27 +4,35 @@
 #include <fstream>
 #include <vector>
 #include <string>
-
+#include "Task.h"
+#include "Smartstring.h"
 using namespace std;
 
 class Storage
 {
 public:
 	//VARIABLES
-
+	vector<Task*> taskList;
 	//METHODS
 	Storage();
 	Storage(string filename);
 	~Storage();
-	string loadFile();
-	string writeToFile(string input);
-	string clearFile();
-	vector<string> getContent();
-
+	string Add(Task* task);
+	string Load();
+	string LoadFileContent();
+	string LoadTaskList();
+	string WriteToFile(string input);
+	string Rewrite();
+	string ToString();
+	string ClearFile();
+	vector<string> GetContent();
+	vector<Task*> GetTaskList();
+	
 private:
 	//VARIABLES
 	string _filename;
-	vector<string> _content;
+	vector<string> _filecontent;
+
 	const string _FEEDBACK_GENERIC_SUCCESS = "STORAGE SUCCESS";
 	const string _FEEDBACK_GENERIC_FAILURE = "STORAGE FAILED";
 	const string _FEEDBACK_LOAD_SUCCESS = "LOAD SUCCESS";
@@ -37,7 +45,7 @@ private:
 	const string _EMPTY_STRING = "";
 
 	//METHODS
-
+	
 
 };
 

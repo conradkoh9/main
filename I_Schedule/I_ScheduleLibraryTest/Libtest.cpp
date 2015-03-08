@@ -31,19 +31,19 @@ namespace I_ScheduleLibraryTest{
 
 			vector<string> all_feedback;
 			string feedback;
-			feedback = storage->clearFile();
+			feedback = storage->ClearFile();
 			Assert::AreEqual(feedback, _FEEDBACK_CLEAR_SUCCESS);
 			all_feedback.push_back(feedback);
-			feedback = storage->writeToFile("hello world");
+			feedback = storage->WriteToFile("Description: hello world");
 			Assert::AreEqual(feedback, _FEEDBACK_WRITE_SUCCESS);
 			all_feedback.push_back(feedback);
-			feedback = storage->loadFile();
+			feedback = storage->LoadFileContent();
 			Assert::AreEqual(feedback, _FEEDBACK_LOAD_SUCCESS);
 			all_feedback.push_back(feedback);
 
 			vector<string>::iterator iter, iter2;
 			iter2 = expected_all_feedback.begin();
-			vector<string> content = storage->getContent();
+			vector<string> content = storage->GetContent();
 			for (iter = content.begin(); iter != content.end(); ++iter){
 				Assert::AreEqual(*iter ,*iter2);
 				++iter2;

@@ -4,6 +4,8 @@ const string Task::FIELD_DESCRIPTION = "Description: ";
 const string Task::FIELD_STARTDATE = "Start Date: ";
 const string Task::FIELD_ENDDATE = "End Date: ";
 const string Task::FIELD_PRIORITY = "Priority: ";
+
+
 const string Task::_FEEDBACK_DESCRIPTION_SET = "DESCRIPTION SET";
 const string Task::_FEEDBACK_STARTDATE_SET = "START DATE SET";
 const string Task::_FEEDBACK_ENDDATE_SET = "END DATE SET";
@@ -15,13 +17,15 @@ Task::Task()
 	description = "";
 	priority = "";
 	enddate = "";
+	numberOfFields = Smartstring::NUMBER_OF_FIELDS;
 }
 
 Task::Task(vector<string> input){
-	description = input[Smartstring::DESCRIPTION];
-	enddate = input[Smartstring::ENDDATE];
-	startdate = input[Smartstring::STARTDATE];
-	priority = input[Smartstring::PRIORITY];
+	description = input[Smartstring::FIELD::DESCRIPTION];
+	enddate = input[Smartstring::FIELD::ENDDATE];
+	startdate = input[Smartstring::FIELD::STARTDATE];
+	priority = input[Smartstring::FIELD::PRIORITY];
+	numberOfFields = Smartstring::NUMBER_OF_FIELDS;
 }
 
 

@@ -14,7 +14,6 @@ public:
 	~Logic();
 	Parser* parser;
 	Storage* storage;
-	vector<Task*> taskList;
 	vector<Task*> activeTaskList;
 	//methods
 	string Run(string input);

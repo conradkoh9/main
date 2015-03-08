@@ -19,6 +19,7 @@ public:
 	Smartstring::COMMAND IdentifyCommand(string input);
 	vector<string> IdentifyTaskFields(string input);
 	string RemoveCommand(string input);
+	string RemoveKeywords(string input);
 	vector<string> Tokenize(string input);
 
 
