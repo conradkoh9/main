@@ -145,7 +145,7 @@ Smartstring::FIELD Smartstring::Field(){
 	if (description == KEYWORD_PRIORITY_1 || description == KEYWORD_PRIORITY_2){
 		return Smartstring::FIELD::PRIORITY;
 	}
-	if (description == KEYWORD_ENDDATE_1 || description == KEYWORD_ENDDATE_2 || description == KEYWORD_ENDDATE_3 || description == KEYWORD_ENDDATE_4 || description == KEYWORD_ENDDATE_5 || description == KEYWORD_ENDDATE_6 || description == KEYWORD_ENDDATE_7){
+	if (description == KEYWORD_ENDDATE_1 || description == KEYWORD_ENDDATE_2 || description == KEYWORD_ENDDATE_3 || description == KEYWORD_ENDDATE_4 || description == KEYWORD_ENDDATE_5 || description == KEYWORD_ENDDATE_6 || description == KEYWORD_ENDDATE_7 || description == KEYWORD_ENDDATE_8){
 		return Smartstring::FIELD::ENDDATE;
 	}
 	if (description == KEYWORD_DESCRIPTION_1){
