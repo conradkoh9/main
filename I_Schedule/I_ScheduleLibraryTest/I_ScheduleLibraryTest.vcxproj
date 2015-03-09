@@ -52,7 +52,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>C:\Users\conra_000\Desktop\Project Testing\main\I_Schedule\I_Schedule;C:\Users\ziqi\Desktop\CS2103\project\main\I_Schedule\I_Schedule;C:\Users\Administrator\Desktop\project\main\I_Schedule\I_Schedule;C:\Users\conra_000\Desktop\Project Testing\main\I_Schedule\I_Schedule;$(VCInstallDir)UnitTest\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Charlotte\CS2103 Project\main\I_Schedule\I_Schedule;C:\Users\conra_000\Desktop\Project Testing\main\I_Schedule\I_Schedule;C:\Users\ziqi\Desktop\CS2103\project\main\I_Schedule\I_Schedule;C:\Users\Administrator\Desktop\project\main\I_Schedule\I_Schedule;$(VCInstallDir)UnitTest\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <UseFullPaths>true</UseFullPaths>
     </ClCompile>
