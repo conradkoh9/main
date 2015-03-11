@@ -200,6 +200,44 @@ namespace I_ScheduleLibraryTest{
 			feedback = logic->Run(myinput);
 			
 			Assert::AreEqual(expected, feedback);
-		}
+			TEST_METHOD(LOGIC_EDIT){
+				Logic* logic = new Logic();
+				Storage* storage = new Storage("Storage_Edit.txt");
+				storage->Clear();
+				Task* task = new Task();
+				task->SetDescription("do homework");
+				task->SetEndDate("tomorrow");
+				task->SetStartDate("today");
+				task->SetPriority("1");
+				storage->Add(task);
+
+				Task* task2 = new Task();
+				task2->SetDescription("do homework 2");
+				task2->SetEndDate("tomorrow2");
+				task2->SetStartDate("today2");
+				task2->SetPriority("2");
+				storage->Add(task2);
+
+				//case index error1
+				string expected = "INVALID INDEX";
+				Assert::AreEqual(expected, logic->Edit("-1 description: meet my clients"));
+
+				//case index error2
+				Assert::AreEqual(expected, logic->Edit("4 description: meet my clients"));
+
+				//case edit the description
+				//string feedback;
+				//feedback = "meet my clients today tomorrow2 12";
+				//Assert::AreEqual(feedback, logic->Edit("1 description: meet my clients"));
+
+				//case change saved to storage
+				/*string update;
+				update = "meet my clients today tomorrow2 12";
+				Assert::AreEqual(update, logic->Display("2 description: meet my clients"));
+				*/
+			}
+
+
+
 	};
 }
