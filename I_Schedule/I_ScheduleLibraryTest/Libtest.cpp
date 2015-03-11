@@ -39,6 +39,9 @@ namespace I_ScheduleLibraryTest{
 			tasklist.clear();
 						
 		}
+		
+		TEST_METHOD(STORAGE_SEARCH){
+		}
 
 		TEST_METHOD(STORAGE_REWRITE_LOAD){
 

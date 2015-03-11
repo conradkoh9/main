@@ -26,6 +26,15 @@ public:
 	vector<string> GetContent();
 	vector<Task*> GetTaskList();
 	
+	//Search Method
+	vector<Task*> search(string keyword, Smartstring::FIELD fieldTyoe);
+	bool isContainedInDescription(string keyword,string description);
+	bool isContainedStartdate(string keyword,string startDate );
+	bool isContainedInEnddate(string keyword, string endDate);
+	bool isContainedInPriority(string keyword, string priority);
+	bool isContainingKeyword(string keyword, vector<string>& tokenVector);
+	string convertToLower(string str);
+	void getTokens(string str, vector<string>& tokenVector, char token);
 
 private:
 	//VARIABLES

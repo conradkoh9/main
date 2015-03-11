@@ -1,4 +1,6 @@
 #include "Storage.h"
+#include "Smartstring.h"
+#include "Parser.h"
 
 //PUBLIC
 Storage::Storage(){
@@ -149,6 +151,121 @@ string Storage::ClearVectors(){
 
 vector<Task*> Storage::GetTaskList(){
 	return taskList;
+}
+
+vector<Task*> Storage::search(string keyword, Smartstring::FIELD fieldType){
+	int sizeOftaskList = taskList.size();
+	vector<Task*> searchingResult = {}; 
+
+	if (fieldType == Smartstring::DESCRIPTION){
+		for(int i = 0; i < sizeOftaskList; i++){
+			string description = taskList[i]->GetDescription();
+			if (isContainedInDescription(keyword,description)){
+				searchingResult.push_back(taskList[i]);
+			}
+		}
+		
+	}else if (fieldType == Smartstring::STARTDATE){
+		for (int i = 0; i < sizeOftaskList; i++){
+			string startDate = taskList[i]->GetStartDate();
+			if (isContainedStartdate(keyword, startDate)){
+				searchingResult.push_back(taskList[i]);
+			}
+		}
+	}else if (fieldType == Smartstring::ENDDATE){
+		
+		for (int i = 0; i < sizeOftaskList; i++){
+			string endDate = taskList[i]->GetEndDate();
+			if (isContainedInEnddate(keyword, endDate)){
+				searchingResult.push_back(taskList[i]);
+			}
+		}
+	}else if (fieldType == Smartstring::PRIORITY){
+		for (int i = 0; i < sizeOftaskList; i++){
+			string priority = taskList[i]->GetPriority();
+			if (isContainedInPriority(keyword,priority)){
+				searchingResult.push_back(taskList[i]);
+			}
+		}
+	}else{}
+	return searchingResult;
+}
+
+bool Storage::isContainedInDescription(string keyword, string description){
+	//do we need convert to lower?
+	int sizeOfDescription = description.size();
+	char token = ' ';
+	string newKeyword = convertToLower(keyword);
+	string newDescription = convertToLower(description);
+	for (int i = 0; i < sizeOfDescription; i++){
+		vector<string> tokenVector;
+		getTokens(newDescription, tokenVector, token);
+		if (isContainingKeyword(keyword,tokenVector)){
+			return true;
+		}
+	}
+	return false;
+}
+
+string Storage::convertToLower(string str){
+	int legthOfString = str.length();
+	for (int i = 0; i < legthOfString; i++)
+	{
+		//If the character is not a space
+		if (str[i] != ' '){
+			//Reset the value of the array position to the new lower case letter
+			str[i] = tolower(str[i]);
+		}
+	}
+	return str;
+}
+
+void Storage::getTokens(string str, vector<string>& tokenVector, char token){
+	int lastPosition = str.find_first_not_of(token, 0);
+	int position = str.find_first_of(token, lastPosition);
+	while (position != string::npos || lastPosition != string::npos){
+		tokenVector.push_back(str.substr(lastPosition, position - lastPosition));
+		lastPosition = str.find_first_not_of(token, position);
+		position = str.find_first_of(token, lastPosition);
+	};
+	return;
+}
+
+bool Storage::isContainingKeyword(string keyword, vector<string>& tokenVector){
+	int sizeOfTokenVector = tokenVector.size();
+
+	for (int i = 0; i < sizeOfTokenVector; i++){
+		if (keyword == tokenVector[i]){
+			return true;
+		}
+	}
+	return false;
+}
+
+bool Storage::isContainedStartdate(string keyword, string startDate){
+	if (keyword == startDate){ 
+		return true;
+	}else{
+		return false;
+	}
+}
+
+bool Storage::isContainedInEnddate(string keyword, string endDate){
+	if (keyword == endDate){
+		return true;
+	}
+	else{
+		return false;
+	}
+}
+
+bool Storage::isContainedInPriority(string keyword, string priority){
+	if (keyword == priority){
+		return true;
+	}
+	else{
+		return false;
+	}
 }
 
 string Storage::WriteVectors(){
