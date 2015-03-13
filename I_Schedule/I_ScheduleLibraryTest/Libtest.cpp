@@ -198,8 +198,9 @@ namespace I_ScheduleLibraryTest{
 			string expected = "Description: homework\nStart: monday\nEnd: tuesday\nPriority: 1";
 			string feedback;
 			feedback = logic->Run(myinput);
-			
+
 			Assert::AreEqual(expected, feedback);
+		}
 			TEST_METHOD(LOGIC_EDIT){
 				Logic* logic = new Logic();
 				Storage* storage = new Storage("Storage_Edit.txt");
