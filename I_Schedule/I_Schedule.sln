@@ -9,6 +9,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "I_ScheduleEXE", "I_Schedule
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "I_ScheduleLibraryTest", "I_ScheduleLibraryTest\I_ScheduleLibraryTest.vcxproj", "{140EAB16-6AEF-4518-862D-252DE7042461}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "I_ScheduleGUI", "I_ScheduleGUI\I_ScheduleGUI.vcxproj", "{AD93C5AF-E868-4CE1-A35C-DF389A577034}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -27,6 +29,10 @@ Global
 		{140EAB16-6AEF-4518-862D-252DE7042461}.Debug|Win32.Build.0 = Debug|Win32
 		{140EAB16-6AEF-4518-862D-252DE7042461}.Release|Win32.ActiveCfg = Release|Win32
 		{140EAB16-6AEF-4518-862D-252DE7042461}.Release|Win32.Build.0 = Release|Win32
+		{AD93C5AF-E868-4CE1-A35C-DF389A577034}.Debug|Win32.ActiveCfg = Debug|Win32
+		{AD93C5AF-E868-4CE1-A35C-DF389A577034}.Debug|Win32.Build.0 = Debug|Win32
+		{AD93C5AF-E868-4CE1-A35C-DF389A577034}.Release|Win32.ActiveCfg = Release|Win32
+		{AD93C5AF-E868-4CE1-A35C-DF389A577034}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

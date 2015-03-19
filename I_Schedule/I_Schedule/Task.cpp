@@ -71,9 +71,9 @@ string Task::GetPriority(){
 
 string Task::ToString(){
 	ostringstream out;
-	out << FIELD_DESCRIPTION << description << endl;
-	out << FIELD_STARTDATE << startdate << endl;
-	out << FIELD_ENDDATE << enddate << endl;
+	out << FIELD_DESCRIPTION << description << "\r\n";
+	out << FIELD_STARTDATE << startdate << "\r\n";
+	out << FIELD_ENDDATE << enddate << "\r\n";
 	out << FIELD_PRIORITY << priority;
 	return out.str();
 }

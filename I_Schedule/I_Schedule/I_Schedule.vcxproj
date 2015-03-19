@@ -71,6 +71,7 @@
     <ClInclude Include="Smartstring.h" />
     <ClInclude Include="Storage.h" />
     <ClInclude Include="Task.h" />
+    <ClInclude Include="UI_Controller.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Date.cpp" />
@@ -79,6 +80,7 @@
     <ClCompile Include="Smartstring.cpp" />
     <ClCompile Include="Storage.cpp" />
     <ClCompile Include="Task.cpp" />
+    <ClCompile Include="UI_Controller.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
