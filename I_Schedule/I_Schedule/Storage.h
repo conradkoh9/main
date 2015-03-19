@@ -23,6 +23,7 @@ public:
 	string Rewrite();
 	string ToString();
 	string Clear();
+	string Delete(int);
 	vector<string> GetContent();
 	vector<Task*> GetTaskList();
 	
@@ -49,6 +50,8 @@ private:
 	const string _FEEDBACK_WRITE_FAILURE = "WRITE FAILED";
 	const string _FEEDBACK_CLEAR_SUCCESS = "CLEAR SUCCESS";
 	const string _FEEDBACK_CLEAR_FAILURE = "CLEAR FAILED";
+	const string _FEEDBACK_DELETE_SUCCESS = "DELETE SUCCESS";
+	const string _FEEDBACK_DEKETE_SUCCESS = "DELETE FAILED";
 	const string _FEEDBACK_FILE_EMPTY = "FILE EMPTY";
 	const string _EMPTY_STRING = "";
 

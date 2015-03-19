@@ -72,8 +72,10 @@ string Logic::Add(string taskInput){
 	
 	return task->ToString();
 }
+
 string Logic::Delete(string taskInput){
-	return "function not defined";
+	int position = atoi(taskInput.c_str());
+	return storage->Delete(position);
 }
 
 string Logic::Display(string taskInput){

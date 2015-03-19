@@ -149,6 +149,11 @@ string Storage::ClearVectors(){
 	return _FEEDBACK_CLEAR_SUCCESS;
 }
 
+string Storage::Delete(int position){
+	taskList.erase(taskList.begin() + position - 1);
+	return _FEEDBACK_DELETE_SUCCESS;
+}
+
 vector<Task*> Storage::GetTaskList(){
 	return taskList;
 }
