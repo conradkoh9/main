@@ -13,5 +13,8 @@ public:
 	UI_Controller();
 	~UI_Controller();
 	string Run(string input);
+
+private:
+	string Standardize(string input);
 };
 

@@ -83,7 +83,7 @@ namespace I_ScheduleGUI {
 			this->INPUT_CMDLN->Multiline = true;
 			this->INPUT_CMDLN->Name = L"INPUT_CMDLN";
 			this->INPUT_CMDLN->Size = System::Drawing::Size(758, 64);
-			this->INPUT_CMDLN->TabIndex = 1;
+			this->INPUT_CMDLN->TabIndex = 0;
 			// 
 			// DISPLAY_TASK_DEADLINE
 			// 

@@ -34,17 +34,19 @@ namespace I_ScheduleLibraryTest{
 			string expected[2];
 			expected[0] = "Description: do homework\nStart: today\nEnd: tomorrow\nPriority: 1";
 			expected[1] = "Description: do homework 2\nStart: today2\nEnd: tomorrow2\nPriority: 12";
-			Assert::AreEqual(tasklist[0]->ToString(), expected[0]);
-			Assert::AreEqual(tasklist[1]->ToString(), expected[1]);
+			Assert::AreEqual(expected[0], tasklist[0]->ToString());
+			Assert::AreEqual(expected[1], tasklist[1]->ToString());
 			tasklist.clear();
+			
 						
 		}
 		
 		TEST_METHOD(STORAGE_SEARCH){
+			Assert::AreEqual("\n", "\n");
 		}
 
 		TEST_METHOD(STORAGE_REWRITE_LOAD){
-
+			
 			//Load(), Rewrite()
 			Storage* storage = new Storage("Unit_test_IO2.txt");
 			storage->Clear();
@@ -83,6 +85,7 @@ namespace I_ScheduleLibraryTest{
 				string actual = taskptr->ToString();
 				Assert::AreEqual(expected[i], actual);
 				i++;
+				
 			}
 
 		}

@@ -120,7 +120,7 @@ string Storage::ToString(){
 	for (iter = taskList.begin(); iter != taskList.end(); ++iter){
 		++index;
 		if (iter + 1 != taskList.end()){
-			out << index << ": " << (*iter)->GetDescription() << "\r\n";
+			out << index << ": " << (*iter)->GetDescription() << "endl";
 		}
 		else{
 			out << index << ": " << (*iter)->GetDescription();
@@ -280,7 +280,7 @@ string Storage::WriteVectors(){
 	vector<Task*>::iterator iter;
 	try{
 		for (iter = taskList.begin(); iter != taskList.end(); ++iter){
-			out << (*iter)->ToString() << "\r\n";
+			out << (*iter)->ToString() << "endl";
 		}
 		of << out.str();
 	}

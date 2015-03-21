@@ -13,6 +13,9 @@ class Storage
 public:
 	//VARIABLES
 	vector<Task*> taskList;
+	//vector<Task*> floatingList;
+	//vector<Task*> timedList;
+	//vector<Task*> deadlineList;
 
 	//METHODS
 	Storage();
@@ -28,7 +31,7 @@ public:
 	vector<Task*> GetTaskList();
 	
 	//Search Method
-	vector<Task*> search(string keyword, Smartstring::FIELD fieldTyoe);
+	vector<Task*> search(string keyword, Smartstring::FIELD fieldType);
 	bool isContainedInDescription(string keyword,string description);
 	bool isContainedStartdate(string keyword,string startDate );
 	bool isContainedInEnddate(string keyword, string endDate);
