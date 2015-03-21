@@ -129,7 +129,10 @@ namespace I_ScheduleGUI {
 #pragma endregion
 	private: System::Void BUTTON_SEND_Click(System::Object^  sender, System::EventArgs^  e) {
 		string input = msclr::interop::marshal_as<std::string>(INPUT_CMDLN->Text);
-		DISPLAY_TASK_TIMED->Text = gcnew String(controller->Run(input).c_str());
+		controller->Run(input);
+		DISPLAY_TASK_TIMED->Text = gcnew String(controller->DISPLAY_TASK_TIMED.c_str());
+		DISPLAY_TASK_DEADLINE->Text = gcnew String(controller->DISPLAY_TASK_DEADLINE.c_str());
+		DISPLAY_TASK_FLOAT->Text = gcnew String(controller->DISPLAY_TASK_FLOAT.c_str());
 		INPUT_CMDLN->Clear();
 	}
 };

@@ -12,12 +12,16 @@ UI_Controller::~UI_Controller()
 }
 
 string UI_Controller::Run(string input){
-	//DISPLAY_TASK_TIMED = Standardize("hello\nhow\nare\nyou\n");
 	DISPLAY_TASK_TIMED = Standardize(logic->Execute(input));
+	DateTime* now = new DateTime();
+	DISPLAY_TASK_DEADLINE = Standardize(now->Now());
 	return DISPLAY_TASK_TIMED;
 }
 
+//the intended purpose of the standardize function is for the translation of characters from console to windows in 
+//the expression that we desire.
 string UI_Controller::Standardize(string input){
+	//start replace new line characters
 	static int startIdx = 0;
 	int endIdx = input.length() - 1;
 	int found = input.find_first_of('\n');
@@ -32,5 +36,6 @@ string UI_Controller::Standardize(string input){
 		found = input.find_first_of('\n', startIdx);
 
 	}
+	//end replace new line characters
 	return input;
 }
