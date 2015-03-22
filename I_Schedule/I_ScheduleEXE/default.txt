@@ -1,52 +1,43 @@
 Description: homework
 Start: monday
 End: tuesday
-Priority: 1endlDescription: homework
-Start: monday
-End: tuesday
-Priority: 1endlDescription: homework
-Start: monday
-End: tuesday
-Priority: 1endlDescription: assginment on 05/04/2015
-Start: 
+Priority: 1endlDescription: homeworkendlDescription: monday
+Start: tuesday
+End: 1endlDescription: homework
+Priority: mondayendlDescription: tuesday
+Start: 1endlDescription: assginment on 05/04/2015
 End: 
-Priority: endlDescription: homework
+Priority: endlDescription: endlDescription: homework
 Start: monday
 End: tuesday
-Priority: 1endlDescription: homework
-Start: monday
-End: tuesday
-Priority: 1endlDescription: homework
-Start: monday
-End: tuesday
-Priority: 1endlDescription: homework
-Start: monday
-End: tuesday
-Priority: 1endlDescription: homework
-Start: monday
-End: tuesday
-Priority: 1endlDescription: homework
-Start: monday
-End: tuesday
-Priority: 1endlDescription: homework
-Start: monday
-End: tuesday
-Priority: 1endlDescription: homework
-Start: monday
-End: tuesday
-Priority: 1endlDescription: homework
-Start: monday
-End: tuesday
-Priority: 1endlDescription: homework
-Start: monday
-End: tuesday
-Priority: 1endlDescription: homework
-Start: 
+Priority: 1endlDescription: homeworkendlDescription: monday
+Start: tuesday
+End: 1endlDescription: homework
+Priority: mondayendlDescription: tuesday
+Start: 1endlDescription: homework
 End: monday
-Priority: endlDescription: homework
+Priority: tuesdayendlDescription: 1endlDescription: homework
 Start: monday
 End: tuesday
-Priority: 1endlDescription: homework
+Priority: 1endlDescription: homeworkendlDescription: monday
+Start: tuesday
+End: 1endlDescription: homework
+Priority: mondayendlDescription: tuesday
+Start: 1endlDescription: homework
+End: monday
+Priority: tuesdayendlDescription: 1endlDescription: homework
+Start: monday
+End: tuesday
+Priority: 1endlDescription: homeworkendlDescription: monday
+Start: tuesday
+End: 1endlDescription: homework
+Priority: endlDescription: monday
+Start: endlDescription: homework
+End: monday
+Priority: tuesdayendlDescription: 1endlDescription: homework
+Start: monday
+End: tuesday
+Priority: 1endlendlDescription: homework
 Start: monday
 End: tuesday
 Priority: 1endl
