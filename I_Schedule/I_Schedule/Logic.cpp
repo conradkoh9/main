@@ -108,27 +108,31 @@ string Logic::Edit(string taskInput){
 	for (int i = 0; i < modified.size(); ++i){
 		if (modified[i] != ""){
 			switch (i){
-				case Smartstring::FIELD::DESCRIPTION:{
-					taskptr->SetDescription(modified[i]);
-					break;
-				}
-				case Smartstring::FIELD::STARTDATE:{
-					taskptr->SetStartDate(modified[i]);
-					break;
-				}
-				case Smartstring::FIELD::ENDDATE:{
-					taskptr->SetEndDate(modified[i]);
-					break;
-				}
-				case Smartstring::FIELD::PRIORITY:{
-					taskptr->SetPriority(modified[i]);
-					break;
-				}
+			case Smartstring::FIELD::DESCRIPTION:{
+				assert(taskptr != NULL);
+				taskptr->SetDescription(modified[i]);
+				break;
+			}
+			case Smartstring::FIELD::STARTDATE:{
+				assert(taskptr != NULL);
+				taskptr->SetStartDate(modified[i]);
+				break;
+			}
+			case Smartstring::FIELD::ENDDATE:{
+				assert(taskptr != NULL);
+				taskptr->SetEndDate(modified[i]);
+				break;
+			}
+			case Smartstring::FIELD::PRIORITY:{
+				assert(taskptr != NULL);
+				taskptr->SetPriority(modified[i]);
+				break;
+			}
 			}
 		}
 	}
 	//end analyze string as vect and replace
-
+	assert(taskptr != NULL);
 	return taskptr->ToString();
 }
 
