@@ -1,4 +1,3 @@
-
 #include "Logic.h"
 
 //adding functionality
@@ -6,16 +5,27 @@
 //2. Add function itself in header and cpp
 
 const string Logic::_FEEDBACK_ERROR_INVALID_INDEX = "INVALID INDEX";
-
+ostringstream Logic::fout; //floating task display stream
+ostringstream Logic::tout; //timed task display stream
+ostringstream Logic::dout; //deadline task display stream
+ostringstream Logic::mout; //main display stream
 Logic::Logic()
 {
 	parser = new Parser();
 	storage = new Storage("default.txt");
+	tout << "test timed task display";
+	dout << "test deadline task display";
+	fout << "test floating task display";
+	mout << "test main display";
 }
 
 Logic::Logic(string input){
 	parser = new Parser();
 	storage = new Storage(input);
+	tout << "test timed task display";
+	dout << "test deadline task display";
+	fout << "test floating task display";
+	mout << "test main display";
 }
 
 Logic::~Logic()
@@ -24,6 +34,10 @@ Logic::~Logic()
 
 string Logic::Run(string input){
 	string feedback = Execute(input);
+	mout << feedback;
+	fout << storage->ToString(); //in future this should be replaced by floating task ToString function in Storage
+	dout << "deadline task display"; //this should be replaced by deadline tasks
+	tout << "timed task display"; // this should be replaced by timed task ToString function in Storage
 	return feedback;
 }
 
@@ -32,35 +46,35 @@ string Logic::Execute(string input){
 	string taskInput = parser->RemoveCommand(input);
 	string feedback;
 	switch (cmd){
-		case (Smartstring::COMMAND::ADD) : {
-			feedback = Add(taskInput);
-			break;
-		}
-		case (Smartstring::COMMAND::DELETE) : {
-			feedback = Delete(taskInput);
-			break;
-		}
-		case (Smartstring::COMMAND::DISPLAY) : {
-			feedback = Display(taskInput);
-			break;
-		}
-		case(Smartstring::COMMAND::EDIT) : {
-			feedback = Edit(taskInput);
-			break;
-		}
-		case (Smartstring::COMMAND::SEARCH) : {
-			feedback = Search(taskInput);
-			break;
-		}
-		case (Smartstring::COMMAND::CLEAR) : {
-			feedback = Clear();
-			break;
-		}
+	case (Smartstring::COMMAND::ADD) : {
+		feedback = Add(taskInput);
+		break;
+	}
+	case (Smartstring::COMMAND::DELETE) : {
+		feedback = Delete(taskInput);
+		break;
+	}
+	case (Smartstring::COMMAND::DISPLAY) : {
+		feedback = Display();
+		break;
+	}
+	case(Smartstring::COMMAND::EDIT) : {
+		feedback = Edit(taskInput);
+		break;
+	}
+	case (Smartstring::COMMAND::SEARCH) : {
+		feedback = Search(taskInput);
+		break;
+	}
+	case (Smartstring::COMMAND::CLEAR) : {
+		feedback = Clear();
+		break;
+	}
 
-		case (Smartstring::COMMAND::EXIT) : {
-			exit = true;
-			break;
-		}
+	case (Smartstring::COMMAND::EXIT) : {
+		exit = true;
+		break;
+	}
 	}
 	return feedback;
 }
@@ -69,7 +83,7 @@ string Logic::Add(string taskInput){
 	vector<string> taskinfo = parser->IdentifyTaskFields(taskInput);
 	Task* task = new Task(taskinfo);
 	string feedback = storage->Add(task);
-	
+
 	return task->ToString();
 }
 
@@ -78,7 +92,7 @@ string Logic::Delete(string taskInput){
 	return storage->Delete(position);
 }
 
-string Logic::Display(string taskInput){
+string Logic::Display(){
 	string output = storage->ToString();
 	return output;
 }
@@ -109,22 +123,18 @@ string Logic::Edit(string taskInput){
 		if (modified[i] != ""){
 			switch (i){
 			case Smartstring::FIELD::DESCRIPTION:{
-				assert(taskptr != NULL);
 				taskptr->SetDescription(modified[i]);
 				break;
 			}
 			case Smartstring::FIELD::STARTDATE:{
-				assert(taskptr != NULL);
 				taskptr->SetStartDate(modified[i]);
 				break;
 			}
 			case Smartstring::FIELD::ENDDATE:{
-				assert(taskptr != NULL);
 				taskptr->SetEndDate(modified[i]);
 				break;
 			}
 			case Smartstring::FIELD::PRIORITY:{
-				assert(taskptr != NULL);
 				taskptr->SetPriority(modified[i]);
 				break;
 			}
@@ -132,7 +142,7 @@ string Logic::Edit(string taskInput){
 		}
 	}
 	//end analyze string as vect and replace
-	assert(taskptr != NULL);
+
 	return taskptr->ToString();
 }
 

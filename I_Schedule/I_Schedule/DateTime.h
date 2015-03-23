@@ -7,7 +7,7 @@ class DateTime
 public:
 	DateTime();
 	DateTime(string input);
-	~DateTime(); 
+	~DateTime();
 	string Now();
 
 private:

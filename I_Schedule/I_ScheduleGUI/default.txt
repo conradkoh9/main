@@ -1,25 +1,8 @@
-Description: homework monday
-Start: 
-End: 
-Priority: endlDescription: homeworkendlDescription: endlDescription: mondayendlDescription: endlDescription: homeworkendlDescription: endlDescription: mondayendlDescription: endlDescription: homeworkendlDescription: endlDescription: mondayendlDescription: endlDescription: homeworkendlDescription: endlDescription: mondayendlDescription: endlDescription: homeworkendlDescription: endlDescription: mondayendlDescription: endlDescription: homeworkendlDescription: endlDescription: mondayendlDescription: endlDescription: homeworkendlDescription: endlDescription: tuesdayendlDescription: endlendlDescription: endlDescription: endlDescription: endlDescription: homeworkendlDescription: endlDescription: mondayendlDescription: endlendlDescription: endlDescription: endlDescription: endlDescription: homeworkendlDescription: endlDescription: mondayendlDescription: endlendlDescription: endlDescription: endlDescription: endlDescription: homeworkendlDescription: endlDescription: mondayendlDescription: endlendlDescription: endlDescription: endlDescription: endlDescription: homeworkendlDescription: endlDescription: mondayendlDescription: endlendlDescription: endlDescription: endlDescription: endlDescription: homeworkendlDescription: endlDescription: mondayendlDescription: endlendlDescription: endlDescription: endlDescription: endlDescription: homeworkendlDescription: endlDescription: mondayendlDescription: endlendlDescription: endlDescription: endlDescription: endlDescription: homeworkendlDescription: endlDescription: mondayendlDescription: endlendlDescription: endlDescription: endlDescription: endlDescription: homeworkendlDescription: endlDescription: mondayendlDescription: endlendlDescription: endlDescription: endlDescription: endlDescription: homeworkendlDescription: endlDescription: mondayendlDescription: endlendlDescription: endlDescription: endlDescription: endlDescription: homeworkendlDescription: endlDescription: mondayendlDescription: endlendlDescription: endlDescription: endlDescription: endlDescription: homeworkendlDescription: endlDescription: mondayendlDescription: endlendlDescription: endlDescription: endlDescription: endlDescription: homeworkendlDescription: endlDescription: mondayendlDescription: endlendlDescription: endlDescription: endlDescription: endlDescription: homeworkendlDescription: endlDescription: mondayendlDescription: endlendlDescription: endlDescription: endlDescription: endlDescription: homeworkendlDescription: endlDescription: mondayendlDescription: endlendlDescription: endlDescription: endlDescription: endlDescription: helloendlDescription: 
-Start: tuesdayendlDescription: endlendlDescription: endlDescription: endlDescription: endlDescription: homework due: tomorrowendlDescription: 
-End: endlDescription: endlendlDescription: endlDescription: endlDescription: endlDescription: homeworkendlDescription: 
-Priority: mondayendlDescription: endlDescription: homeworkendlDescription: endlDescription: tuesdayendlDescription: endlDescription: homeworkendlDescription: endlDescription: tuesday
-Start: endlDescription: homeworkendlDescription: endlDescription: tuesdayendlDescription: endlendlDescription: endlDescription: endlDescription: homeworkendlDescription: 
+Description: homework
+Start: 
 End: monday
-Priority: endlendlDescription: endlDescription: homeworkendlDescription: endlDescription: endlDescription: endlendlDescription: homework
+Priority: 
+Description: homework
 Start: 
-End: endlDescription: endl
-Priority: endlDescription: endlDescription: endlDescription: homework
-Start: 
-End: endlDescription: endl
-Priority: endlDescription: 
-Start: endlDescription: homework
-End: 
-Priority: endlDescription: endl
-Start: 
-End: 
-Priority: endlDescription: homework
-Start: 
-End: 
-Priority: endl
+End: tuesday
+Priority: 

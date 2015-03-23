@@ -26,14 +26,14 @@ public:
 	string Rewrite();
 	string ToString();
 	string Clear();
-	string Delete(int);
+	string Delete(int position);
 	vector<string> GetContent();
 	vector<Task*> GetTaskList();
-	
+
 	//Search Method
 	vector<Task*> search(string keyword, Smartstring::FIELD fieldType);
-	bool isContainedInDescription(string keyword,string description);
-	bool isContainedStartdate(string keyword,string startDate );
+	bool isContainedInDescription(string keyword, string description);
+	bool isContainedStartdate(string keyword, string startDate);
 	bool isContainedInEnddate(string keyword, string endDate);
 	bool isContainedInPriority(string keyword, string priority);
 	bool isContainingKeyword(string keyword, vector<string>& tokenVector);
@@ -54,7 +54,7 @@ private:
 	const string _FEEDBACK_CLEAR_SUCCESS = "CLEAR SUCCESS";
 	const string _FEEDBACK_CLEAR_FAILURE = "CLEAR FAILED";
 	const string _FEEDBACK_DELETE_SUCCESS = "DELETE SUCCESS";
-	const string _FEEDBACK_DEKETE_SUCCESS = "DELETE FAILED";
+	const string _FEEDBACK_DELETE_FAILURE = "DELETE FAILED";
 	const string _FEEDBACK_FILE_EMPTY = "FILE EMPTY";
 	const string _EMPTY_STRING = "";
 
@@ -64,6 +64,7 @@ private:
 	string ClearVectors();
 	string LoadFileContent();
 	string LoadTaskList();
+	string Remove(int position);
 	string WriteVectors();
 
 };

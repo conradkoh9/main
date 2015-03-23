@@ -9,6 +9,7 @@ public:
 	string DISPLAY_TASK_DEADLINE;
 	string DISPLAY_TASK_FLOAT;
 	string DISPLAY_TASK_TIMED;
+	string DISPLAY_MAIN;
 	Logic* logic;
 
 	UI_Controller();
@@ -17,5 +18,7 @@ public:
 
 private:
 	string Standardize(string input);
+	string UpdateDisplays();
+	string ClearStreams();
 };
 

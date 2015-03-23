@@ -19,3 +19,5 @@ Class I_ScheduleGUI.GUI: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
     Void .ctor(): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
   Fields:
     UI_Controller* controller : Public
+  Methods:
+    Welcome(): PrivateScope, Public, HideBySig

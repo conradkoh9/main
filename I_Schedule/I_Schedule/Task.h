@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #include "Smartstring.h"
+#include <iomanip>
 using namespace std;
 
 class Task
@@ -11,7 +12,7 @@ private:
 	string startdate;
 	string enddate;
 	string priority;
-	
+
 public:
 	Task();
 	Task(vector<string> input);
@@ -40,6 +41,7 @@ public:
 	string GetPriority();
 
 	string ToString();
+	string ToShortString();
 
 	friend ostream& operator<<(ostream& out, Task& task);
 	friend istream& operator>>(istream& in, Task& task);
