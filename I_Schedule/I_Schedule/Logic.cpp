@@ -147,7 +147,9 @@ string Logic::Edit(string taskInput){
 }
 
 string Logic::Search(string taskInput){
-	return "function not defined";
+	vector<string> field_keyword = parser->IdentifyTaskFields(taskInput);
+
+	return storage->search(field_keyword);
 }
 
 string Logic::Clear(){

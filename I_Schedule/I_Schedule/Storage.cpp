@@ -165,49 +165,148 @@ vector<Task*> Storage::GetTaskList(){
 	return taskList;
 }
 
-vector<Task*> Storage::search(string keyword, Smartstring::FIELD fieldType){
-	int sizeOftaskList = taskList.size();
-	vector<Task*> searchingResult = {};
+string Storage::search(vector<string>& input){
+	int size_taskList = taskList.size();
+	vector<Task*> searchingResult;
+	initializeSearchingVector(searchingResult, size_taskList);
+	string resultString;
+	Smartstring::FIELD field;
 
-	if (fieldType == Smartstring::DESCRIPTION){
-		for (int i = 0; i < sizeOftaskList; i++){
-			string description = taskList[i]->GetDescription();
-			if (isContainedInDescription(keyword, description)){
-				searchingResult.push_back(taskList[i]);
-			}
+	if (!input[Smartstring::FIELD::DESCRIPTION].empty()){
+		field = Smartstring::FIELD::DESCRIPTION;
+		if (searchingResult.empty()){
+			searchTaskList(input[Smartstring::FIELD::DESCRIPTION], searchingResult, field);
 		}
+		else{
+			searchResultVector(searchingResult, input[Smartstring::FIELD::DESCRIPTION], field);
+		}
+		if (searchingResult.empty()){
+			return _FEEDBACK_SEARCH_FAILURE;
+		}
+	}
 
-	}
-	else if (fieldType == Smartstring::STARTDATE){
-		for (int i = 0; i < sizeOftaskList; i++){
-			string startDate = taskList[i]->GetStartDate();
-			if (isContainedStartdate(keyword, startDate)){
-				searchingResult.push_back(taskList[i]);
+		if (!input[Smartstring::FIELD::STARTDATE].empty()){
+			field = Smartstring::FIELD::STARTDATE;
+			if (searchingResult.empty()){
+				searchTaskList(input[Smartstring::FIELD::STARTDATE], searchingResult, field);
+			}else{
+				searchResultVector(searchingResult, input[Smartstring::FIELD::STARTDATE], field);
+			}
+			if (searchingResult.empty()){
+				return _FEEDBACK_SEARCH_FAILURE;
 			}
 		}
+	
+	
+	if (!input[Smartstring::FIELD::ENDDATE].empty()){
+		field = Smartstring::FIELD::ENDDATE;
+		if (searchingResult.empty()){
+			searchTaskList(input[Smartstring::FIELD::ENDDATE], searchingResult, field);
+		}else{
+			searchResultVector(searchingResult, input[Smartstring::FIELD::ENDDATE], field);
+		}
+		if (searchingResult.empty()){
+			return _FEEDBACK_SEARCH_FAILURE;
+		}
 	}
-	else if (fieldType == Smartstring::ENDDATE){
 
-		for (int i = 0; i < sizeOftaskList; i++){
-			string endDate = taskList[i]->GetEndDate();
-			if (isContainedInEnddate(keyword, endDate)){
-				searchingResult.push_back(taskList[i]);
-			}
+	if (!input[Smartstring::FIELD::PRIORITY].empty()){
+		field = Smartstring::FIELD::PRIORITY;
+		if (searchingResult.empty()){
+			searchTaskList(input[Smartstring::FIELD::PRIORITY], searchingResult, field);
+		}else{
+			searchResultVector(searchingResult, input[Smartstring::FIELD::PRIORITY], field);
+		}
+		if (searchingResult.empty()){
+			return _FEEDBACK_SEARCH_FAILURE;
 		}
 	}
-	else if (fieldType == Smartstring::PRIORITY){
-		for (int i = 0; i < sizeOftaskList; i++){
-			string priority = taskList[i]->GetPriority();
-			if (isContainedInPriority(keyword, priority)){
-				searchingResult.push_back(taskList[i]);
-			}
-		}
-	}
-	else{}
-	return searchingResult;
+
+	//To display result 
+	resultString = ToString(searchingResult);
+
+	return resultString;
 }
 
-bool Storage::isContainedInDescription(string keyword, string description){
+void Storage::initializeSearchingVector(vector<Task*>& searchingResult, int size_taskList){
+	for (int i = 0; i < size_taskList; i++)
+	{
+		searchingResult[i]->Task::Task();
+	}
+}
+
+void Storage::searchTaskList(string keyword, vector<Task*>& searchingResult, Smartstring::FIELD field){
+	int size_taskList = taskList.size();
+	for (int i = 0; i < size_taskList; i++)
+	{
+		if (field == Smartstring::FIELD::DESCRIPTION){
+			string description = taskList[i]->GetDescription();
+			if (isContained(keyword, description)){
+				searchingResult.push_back(taskList[i]);
+			}
+
+		}
+		else if (field == Smartstring::FIELD::STARTDATE){
+			string startDate = taskList[i]->GetStartDate();
+			if (isContained(keyword, startDate)){
+				searchingResult.push_back(taskList[i]);
+			}
+
+		}
+		else if (field == Smartstring::FIELD::ENDDATE){
+			string endDate = taskList[i]->GetEndDate();
+			if (isContained(keyword, endDate)){
+				searchingResult.push_back(taskList[i]);
+			}
+
+		}
+		else{
+			string priority = taskList[i]->GetPriority();
+			if (isContained(keyword, priority)){
+				searchingResult.push_back(taskList[i]);
+			}
+		}
+	}
+}
+
+void Storage::searchResultVector(vector<Task*>& searchingResult, string keyword, Smartstring::FIELD field){
+	int size_resultVector = searchingResult.size();
+
+	for (int i = 0; i < size_resultVector; i++)
+	{
+		if (field == Smartstring::FIELD::DESCRIPTION){
+			string description = searchingResult[i]->GetDescription();
+			if (!isContained(keyword, description)){
+				searchingResult.erase(searchingResult.begin() + i);
+			}
+
+		}
+		else if (field == Smartstring::FIELD::STARTDATE){
+			string startDate = searchingResult[i]->GetStartDate();
+			if (isContained(keyword, startDate)){
+				searchingResult.erase(searchingResult.begin() + i);
+			}
+
+		}
+		else if (field == Smartstring::FIELD::ENDDATE){
+			string endDate = searchingResult[i]->GetEndDate();
+			if (isContained(keyword, endDate)){
+				searchingResult.erase(searchingResult.begin() + i);
+			}
+
+		}
+		else{
+			string priority = searchingResult[i]->GetPriority();
+			if (isContained(keyword, priority)){
+				searchingResult.erase(searchingResult.begin() + i);
+			}
+		}
+	}
+}
+
+
+
+bool Storage::isContained(string keyword, string description){
 	//do we need convert to lower?
 	int sizeOfDescription = description.size();
 	char token = ' ';
@@ -258,32 +357,24 @@ bool Storage::isContainingKeyword(string keyword, vector<string>& tokenVector){
 	return false;
 }
 
-bool Storage::isContainedStartdate(string keyword, string startDate){
-	if (keyword == startDate){
-		return true;
+string Storage::ToString(vector<Task*> V){
+	ostringstream out;
+	int index = 0;
+	vector<Task*>::iterator iter;
+	for (iter = V.begin(); iter != V.end(); ++iter){
+		++index;
+		if (iter + 1 != V.end()){
+			out << index << ": " << (*iter)->ToShortString() << endl;
+		}
+		else{
+			out << index << ": " << (*iter)->ToShortString();
+		}
 	}
-	else{
-		return false;
-	}
+	return out.str();
 }
 
-bool Storage::isContainedInEnddate(string keyword, string endDate){
-	if (keyword == endDate){
-		return true;
-	}
-	else{
-		return false;
-	}
-}
 
-bool Storage::isContainedInPriority(string keyword, string priority){
-	if (keyword == priority){
-		return true;
-	}
-	else{
-		return false;
-	}
-}
+
 string Storage::Remove(int position){
 	try{
 		if (position > taskList.size()){
@@ -297,6 +388,7 @@ string Storage::Remove(int position){
 	}
 	return _FEEDBACK_DELETE_SUCCESS;
 }
+
 string Storage::WriteVectors(){
 	ostringstream out;
 	ofstream of;

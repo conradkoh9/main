@@ -46,6 +46,13 @@ public:
 	static const string KEYWORD_STARTDATE_4;
 	static const string KEYWORD_DESCRIPTION_1;
 
+	static const string FEEDBACK_SEARCH_FAIL;
+	static const string FEEDBACK_ADD_SUCCESSULLY;
+	static const string FEEDBACK_DELETE_SUCCESSFULLY;
+	static const string FEEDBACK_DELETE_FAIL;
+	static const string FEEDBACK_EDIT_SUCCESSFULLY;
+	static const string FEEDBACK_EDIT_FAIL;
+
 	Smartstring();
 	Smartstring(string input);
 	~Smartstring();

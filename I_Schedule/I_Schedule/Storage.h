@@ -25,20 +25,25 @@ public:
 	string Load();
 	string Rewrite();
 	string ToString();
+	string ToString(vector<Task*> V);
 	string Clear();
 	string Delete(int position);
 	vector<string> GetContent();
 	vector<Task*> GetTaskList();
 
 	//Search Method
-	vector<Task*> search(string keyword, Smartstring::FIELD fieldType);
-	bool isContainedInDescription(string keyword, string description);
+	string search(vector<string>& input);
+	/*bool isContainedInDescription(string keyword, string description);
 	bool isContainedStartdate(string keyword, string startDate);
 	bool isContainedInEnddate(string keyword, string endDate);
-	bool isContainedInPriority(string keyword, string priority);
+	bool isContainedInPriority(string keyword, string priority);*/
+	bool isContained(string keyword, string desreiption);
 	bool isContainingKeyword(string keyword, vector<string>& tokenVector);
 	string convertToLower(string str);
 	void getTokens(string str, vector<string>& tokenVector, char token);
+	void searchTaskList(string str, vector<Task*>& V, Smartstring::FIELD field);
+	void initializeSearchingVector(vector<Task*>& searchingResult, int size_taskList);
+	void searchResultVector(vector<Task*>& V, string str, Smartstring::FIELD field);
 
 private:
 	//VARIABLES
@@ -55,6 +60,7 @@ private:
 	const string _FEEDBACK_CLEAR_FAILURE = "CLEAR FAILED";
 	const string _FEEDBACK_DELETE_SUCCESS = "DELETE SUCCESS";
 	const string _FEEDBACK_DELETE_FAILURE = "DELETE FAILED";
+	const string _FEEDBACK_SEARCH_FAILURE = "SEARCH FAILED";
 	const string _FEEDBACK_FILE_EMPTY = "FILE EMPTY";
 	const string _EMPTY_STRING = "";
 

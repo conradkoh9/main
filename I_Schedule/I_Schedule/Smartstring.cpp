@@ -35,6 +35,14 @@ const string Smartstring:: KEYWORD_STARTDATE_2 = "from:";
 const string Smartstring::KEYWORD_STARTDATE_3 = "date:";
 const string Smartstring::KEYWORD_STARTDATE_4 = "start:";
 const string Smartstring:: KEYWORD_DESCRIPTION_1 = "description:";
+
+const string Smartstring::FEEDBACK_ADD_SUCCESSULLY = "add the entry successfully";
+const string Smartstring::FEEDBACK_DELETE_SUCCESSFULLY = "delete the entry successfully";
+const string Smartstring::FEEDBACK_DELETE_FAIL= "fail to delete the entry";
+const string Smartstring::FEEDBACK_EDIT_SUCCESSFULLY="edit the entry successfully";
+const string Smartstring::FEEDBACK_EDIT_FAIL="fail to edit the entry";
+const string Smartstring::FEEDBACK_SEARCH_FAIL="cannot find";
+
 bool Smartstring::classInitialized = false;
 int Smartstring::numberOfCommands;
 int Smartstring::numberOfKeywords;
