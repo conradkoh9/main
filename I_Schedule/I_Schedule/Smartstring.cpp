@@ -11,30 +11,31 @@
 //5. check the enum within smartstring to check if it matches the cases
 //6. add to the current test cases in Libtest
 
-const string Smartstring:: COMMAND_ADD = "add";
+const string Smartstring::COMMAND_ADD = "add";
 const string Smartstring::COMMAND_CLEAR = "clear";
-const string Smartstring:: COMMAND_DELETE = "delete";
-const string Smartstring:: COMMAND_DISPLAY = "display";
+const string Smartstring::COMMAND_DELETE = "delete";
+const string Smartstring::COMMAND_DISPLAY = "display";
 const string Smartstring::COMMAND_EDIT = "edit";
 const string Smartstring::COMMAND_EXIT = "exit";
-const string Smartstring:: COMMAND_SEARCH = "search";
+const string Smartstring::COMMAND_SEARCH = "search";
 
 
-const string Smartstring:: KEYWORD_ENDDATE_1 = "by";
-const string Smartstring:: KEYWORD_ENDDATE_2 = "by:";
-const string Smartstring:: KEYWORD_ENDDATE_3 = "date:";
-const string Smartstring:: KEYWORD_ENDDATE_4 = "end:";
-const string Smartstring:: KEYWORD_ENDDATE_5 = "on:";
+const string Smartstring::KEYWORD_ENDDATE_1 = "e:";
+const string Smartstring::KEYWORD_ENDDATE_2 = "by:";
+const string Smartstring::KEYWORD_ENDDATE_3 = "date:";
+const string Smartstring::KEYWORD_ENDDATE_4 = "end:";
+const string Smartstring::KEYWORD_ENDDATE_5 = "on:";
 const string Smartstring::KEYWORD_ENDDATE_6 = "to:";
 const string Smartstring::KEYWORD_ENDDATE_7 = "till:";
-const string Smartstring::KEYWORD_ENDDATE_8 = "till";
-const string Smartstring:: KEYWORD_PRIORITY_1 = "priority:";
-const string Smartstring:: KEYWORD_PRIORITY_2 = "priority";
-const string Smartstring:: KEYWORD_STARTDATE_1 = "from";
-const string Smartstring:: KEYWORD_STARTDATE_2 = "from:";
+const string Smartstring::KEYWORD_ENDDATE_8 = "deadline:";
+const string Smartstring::KEYWORD_ENDDATE_9 = "d:";
+const string Smartstring::KEYWORD_PRIORITY_1 = "priority:";
+const string Smartstring::KEYWORD_PRIORITY_2 = "p:";
+const string Smartstring::KEYWORD_STARTDATE_1 = "s:";
+const string Smartstring::KEYWORD_STARTDATE_2 = "from:";
 const string Smartstring::KEYWORD_STARTDATE_3 = "date:";
 const string Smartstring::KEYWORD_STARTDATE_4 = "start:";
-const string Smartstring:: KEYWORD_DESCRIPTION_1 = "description:";
+const string Smartstring::KEYWORD_DESCRIPTION_1 = "description:";
 
 const string Smartstring::FEEDBACK_ADD_SUCCESSULLY = "add the entry successfully";
 const string Smartstring::FEEDBACK_DELETE_SUCCESSFULLY = "delete the entry successfully";
@@ -80,6 +81,7 @@ void Smartstring::Initialize(){
 		keywords.push_back(KEYWORD_ENDDATE_6);
 		keywords.push_back(KEYWORD_ENDDATE_7);
 		keywords.push_back(KEYWORD_ENDDATE_8);
+		keywords.push_back(KEYWORD_ENDDATE_9);
 		keywords.push_back(KEYWORD_PRIORITY_1);
 		keywords.push_back(KEYWORD_PRIORITY_2);
 		keywords.push_back(KEYWORD_STARTDATE_1);
