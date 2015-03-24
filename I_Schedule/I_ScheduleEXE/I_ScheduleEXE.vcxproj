@@ -44,7 +44,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>C:\Users\conra_000\Desktop\Project Testing\New folder\main\I_Schedule\I_Schedule;C:\Users\Charlotte\A\main\I_Schedule\I_Schedule;C:\Users\Charlotte\CS2103 Project\main\I_Schedule\I_Schedule;C:\Users\conra_000\Desktop\Project Testing\main\I_Schedule\I_Schedule;C:\Users\ziqi\Desktop\CS2103\project\main\I_Schedule\I_Schedule;C:\Users\Administrator\Desktop\project\main\I_Schedule\I_Schedule;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\conra_000\Desktop\Project Testing\New folder\main\I_Schedule\I_Schedule;C:\Users\Charlotte\C\main\I_Schedule\I_Schedule;C:\Users\conra_000\Desktop\Project Testing\main\I_Schedule\I_Schedule;C:\Users\ziqi\Desktop\CS2103\project\main\I_Schedule\I_Schedule;C:\Users\Administrator\Desktop\project\main\I_Schedule\I_Schedule;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>

@@ -91,3 +91,18 @@ ostream& operator<<(ostream& out, Task& task){
 	out << task.ToString();
 	return out;
 }
+
+int Task::GetType(){     // 1: timed task 2:deadline task 3:floating task
+	if (enddate == "" && startdate == "")
+	{
+		return 3;
+	}
+	else if (startdate == "")
+	{
+		return 2;
+	}
+	else
+	{
+		return 1;
+	}
+}

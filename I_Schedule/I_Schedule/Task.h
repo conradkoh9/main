@@ -43,6 +43,7 @@ public:
 	string ToString();
 	string ToShortString();
 
+	int GetType();
 	friend ostream& operator<<(ostream& out, Task& task);
 	friend istream& operator>>(istream& in, Task& task);
 };
