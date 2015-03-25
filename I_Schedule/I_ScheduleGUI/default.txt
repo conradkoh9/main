@@ -6,3 +6,7 @@ Description: homework
 Start: 
 End: tuesday
 Priority: 
+Description: homework
+Start: monday
+End: friday
+Priority: 
