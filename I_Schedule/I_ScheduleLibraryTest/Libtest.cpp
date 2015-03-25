@@ -8,12 +8,10 @@ namespace I_ScheduleLibraryTest{
 	TEST_CLASS(myLibTest)
 	{
 	public:
-		Logic* logic = new Logic();
-		Storage* storage = new Storage("Unit_test_IO.txt");
-		Parser* parser = new Parser();
-		Task* task = new Task();
-
 		TEST_METHOD(STORAGE_ADD){
+			string expected[2];
+			vector<Task*> tasklist;
+			//testing the partiton n>0; boundary case n = 1; where n is the number of tasks added
 			Storage* storage = new Storage("Storage_Add.txt");
 			storage->Clear();
 			Task* task = new Task();
@@ -22,32 +20,33 @@ namespace I_ScheduleLibraryTest{
 			task->SetStartDate("today");
 			task->SetPriority("1");
 			storage->Add(task);
+			tasklist = storage->GetTaskList();
+			
+			expected[0] = "Description: do homework\nStart: today\nEnd: tomorrow\nPriority: 1";
+			Assert::AreEqual(expected[0], tasklist[0]->ToString());
 
+			//testing the partition when n>1; boundary case n = 2; where n is the number of tasks added
 			Task* task2 = new Task();
 			task2->SetDescription("do homework 2");
 			task2->SetEndDate("tomorrow2");
 			task2->SetStartDate("today2");
 			task2->SetPriority("12");
 			storage->Add(task2);
+			tasklist = storage->GetTaskList();
 
-			vector<Task*> tasklist = storage->GetTaskList();
-			string expected[2];
-			expected[0] = "Description: do homework\nStart: today\nEnd: tomorrow\nPriority: 1";
 			expected[1] = "Description: do homework 2\nStart: today2\nEnd: tomorrow2\nPriority: 12";
-			Assert::AreEqual(expected[0], tasklist[0]->ToString());
 			Assert::AreEqual(expected[1], tasklist[1]->ToString());
 			tasklist.clear();
-			
 						
 		}
 		
 		TEST_METHOD(STORAGE_SEARCH){
-			Assert::AreEqual("\n", "\n");
 		}
 
-		TEST_METHOD(STORAGE_REWRITE_LOAD){
+		TEST_METHOD(STORAGE_LOAD_REWRITE){
+			//Testing the Load() and Rewrite() functions in storage
+			//testing the partition when n > 1; boundary case n = 1; where n is the number of entries to be loaded and rewritten
 			
-			//Load(), Rewrite()
 			Storage* storage = new Storage("Unit_test_IO2.txt");
 			storage->Clear();
 			Task* task = new Task();
@@ -68,7 +67,7 @@ namespace I_ScheduleLibraryTest{
 
 			delete storage;
 			storage = new Storage("Unit_test_IO2.txt");
-		
+			
 			vector<Task*>::iterator tIter;
 			vector<Task*> taskList = storage->GetTaskList();
 			if (taskList.empty()){
@@ -92,9 +91,9 @@ namespace I_ScheduleLibraryTest{
 
 
 		TEST_METHOD(Parser_IdentifyTaskFields){
-			
+			Parser* parser = new Parser();
 			//Case: fields with varied length 1
-			string input = "go to school on: monday priority 1 from: today";
+			string input = "go to school on: monday p: 1 from: today";
 			vector<string> output = parser->IdentifyTaskFields(input);
 			Assert::AreEqual(output[Smartstring::DESCRIPTION].c_str(), "go to school");
 			Assert::AreEqual(output[Smartstring::STARTDATE].c_str(), "today"); //NEED TO CHANGE FORMAT FOR FINAL TEST
@@ -113,6 +112,7 @@ namespace I_ScheduleLibraryTest{
 
 
 		TEST_METHOD(Parser_IdentifyCommand){
+			Parser* parser = new Parser();
 			//Case: ADD
 			string input = "add homework from: Monday priority: 1 end: Friday";
 			int expected = Smartstring::COMMAND::ADD;
@@ -153,6 +153,7 @@ namespace I_ScheduleLibraryTest{
 		}
 
 		TEST_METHOD(Parser_RemoveCommand){
+			Parser* parser = new Parser();
 			//Case: Test empty
 			string input = "";
 			string expected = "";
@@ -197,49 +198,49 @@ namespace I_ScheduleLibraryTest{
 
 		TEST_METHOD(LOGIC){
 			Logic* logic = new Logic();
-			string myinput = "add homework from monday on: tuesday priority 1";
+			string myinput = "add homework from: monday on: tuesday p: 1";
 			string expected = "Description: homework\nStart: monday\nEnd: tuesday\nPriority: 1";
 			string feedback;
 			feedback = logic->Run(myinput);
 
 			Assert::AreEqual(expected, feedback);
 		}
-			TEST_METHOD(LOGIC_EDIT){
-				Logic* logic = new Logic();
-				Storage* storage = new Storage("Storage_Edit.txt");
-				storage->Clear();
-				Task* task = new Task();
-				task->SetDescription("do homework");
-				task->SetEndDate("tomorrow");
-				task->SetStartDate("today");
-				task->SetPriority("1");
-				storage->Add(task);
+		TEST_METHOD(LOGIC_EDIT){
+			Logic* logic = new Logic();
+			Storage* storage = new Storage("Storage_Edit.txt");
+			storage->Clear();
+			Task* task = new Task();
+			task->SetDescription("do homework");
+			task->SetEndDate("tomorrow");
+			task->SetStartDate("today");
+			task->SetPriority("1");
+			storage->Add(task);
 
-				Task* task2 = new Task();
-				task2->SetDescription("do homework 2");
-				task2->SetEndDate("tomorrow2");
-				task2->SetStartDate("today2");
-				task2->SetPriority("2");
-				storage->Add(task2);
+			Task* task2 = new Task();
+			task2->SetDescription("do homework 2");
+			task2->SetEndDate("tomorrow2");
+			task2->SetStartDate("today2");
+			task2->SetPriority("2");
+			storage->Add(task2);
 
-				//case index error1
-				string expected = "INVALID INDEX";
-				Assert::AreEqual(expected, logic->Edit("-1 description: meet my clients"));
+			//case index error1
+			string expected = "INVALID INDEX";
+			Assert::AreEqual(expected, logic->Edit("-1 description: meet my clients"));
 
-				//case index error2
-				Assert::AreEqual(expected, logic->Edit("4 description: meet my clients"));
+			//case index error2
+			Assert::AreEqual(expected, logic->Edit("4 description: meet my clients"));
 
-				//case edit the description
-				//string feedback;
-				//feedback = "meet my clients today tomorrow2 12";
-				//Assert::AreEqual(feedback, logic->Edit("1 description: meet my clients"));
+			//case edit the description
+			//string feedback;
+			//feedback = "meet my clients today tomorrow2 12";
+			//Assert::AreEqual(feedback, logic->Edit("1 description: meet my clients"));
 
-				//case change saved to storage
-				/*string update;
-				update = "meet my clients today tomorrow2 12";
-				Assert::AreEqual(update, logic->Display("2 description: meet my clients"));
-				*/
-			}
+			//case change saved to storage
+			/*string update;
+			update = "meet my clients today tomorrow2 12";
+			Assert::AreEqual(update, logic->Display("2 description: meet my clients"));
+			*/
+		}
 
 
 
