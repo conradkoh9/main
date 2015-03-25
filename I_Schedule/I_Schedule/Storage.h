@@ -32,17 +32,13 @@ public:
 	vector<Task*> GetTaskList();
 
 	//Search Method
-	string search(vector<string>& input);
-	/*bool isContainedInDescription(string keyword, string description);
-	bool isContainedStartdate(string keyword, string startDate);
-	bool isContainedInEnddate(string keyword, string endDate);
-	bool isContainedInPriority(string keyword, string priority);*/
+	string search(vector<string> input);
+
 	bool isContained(string keyword, string desreiption);
 	bool isContainingKeyword(string keyword, vector<string>& tokenVector);
 	string convertToLower(string str);
 	void getTokens(string str, vector<string>& tokenVector, char token);
 	void searchTaskList(string str, vector<Task*>& V, Smartstring::FIELD field);
-	void initializeSearchingVector(vector<Task*>& searchingResult, int size_taskList);
 	void searchResultVector(vector<Task*>& V, string str, Smartstring::FIELD field);
 
 private:
