@@ -1,16 +1,4 @@
 Description: homework
 Start: 
-End: tuesday
-Priority: 
-Description: homework
-Start: 
-End: tuesday
-Priority: 
-Description: homework
-Start: monday
-End: friday
-Priority: 
-Description: class
-Start: today
-End: tomorrow
+End: monday
 Priority: 
