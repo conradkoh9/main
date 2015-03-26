@@ -46,6 +46,10 @@ public:
 	string ToShortString();
 
 	TASKTYPE GetType();
+	bool isFloating();
+	bool isDeadline();
+	bool isTimed();
+
 	friend ostream& operator<<(ostream& out, Task& task);
 	friend istream& operator>>(istream& in, Task& task);
 };
