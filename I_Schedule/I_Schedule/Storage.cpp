@@ -140,7 +140,6 @@ void Storage::FilterTask(){
 		}else if (taskList[i]->GetType() == Task::TASKTYPE::FLOATING){
 			floatingList.push_back(taskList[i]);
 		}else{
-			//put error?
 		}
 	}
 }
@@ -179,6 +178,18 @@ string Storage::Delete(int position){
 
 vector<Task*> Storage::GetTaskList(){
 	return taskList;
+}
+
+string Storage::GetTimedList(){
+	return ToString(timedList);
+}
+
+string Storage::GetDeadlineList(){
+	return ToString(deadlineList);
+}
+
+string Storage::GetFloatingList(){
+	return ToString(floatingList);
 }
 
 string Storage::search(vector<string> input){

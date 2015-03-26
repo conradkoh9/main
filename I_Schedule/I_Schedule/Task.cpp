@@ -96,7 +96,7 @@ Task::TASKTYPE Task::GetType(){
 	if (enddate == "" && startdate == ""){
 		return Task::TASKTYPE::TIMED;
 	}
-	else if (startdate == ""){
+	else if (startdate == "" && enddate.size()>0){
 		return Task::TASKTYPE::DEADLINE;
 	}
 	else{
@@ -108,19 +108,19 @@ bool Task::isFloating(){
 	bool floating = false;
 	if (enddate == "" && startdate == "")
 		floating = true;
-	return;
+	return floating;
 }
 
 bool Task::isDeadline(){
 	bool deadline = false;
 	if (enddate != "" && startdate == "")
 		deadline = true;
-	return;
+	return deadline;
 }
 
 bool Task::isTimed(){
 	bool timed = false;
 	if (enddate != "" && startdate != "")
 		timed = true;
-	return;
+	return timed;
 }

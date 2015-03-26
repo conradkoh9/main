@@ -34,10 +34,11 @@ Logic::~Logic()
 
 string Logic::Run(string input){
 	string feedback = Execute(input);
+	storage->FilterTask();
 	mout << feedback;
-	fout << storage->ToString(); //in future this should be replaced by floating task ToString function in Storage
-	dout << "deadline task display"; //this should be replaced by deadline tasks
-	tout << "timed task display"; // this should be replaced by timed task ToString function in Storage
+	fout << storage->GetFloatingList(); //in future this should be replaced by floating task ToString function in Storage
+	dout << storage->GetDeadlineList(); //this should be replaced by deadline tasks
+	tout << storage->GetTimedList(); // this should be replaced by timed task ToString function in Storage
 	return feedback;
 }
 

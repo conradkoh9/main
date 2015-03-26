@@ -30,6 +30,9 @@ public:
 	string Delete(int position);
 	vector<string> GetContent();
 	vector<Task*> GetTaskList();
+	string GetTimedList();
+	string GetDeadlineList();
+	string GetFloatingList();
 	void FilterTask();
 
 	//Search Method
