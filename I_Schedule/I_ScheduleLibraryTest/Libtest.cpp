@@ -41,6 +41,53 @@ namespace I_ScheduleLibraryTest{
 		}
 		
 		TEST_METHOD(STORAGE_SEARCH){
+			Storage* storage = new Storage("Storage_Search.txt");
+			
+			//Testing FilterTask function
+			storage->FilterTask();
+			string timedTask = storage->ToString(storage->timedList);
+			string deadlineTask = storage->ToString(storage->deadlineList);
+			string floatingTask = storage->ToString(storage->floatingList);
+			/*cout<< "Timed Task List:" << "\n" << timedTask << endl;
+			cout<< "Deadline Task List:" << "\n" << deadlineTask << endl;
+			cout<< "Floating Task List:" << "\n" << floatingTask << endl;*/
+			
+			string expected[5];
+			
+			string result;
+			expected[3] = "homework from monday to tuesday priority 1 ";
+			expected[4] = "cannot find";
+			
+			//Testing seach by description
+			vector<string> input;
+			input[Smartstring::FIELD::DESCRIPTION] = "homework";
+			result=storage->search(input);
+			Assert::AreEqual(expected[3], result);
+			
+			//Testing search by start date
+			input.clear();
+			input[Smartstring::FIELD::STARTDATE] = "monday";
+			result = storage->search(input);
+			Assert::AreEqual(expected[3], result);
+			
+			//Testing search by end date
+			input.clear();
+			input[Smartstring::FIELD::ENDDATE] = "friday";
+			result = storage->search(input);
+			Assert::AreEqual(expected[3], result);
+			
+			//Testing search by priority
+			input.clear();
+			input[Smartstring::FIELD::PRIORITY] = "1";
+			result = storage->search(input);
+			Assert::AreEqual(expected[3], result);
+			
+			//Testing failure case
+			input.clear();
+			input[Smartstring::FIELD::PRIORITY] = "1000";
+			result = storage->search(input);
+			Assert::AreEqual(expected[4], result);
+
 		}
 
 		TEST_METHOD(STORAGE_LOAD_REWRITE){

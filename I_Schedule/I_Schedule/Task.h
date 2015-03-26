@@ -19,6 +19,8 @@ public:
 	~Task();
 	int numberOfFields;
 
+	enum TASKTYPE{ FLOATING, DEADLINE, TIMED };
+
 	static const string FIELD_DESCRIPTION;
 	static const string FIELD_STARTDATE;
 	static const string FIELD_ENDDATE;
@@ -43,7 +45,7 @@ public:
 	string ToString();
 	string ToShortString();
 
-	int GetType();
+	TASKTYPE GetType();
 	friend ostream& operator<<(ostream& out, Task& task);
 	friend istream& operator>>(istream& in, Task& task);
 };

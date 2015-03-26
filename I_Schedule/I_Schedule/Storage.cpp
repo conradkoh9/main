@@ -129,6 +129,22 @@ string Storage::ToString(){
 	return out.str();
 }
 
+void Storage::FilterTask(){
+	int size_taskList = taskList.size();
+
+	for (int i = 0; i < size_taskList; i++){
+		if (taskList[i]->GetType() == Task::TASKTYPE::TIMED){
+			timedList.push_back(taskList[i]);
+		}else if (taskList[i]->GetType() == Task::TASKTYPE::DEADLINE){
+			deadlineList.push_back(taskList[i]);
+		}else if (taskList[i]->GetType() == Task::TASKTYPE::FLOATING){
+			floatingList.push_back(taskList[i]);
+		}else{
+			//put error?
+		}
+	}
+}
+
 string Storage::Clear(){
 	ClearFile();
 	ClearVectors();
@@ -171,7 +187,7 @@ string Storage::search(vector<string> input){
 	string resultString;
 	Smartstring::FIELD field;
 
-	if (!input[Smartstring::FIELD::DESCRIPTION].empty()){
+	if (input[Smartstring::FIELD::DESCRIPTION].size()>0){
 		field = Smartstring::FIELD::DESCRIPTION;
 		if (searchingResult.empty()){
 			searchTaskList(input[Smartstring::FIELD::DESCRIPTION], searchingResult, field);
@@ -184,7 +200,7 @@ string Storage::search(vector<string> input){
 		}
 	}
 
-		if (!input[Smartstring::FIELD::STARTDATE].empty()){
+		if (input[Smartstring::FIELD::STARTDATE].size()>0){
 			field = Smartstring::FIELD::STARTDATE;
 			if (searchingResult.empty()){
 				searchTaskList(input[Smartstring::FIELD::STARTDATE], searchingResult, field);
@@ -197,7 +213,7 @@ string Storage::search(vector<string> input){
 		}
 	
 	
-	if (!input[Smartstring::FIELD::ENDDATE].empty()){
+	if (input[Smartstring::FIELD::ENDDATE].size()>0){
 		field = Smartstring::FIELD::ENDDATE;
 		if (searchingResult.empty()){
 			searchTaskList(input[Smartstring::FIELD::ENDDATE], searchingResult, field);
@@ -209,7 +225,7 @@ string Storage::search(vector<string> input){
 		}
 	}
 
-	if (!input[Smartstring::FIELD::PRIORITY].empty()){
+	if (input[Smartstring::FIELD::PRIORITY].size()>0){
 		field = Smartstring::FIELD::PRIORITY;
 		if (searchingResult.empty()){
 			searchTaskList(input[Smartstring::FIELD::PRIORITY], searchingResult, field);

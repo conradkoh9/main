@@ -1,8 +1,16 @@
-Description: hand in homework by March 6
+Description: homework
 Start: 
-End: 
+End: tuesday
 Priority: 
-Description: have dinner
-Start: 4 till 5
-End: 
+Description: homework
+Start: 
+End: tuesday
+Priority: 
+Description: homework
+Start: monday
+End: friday
+Priority: 
+Description: class
+Start: today
+End: tomorrow
 Priority: 

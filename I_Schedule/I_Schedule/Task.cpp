@@ -92,14 +92,17 @@ ostream& operator<<(ostream& out, Task& task){
 	return out;
 }
 
-int Task::GetType(){     // 1: timed task  2:deadline task  3:floating task
-	if (enddate == "" && startdate == ""){
-		return 3;
+Task::TASKTYPE Task::GetType(){     // 1: timed task 2:deadline task 3:floating task
+	if (enddate == "" && startdate == "")
+	{
+		return Task::TASKTYPE::TIMED;
 	}
-	else if (startdate == ""){
-		return 2;
+	else if (startdate == "")
+	{
+		return Task::TASKTYPE::DEADLINE;
 	}
-	else{
-		return 1;
+	else
+	{
+		return Task::TASKTYPE::FLOATING;
 	}
 }

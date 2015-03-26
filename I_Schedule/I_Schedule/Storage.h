@@ -13,9 +13,9 @@ class Storage
 public:
 	//VARIABLES
 	vector<Task*> taskList;
-	//vector<Task*> floatingList;
-	//vector<Task*> timedList;
-	//vector<Task*> deadlineList;
+	vector<Task*> floatingList;
+	vector<Task*> timedList;
+	vector<Task*> deadlineList;
 
 	//METHODS
 	Storage();
@@ -30,6 +30,7 @@ public:
 	string Delete(int position);
 	vector<string> GetContent();
 	vector<Task*> GetTaskList();
+	void FilterTask();
 
 	//Search Method
 	string search(vector<string> input);

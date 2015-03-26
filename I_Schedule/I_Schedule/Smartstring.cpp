@@ -32,11 +32,9 @@ const string Smartstring::KEYWORD_ENDDATE_9 = "d:";
 const string Smartstring::KEYWORD_ENDDATE_10 = "before";
 const string Smartstring::KEYWORD_ENDDATE_11 = "before:";
 const string Smartstring::KEYWORD_PRIORITY_1 = "priority:";
-const string Smartstring::KEYWORD_PRIORITY_2 = "priority";
 const string Smartstring::KEYWORD_PRIORITY_3 = "p:";
 const string Smartstring::KEYWORD_STARTDATE_1 = "s:";
 const string Smartstring::KEYWORD_STARTDATE_2 = "from:";
-const string Smartstring::KEYWORD_STARTDATE_3 = "from";
 const string Smartstring::KEYWORD_STARTDATE_4 = "date:";
 const string Smartstring::KEYWORD_STARTDATE_5 = "start:";
 const string Smartstring::KEYWORD_DESCRIPTION_1 = "description:";
@@ -87,10 +85,8 @@ void Smartstring::Initialize(){
 		keywords.push_back(KEYWORD_ENDDATE_8);
 		keywords.push_back(KEYWORD_ENDDATE_9);
 		keywords.push_back(KEYWORD_PRIORITY_1);
-		keywords.push_back(KEYWORD_PRIORITY_2);
 		keywords.push_back(KEYWORD_STARTDATE_1);
 		keywords.push_back(KEYWORD_STARTDATE_2);
-		keywords.push_back(KEYWORD_STARTDATE_3);
 		keywords.push_back(KEYWORD_STARTDATE_4);
 		keywords.push_back(KEYWORD_DESCRIPTION_1);
 		numberOfCommands = commands.size();
@@ -153,10 +149,10 @@ Smartstring::COMMAND Smartstring::Command(){
 }
 
 Smartstring::FIELD Smartstring::Field(){
-	if (description == KEYWORD_STARTDATE_1 || description == KEYWORD_STARTDATE_2 || description == KEYWORD_STARTDATE_3 || description == KEYWORD_STARTDATE_4){
+	if (description == KEYWORD_STARTDATE_1 || description == KEYWORD_STARTDATE_2 || description == KEYWORD_STARTDATE_4){
 		return Smartstring::FIELD::STARTDATE;
 	}
-	if (description == KEYWORD_PRIORITY_1 || description == KEYWORD_PRIORITY_2){
+	if (description == KEYWORD_PRIORITY_1){
 		return Smartstring::FIELD::PRIORITY;
 	}
 	if (description == KEYWORD_ENDDATE_1 || description == KEYWORD_ENDDATE_2 || description == KEYWORD_ENDDATE_3 || description == KEYWORD_ENDDATE_4 || description == KEYWORD_ENDDATE_5 || description == KEYWORD_ENDDATE_6 || description == KEYWORD_ENDDATE_7 || description == KEYWORD_ENDDATE_8){
