@@ -104,6 +104,32 @@ Task::TASKTYPE Task::GetType(){
 	}
 }
 
+bool Task::Contains(string input){
+	bool found = false;
+	int pos;
+	vector<string> taskVect;
+	//initialization 
+	for (int fields = 0; fields < numberOfFields; fields++){
+		taskVect.push_back("");
+	}
+	taskVect[Smartstring::FIELD::DESCRIPTION] = description;
+	taskVect[Smartstring::FIELD::STARTDATE] = startdate;
+	taskVect[Smartstring::FIELD::ENDDATE] = enddate;
+	taskVect[Smartstring::FIELD::PRIORITY] = priority;
+
+	//end initialization
+	for (int i = 0; i < numberOfFields; ++i){
+		if (!found){
+			pos = taskVect[i].find(input);
+			if (pos != string::npos){
+				found = true;
+			}
+		}
+	}
+	return found;
+}
+
+
 bool Task::isFloating(){
 	bool floating = false;
 	if (enddate == "" && startdate == "")

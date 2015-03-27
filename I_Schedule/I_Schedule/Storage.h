@@ -16,6 +16,7 @@ public:
 	vector<Task*> floatingList;
 	vector<Task*> timedList;
 	vector<Task*> deadlineList;
+	vector<Task*> currentScope;
 
 	//METHODS
 	Storage();
@@ -35,15 +36,10 @@ public:
 	string GetFloatingList();
 	void FilterTask();
 
-	//Search Method
-	string search(vector<string> input);
+	//Power Search Method
+	string search(string input);
+	vector<Task*> Storage::PowerSearch(string input);
 
-	bool isContained(string keyword, string desreiption);
-	bool isContainingKeyword(string keyword, vector<string>& tokenVector);
-	string convertToLower(string str);
-	void getTokens(string str, vector<string>& tokenVector, char token);
-	void searchTaskList(string str, vector<Task*>& V, Smartstring::FIELD field);
-	void searchResultVector(vector<Task*>& V, string str, Smartstring::FIELD field);
 
 private:
 	//VARIABLES

@@ -46,6 +46,7 @@ public:
 	string ToShortString();
 
 	TASKTYPE GetType();
+	bool Contains(string input);
 	bool isFloating();
 	bool isDeadline();
 	bool isTimed();

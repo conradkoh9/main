@@ -13,7 +13,6 @@ Storage::Storage(string filename){
 	Load();
 }
 
-
 Storage::~Storage(){
 }
 string Storage::Add(Task* task){
@@ -160,6 +159,9 @@ vector<string> Storage::GetContent(){
 
 string Storage::ClearVectors(){
 	taskList.clear();
+	timedList.clear();
+	floatingList.clear();
+	deadlineList.clear();
 	_filecontent.clear();
 	return _FEEDBACK_CLEAR_SUCCESS;
 }
@@ -192,196 +194,30 @@ string Storage::GetFloatingList(){
 	return ToString(floatingList);
 }
 
-string Storage::search(vector<string> input){
-	int size_taskList = taskList.size();
-	vector<Task*> searchingResult;
-	string resultString;
-	Smartstring::FIELD field;
-
-	if (input[Smartstring::FIELD::DESCRIPTION].size()>0){
-		field = Smartstring::FIELD::DESCRIPTION;
-		if (searchingResult.empty()){
-			searchTaskList(input[Smartstring::FIELD::DESCRIPTION], searchingResult, field);
-		}
-		else{
-			searchResultVector(searchingResult, input[Smartstring::FIELD::DESCRIPTION], field);
-		}
-		if (searchingResult.empty()){
-			return _FEEDBACK_SEARCH_FAILURE;
-		}
+string Storage::search(string input){
+	vector<Task*> result = PowerSearch(input);
+	if (result.empty()){
+		return _FEEDBACK_SEARCH_FAILURE;
 	}
-
-		if (input[Smartstring::FIELD::STARTDATE].size()>0){
-			field = Smartstring::FIELD::STARTDATE;
-			if (searchingResult.empty()){
-				searchTaskList(input[Smartstring::FIELD::STARTDATE], searchingResult, field);
-			}else{
-				searchResultVector(searchingResult, input[Smartstring::FIELD::STARTDATE], field);
-			}
-			if (searchingResult.empty()){
-				return _FEEDBACK_SEARCH_FAILURE;
-			}
-		}
-	
-	
-	if (input[Smartstring::FIELD::ENDDATE].size()>0){
-		field = Smartstring::FIELD::ENDDATE;
-		if (searchingResult.empty()){
-			searchTaskList(input[Smartstring::FIELD::ENDDATE], searchingResult, field);
-		}else{
-			searchResultVector(searchingResult, input[Smartstring::FIELD::ENDDATE], field);
-		}
-		if (searchingResult.empty()){
-			return _FEEDBACK_SEARCH_FAILURE;
-		}
-	}
-
-	if (input[Smartstring::FIELD::PRIORITY].size()>0){
-		field = Smartstring::FIELD::PRIORITY;
-		if (searchingResult.empty()){
-			searchTaskList(input[Smartstring::FIELD::PRIORITY], searchingResult, field);
-		}else{
-			searchResultVector(searchingResult, input[Smartstring::FIELD::PRIORITY], field);
-		}
-		if (searchingResult.empty()){
-			return _FEEDBACK_SEARCH_FAILURE;
-		}
-	}
-
-	//To display result 
-	resultString = ToString(searchingResult);
-
-	return resultString;
-}
-
-
-void Storage::searchTaskList(string keyword, vector<Task*>& searchingResult, Smartstring::FIELD field){
-	int size_taskList = taskList.size();
-	for (int i = 0; i < size_taskList; i++)
+	else
 	{
-		if (field == Smartstring::FIELD::DESCRIPTION){
-			string description = taskList[i]->GetDescription();
-			if (isContained(keyword, description)){
-				searchingResult.push_back(taskList[i]);
-			}
-
-		}
-		else if (field == Smartstring::FIELD::STARTDATE){
-			string startDate = taskList[i]->GetStartDate();
-			//keyword = Smartstring::convertTimeFormat(keyword);
-			if (keyword==startDate){
-				searchingResult.push_back(taskList[i]);
-			}
-
-		}
-		else if (field == Smartstring::FIELD::ENDDATE){
-			string endDate = taskList[i]->GetEndDate();
-			//keyword = Smartstring::convertTimeFormat(keyword);
-			if (keyword == endDate){
-				searchingResult.push_back(taskList[i]);
-			}
-
-		}
-		else{
-			//keyword = Smartstring::convertTimeFormat(keyword);
-			string priority = taskList[i]->GetPriority();
-			if (keyword == priority){
-				searchingResult.push_back(taskList[i]);
-			}
-		}
+		return ToString(result);
 	}
 }
 
-void Storage::searchResultVector(vector<Task*>& searchingResult, string keyword, Smartstring::FIELD field){
-	int size_resultVector = searchingResult.size();
-
-	for (int i = 0; i < size_resultVector; i++)
-	{
-		if (field == Smartstring::FIELD::DESCRIPTION){
-			string description = searchingResult[i]->GetDescription();
-			if (!isContained(keyword, description)){
-				searchingResult.erase(searchingResult.begin() + i);
-			}
-
-		}
-		else if (field == Smartstring::FIELD::STARTDATE){
-			string startDate = searchingResult[i]->GetStartDate();
-			//keyword = Smartstring::convertTimeFormat(keyword);
-			if (keyword!=startDate){
-				searchingResult.erase(searchingResult.begin() + i);
-			}
-
-		}
-		else if (field == Smartstring::FIELD::ENDDATE){
-			string endDate = searchingResult[i]->GetEndDate();
-			//keyword = Smartstring::convertTimeFormat(keyword);
-			if (keyword!=endDate){
-				searchingResult.erase(searchingResult.begin() + i);
-			}
-
-		}
-		else{
-			string priority = searchingResult[i]->GetPriority();
-			//keyword = Smartstring::convertTimeFormat(keyword);
-			if (keyword!=priority){
-				searchingResult.erase(searchingResult.begin() + i);
-			}
+vector<Task*> Storage::PowerSearch(string input){
+	vector<Task*>::iterator iter;
+	vector<Task*> searchResult;
+	for (iter = taskList.begin(); iter != taskList.end(); ++iter){
+		Task* currentTask = *iter;
+		if (currentTask->Contains(input)){
+			searchResult.push_back(currentTask);
 		}
 	}
+	currentScope = searchResult;
+	return searchResult;
 }
 
-
-
-bool Storage::isContained(string keyword, string description){
-	//do we need convert to lower?
-	int sizeOfDescription = description.size();
-	char token = ' ';
-	string newKeyword = convertToLower(keyword);
-	string newDescription = convertToLower(description);
-	for (int i = 0; i < sizeOfDescription; i++){
-		vector<string> tokenVector;
-		getTokens(newDescription, tokenVector, token);
-		if (isContainingKeyword(keyword, tokenVector)){
-			return true;
-		}
-	}
-	return false;
-}
-
-string Storage::convertToLower(string str){
-	int legthOfString = str.length();
-	for (int i = 0; i < legthOfString; i++)
-	{
-		//If the character is not a space
-		if (str[i] != ' '){
-			//Reset the value of the array position to the new lower case letter
-			str[i] = tolower(str[i]);
-		}
-	}
-	return str;
-}
-
-void Storage::getTokens(string str, vector<string>& tokenVector, char token){
-	int lastPosition = str.find_first_not_of(token, 0);
-	int position = str.find_first_of(token, lastPosition);
-	while (position != string::npos || lastPosition != string::npos){
-		tokenVector.push_back(str.substr(lastPosition, position - lastPosition));
-		lastPosition = str.find_first_not_of(token, position);
-		position = str.find_first_of(token, lastPosition);
-	};
-	return;
-}
-
-bool Storage::isContainingKeyword(string keyword, vector<string>& tokenVector){
-	int sizeOfTokenVector = tokenVector.size();
-
-	for (int i = 0; i < sizeOfTokenVector; i++){
-		if (keyword == tokenVector[i]){
-			return true;
-		}
-	}
-	return false;
-}
 
 string Storage::ToString(vector<Task*> V){
 	ostringstream out;

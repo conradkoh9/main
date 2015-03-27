@@ -36,9 +36,9 @@ string Logic::Run(string input){
 	string feedback = Execute(input);
 	storage->FilterTask();
 	mout << feedback;
-	fout << storage->GetFloatingList(); //in future this should be replaced by floating task ToString function in Storage
-	dout << storage->GetDeadlineList(); //this should be replaced by deadline tasks
-	tout << storage->GetTimedList(); // this should be replaced by timed task ToString function in Storage
+	fout << storage->GetFloatingList(); 
+	dout << storage->GetDeadlineList(); 
+	tout << storage->GetTimedList(); 
 	return feedback;
 }
 
@@ -148,9 +148,9 @@ string Logic::Edit(string taskInput){
 }
 
 string Logic::Search(string taskInput){
-	vector<string> field_keyword = parser->IdentifyTaskFields(taskInput);
-
-	return storage->search(field_keyword);
+	//vector<string> field_keyword = parser->IdentifyTaskFields(taskInput);
+		//return storage->search(field_keyword);
+		return storage->search(taskInput);
 }
 
 string Logic::Clear(){
