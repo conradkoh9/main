@@ -6,7 +6,10 @@
 #include <string>
 #include "Task.h"
 #include "Smartstring.h"
+#include "Logger.h";
+
 using namespace std;
+using namespace logging;
 
 class Storage
 {

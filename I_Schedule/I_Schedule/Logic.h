@@ -3,8 +3,10 @@
 #include "Parser.h"
 #include "Storage.h"
 #include "Smartstring.h"
+#include "Logger.h";
 
 using namespace std;
+using namespace logging;
 
 class Logic
 {

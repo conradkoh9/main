@@ -17,6 +17,7 @@ Logic::Logic()
 	dout << "test deadline task display";
 	fout << "test floating task display";
 	mout << "test main display";
+	logfile << "Logic created";
 }
 
 Logic::Logic(string input){
@@ -26,6 +27,7 @@ Logic::Logic(string input){
 	dout << "test deadline task display";
 	fout << "test floating task display";
 	mout << "test main display";
+	logfile << "Logic created";
 }
 
 Logic::~Logic()

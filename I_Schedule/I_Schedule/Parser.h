@@ -4,7 +4,10 @@
 #include <sstream>
 #include "Smartstring.h"
 #include "Task.h"
+#include "Logger.h";
+
 using namespace std;
+using namespace logging;
 class Parser
 {
 public:

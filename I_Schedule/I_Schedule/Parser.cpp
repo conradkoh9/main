@@ -3,6 +3,7 @@
 
 Parser::Parser()
 {
+	logfile << "Parser created";
 }
 
 

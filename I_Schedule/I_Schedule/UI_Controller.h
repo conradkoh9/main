@@ -3,6 +3,9 @@
 #include "Logic.h";
 #include "sstream";
 #include "DateTime.h";
+#include "Logger.h";
+
+using namespace logging;
 class UI_Controller
 {
 public:

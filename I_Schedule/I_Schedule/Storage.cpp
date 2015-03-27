@@ -1,16 +1,16 @@
 #include "Storage.h"
-#include "Smartstring.h"
-#include "Parser.h"
 
 //PUBLIC
 Storage::Storage(){
 	_filename = "default.txt";
 	Load();
+	logfile << "Storage created";
 }
 
 Storage::Storage(string filename){
 	_filename = filename;
 	Load();
+	logfile << "Storage created with filename: " + filename;
 }
 
 Storage::~Storage(){

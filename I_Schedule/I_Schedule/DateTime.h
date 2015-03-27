@@ -9,6 +9,7 @@ public:
 	DateTime(string input);
 	~DateTime();
 	string Now();
+	string Today();
 
 private:
 	int _day;

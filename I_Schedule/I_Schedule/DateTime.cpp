@@ -18,7 +18,16 @@ string DateTime::Now(){
 	struct tm timeinfo; //this struct is defined by the system
 	localtime_s(&timeinfo, &now); //converts the raw time into a struct
 	char output[80];
-	strftime(output, 80, "Time: %I:%M%p \nDate: %d/%m/%Y", &timeinfo); //to refer to more ways to access time format, refer to http://cplusplus.com/reference/ctime/strftime/
+	strftime(output, 80, "%I:%M%p", &timeinfo); //to refer to more ways to access time format, refer to http://cplusplus.com/reference/ctime/strftime/
 	//under strftime, yellow boxes indicate certain formats that are not supported on visual studio
+	return output;
+}
+
+string DateTime::Today(){
+	time_t now = time(0);
+	struct tm timeinfo;
+	localtime_s(&timeinfo, &now);
+	char output[80];
+	strftime(output, 80, "%d/%m/%Y", &timeinfo);
 	return output;
 }

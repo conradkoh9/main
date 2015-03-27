@@ -6,6 +6,7 @@ UI_Controller::UI_Controller()
 	logic = new Logic();
 	UpdateDisplays();
 	ClearStreams();
+	logfile << "UI Created";
 }
 
 
