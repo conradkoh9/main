@@ -158,3 +158,7 @@ Description: homework
 Start: monday
 End: tuesday
 Priority: 1
+Description: homework from monday
+Start: 
+End: tuesday priority 1
+Priority: 

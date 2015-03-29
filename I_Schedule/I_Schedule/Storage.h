@@ -41,7 +41,9 @@ public:
 
 	//Power Search Method
 	string search(string input);
-	vector<Task*> Storage::PowerSearch(string input);
+	vector<Task*> PowerSearch(string input);
+	vector<Task*> NearSearch(string input);
+	//vector<string> GetEmptySlots(string input);
 
 
 private:

@@ -150,8 +150,6 @@ string Logic::Edit(string taskInput){
 }
 
 string Logic::Search(string taskInput){
-	//vector<string> field_keyword = parser->IdentifyTaskFields(taskInput);
-		//return storage->search(field_keyword);
 		return storage->search(taskInput);
 }
 

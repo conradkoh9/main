@@ -195,13 +195,17 @@ string Storage::GetFloatingList(){
 }
 
 string Storage::search(string input){
-	vector<Task*> result = PowerSearch(input);
-	if (result.empty()){
+	vector<Task*> PowerSearch_Result = PowerSearch(input);
+	vector<Task*> NearSearch_Result = NearSearch(input);
+	if (PowerSearch_Result.empty() && NearSearch_Result.empty()){
 		return _FEEDBACK_SEARCH_FAILURE;
+	}
+	else if (PowerSearch_Result.empty() && !NearSearch_Result.empty()){
+		return ToString(NearSearch_Result);
 	}
 	else
 	{
-		return ToString(result);
+		return ToString(PowerSearch_Result);
 	}
 }
 
@@ -218,6 +222,27 @@ vector<Task*> Storage::PowerSearch(string input){
 	return searchResult;
 }
 
+vector<Task*> Storage::NearSearch(string input){
+	vector<Task*>::iterator iter;
+	vector<Task*> searchResult;
+	for (iter = taskList.begin(); iter != taskList.end(); ++iter){
+		Task* currentTask = *iter;
+		if (currentTask->NearMatch(input)){
+			searchResult.push_back(currentTask);
+		}
+	}
+	return searchResult;
+}
+
+/*vector<string> Storage::GetEmptySlots(string input){
+	vector<string> wholeDay;
+	string startTime;
+	string endTime; //use DateTime class to convert input
+	for (int i = 0; i < 24; i++){
+		wholeDay.push_back(""); //Use DateTime class to initialize 
+	}
+
+}*/
 
 string Storage::ToString(vector<Task*> V){
 	ostringstream out;

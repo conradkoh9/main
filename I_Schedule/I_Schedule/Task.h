@@ -3,6 +3,8 @@
 #include <vector>
 #include "Smartstring.h"
 #include <iomanip>
+#include <cstring>
+#include <climits>
 using namespace std;
 
 class Task
@@ -47,6 +49,10 @@ public:
 
 	TASKTYPE GetType();
 	bool Contains(string input);
+	bool NearMatch(string input);
+	size_t LevenshteinDistance(const std::string &s1, const std::string &s2);
+	//template<class T> unsigned int levenshtein_distance(const T &s1, const T & s2);
+
 	bool isFloating();
 	bool isDeadline();
 	bool isTimed();

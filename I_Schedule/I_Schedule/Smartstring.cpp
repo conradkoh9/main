@@ -45,6 +45,7 @@ const string Smartstring::FEEDBACK_EDIT_SUCCESSFULLY="edit the entry successfull
 const string Smartstring::FEEDBACK_EDIT_FAIL="fail to edit the entry";
 const string Smartstring::FEEDBACK_SEARCH_FAIL="cannot find";
 
+
 bool Smartstring::classInitialized = false;
 int Smartstring::numberOfCommands;
 int Smartstring::numberOfKeywords;
