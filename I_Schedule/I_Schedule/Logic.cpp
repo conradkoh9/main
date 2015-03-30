@@ -54,15 +54,15 @@ string Logic::Run(string input){
 
 string Logic::Execute(string input){
 	Smartstring::COMMAND cmd = parser->IdentifyCommand(input);
-	string taskInput = parser->RemoveCommand(input);
+	string remainder = parser->RemoveCommand(input);
 	string feedback;
 	switch (cmd){
 		case (Smartstring::COMMAND::ADD) : {
-			feedback = Add(taskInput);
+			feedback = Add(remainder);
 			break;
 		}
 		case (Smartstring::COMMAND::DELETE) : {
-			feedback = Delete(taskInput);
+			feedback = Delete(remainder);
 			break;
 		}
 		case (Smartstring::COMMAND::DISPLAY) : {
@@ -70,11 +70,11 @@ string Logic::Execute(string input){
 			break;
 		}
 		case(Smartstring::COMMAND::EDIT) : {
-			feedback = Edit(taskInput);
+			feedback = Edit(remainder);
 			break;
 		}
 		case (Smartstring::COMMAND::SEARCH) : {
-			feedback = Search(taskInput);
+			feedback = Search(remainder);
 			break;
 		}
 		case (Smartstring::COMMAND::CLEAR) : {
@@ -82,8 +82,8 @@ string Logic::Execute(string input){
 			break;
 		}
 
-		case (Smartstring::COMMAND::EXIT) : {
-			exit = true;
+		case (Smartstring::COMMAND::SAVE) : {
+			feedback = Save(remainder);
 			break;
 		}
 		case(Smartstring::COMMAND::INVALID_CMD) : {
@@ -166,6 +166,10 @@ string Logic::Search(string taskInput){
 	return _FEEDBACK_SEARCH;
 }
 
+string Logic::Save(string input){
+	string feedback = storage->Save(input);
+	return feedback;
+}
 string Logic::Invalid(){
 	mout << storage->ToString();
 	return _FEEDBACK_INVALID_COMMAND;

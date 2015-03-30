@@ -27,6 +27,7 @@ public:
 	~Storage();
 	string Add(Task* task);
 	string Load();
+	string Save(string newFileName);
 	string Rewrite();
 	string ToString();
 	string ToString(vector<Task*> V);
@@ -45,7 +46,7 @@ public:
 	vector<Task*> NearSearch(string input);
 	//vector<string> GetEmptySlots(string input);
 
-
+	bool FileEmpty(string filename);
 private:
 	//VARIABLES
 	string _filename;
@@ -63,6 +64,8 @@ private:
 	const string _FEEDBACK_DELETE_FAILURE = "DELETE FAILED";
 	const string _FEEDBACK_SEARCH_FAILURE = "SEARCH FAILED";
 	const string _FEEDBACK_FILE_EMPTY = "FILE EMPTY";
+	const string _FEEDBACK_FILE_NOT_EMPTY = "FILE NOT EMPTY";
+	const string _FEEDBACK_INVALID_FILE_FORMAT = "Invalid file format entered";
 	const string _EMPTY_STRING = "";
 	const string _FILE_EXTENSION_CSV = ".csv";
 	const string _FILE_EXTENSION_TXT = ".txt";

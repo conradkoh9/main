@@ -10,7 +10,7 @@ private:
 	
 public:
 	string description;
-	enum COMMAND { ADD, CLEAR, DELETE, DISPLAY, EDIT, EXIT, SEARCH, INVALID_CMD };
+	enum COMMAND { ADD, CLEAR, DELETE, DISPLAY, EDIT, SAVE, SEARCH, INVALID_CMD };
 	enum FIELD { DESCRIPTION, STARTDATE, ENDDATE, PRIORITY, INVALID_FLD };
 
 	static bool classInitialized;
@@ -24,7 +24,7 @@ public:
 	static const string COMMAND_DELETE;
 	static const string COMMAND_DISPLAY;
 	static const string COMMAND_EDIT;
-	static const string COMMAND_EXIT;
+	static const string COMMAND_SAVE;
 	static const string COMMAND_SEARCH;
 	static const int NUMBER_OF_FIELDS;
 

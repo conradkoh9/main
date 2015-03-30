@@ -90,6 +90,15 @@ namespace I_ScheduleLibraryTest{
 
 		}
 
+		TEST_METHOD(STORAGE_EMPTY_FILE){
+			Storage* storage = new Storage("STORAGE_EMPTY_FILE_TEST.txt");
+			ofstream of;
+			of.open("STORAGE_EMPTY_FILE_TEST.txt");
+			of << "heawdkowdk";
+			storage->Clear();
+			Assert::IsTrue(storage->FileEmpty("STORAGE_EMPTY_FILE_TEST.txt"));
+		}
+
 		TEST_METHOD(STORAGE_TXT_LOAD_REWRITE){
 			//Testing the Load() and Rewrite() functions in storage
 			//testing the partition when n > 1; boundary case n = 1; where n is the number of entries to be loaded and rewritten

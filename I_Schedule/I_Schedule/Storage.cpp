@@ -35,6 +35,18 @@ string Storage::Load(){
 	return _FEEDBACK_LOAD_SUCCESS;
 }
 
+string Storage::Save(string newFileName){
+	if (FileEmpty(newFileName)){
+		_filename = newFileName;
+		string feedback = Rewrite();
+		return feedback;
+	}
+	else{
+		return _FEEDBACK_FILE_NOT_EMPTY;
+	}
+	
+}
+
 string Storage::LoadRawFileContent(){
 	string line;
 	vector<string> all_lines;
@@ -159,6 +171,20 @@ string Storage::LoadTXTContent(){
 	return _FEEDBACK_LOAD_SUCCESS;
 }
 
+bool Storage::FileEmpty(string filename){
+	ifstream ifs;
+	ifs.open(filename);
+	string test;
+	ifs >> test;
+	if (test.empty()){
+		ifs.close();
+		return true;
+	}
+	else{
+		ifs.close();
+		return false;
+	}
+}
 string Storage::Rewrite(){
 	ClearFile();
 	string feedback = WriteVectors();
@@ -347,7 +373,7 @@ string Storage::WriteVectors(){
 		break;
 	}
 	case(FILETYPE::INVALID) : {
-		return _FEEDBACK_WRITE_FAILURE;
+		return _FEEDBACK_INVALID_FILE_FORMAT;
 		break;
 	}
 	}
