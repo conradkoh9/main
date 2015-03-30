@@ -64,15 +64,27 @@ private:
 	const string _FEEDBACK_SEARCH_FAILURE = "SEARCH FAILED";
 	const string _FEEDBACK_FILE_EMPTY = "FILE EMPTY";
 	const string _EMPTY_STRING = "";
+	const string _FILE_EXTENSION_CSV = ".csv";
+	const string _FILE_EXTENSION_TXT = ".txt";
+	const string _DELIMITERS_CSV = ",\"";
+	enum FILETYPE {CSV, TXT, INVALID};
 
 	//METHODS
 
 	string ClearFile();
 	string ClearVectors();
-	string LoadFileContent();
-	string LoadTaskList();
+	string LoadRawFileContent();
 	string Remove(int position);
+	FILETYPE IdentifyFileType();
+	//write methods
 	string WriteVectors();
+	string WriteToCSV();
+	string WriteToTXT();
+
+	//load methods
+	string LoadTaskList();
+	string LoadCSVContent(); //loads _filecontent vector into taskList vector assuming CSV format
+	string LoadTXTContent(); //loads _filecontent vector into taskList vector assuming TXT format
 
 };
 

@@ -26,7 +26,7 @@ string Storage::Add(Task* task){
 string Storage::Load(){
 	try{
 		ClearVectors();
-		LoadFileContent();
+		LoadRawFileContent();
 		LoadTaskList();
 	}
 	catch (out_of_range){
@@ -35,7 +35,7 @@ string Storage::Load(){
 	return _FEEDBACK_LOAD_SUCCESS;
 }
 
-string Storage::LoadFileContent(){
+string Storage::LoadRawFileContent(){
 	string line;
 	vector<string> all_lines;
 	ifstream in(_filename.c_str());
@@ -45,16 +45,8 @@ string Storage::LoadFileContent(){
 				if (line == _EMPTY_STRING){
 					return _FEEDBACK_FILE_EMPTY;
 				}
-				//remove field description
-				istringstream is(line);
-				string buffer;
-				is >> buffer;
-				string output;
-				getline(is, output);
-				int length = line.length() - 1;
-				output = output.substr(1, length);
-				//end remove field description
-				all_lines.push_back(output);
+				
+				all_lines.push_back(line);
 			}
 			_filecontent = all_lines;
 			return _FEEDBACK_LOAD_SUCCESS;
@@ -67,6 +59,28 @@ string Storage::LoadFileContent(){
 }
 
 string Storage::LoadTaskList(){
+	FILETYPE filetype = IdentifyFileType();
+	string feedback;
+	switch (filetype){
+	case (FILETYPE::CSV) : {
+		feedback = LoadCSVContent();
+		break;
+	}
+	case(FILETYPE::TXT) : {
+		feedback = LoadTXTContent();
+		break;
+	}
+	case(FILETYPE::INVALID) : {
+		return _FEEDBACK_LOAD_FAILURE;
+		break;
+	}
+	}
+	return feedback;
+
+	//=======
+	
+}
+string Storage::LoadCSVContent(){
 	Smartstring str;
 	const int startfield = Smartstring::FIELD::DESCRIPTION;
 	int currentfield = startfield;
@@ -75,6 +89,43 @@ string Storage::LoadTaskList(){
 	Task* taskptr = new Task();
 	try{
 		for (iter = _filecontent.begin(); iter != _filecontent.end(); ++iter){
+			str = (*iter);
+			vector<string> output = str.Tokenize(_DELIMITERS_CSV);
+			taskptr = new Task(output);
+			taskList.push_back(taskptr);
+		}
+	}
+
+	catch (out_of_range){
+		return _FEEDBACK_LOAD_FAILURE;
+	}
+	return _FEEDBACK_LOAD_SUCCESS;
+	return _FEEDBACK_LOAD_FAILURE;
+}
+string Storage::LoadTXTContent(){
+	Smartstring str;
+	const int startfield = Smartstring::FIELD::DESCRIPTION;
+	int currentfield = startfield;
+	int fieldcount = Smartstring::NUMBER_OF_FIELDS;
+	vector<string>::iterator iter;
+	Task* taskptr = new Task();
+	//remove field description from _filecontent
+	vector<string> taskContent;
+	for (iter = _filecontent.begin(); iter != _filecontent.end(); ++iter){
+		string line = (*iter);
+		istringstream is(line);
+		string buffer;
+		is >> buffer;
+		string output;
+		getline(is, output);
+		int length = line.length() - 1;
+		output = output.substr(1, length);
+		taskContent.push_back(output);
+	}
+	
+	//end remove field description from _filecontent
+	try{
+		for (iter = taskContent.begin(); iter != taskContent.end(); ++iter){
 			if (currentfield == Smartstring::FIELD::DESCRIPTION){
 				taskptr = new Task();
 				taskList.push_back(taskptr);
@@ -283,15 +334,40 @@ string Storage::Remove(int position){
 	}
 	return _FEEDBACK_DELETE_SUCCESS;
 }
-
 string Storage::WriteVectors(){
+	FILETYPE filetype = IdentifyFileType();
+	string feedback;
+	switch (filetype){
+	case (FILETYPE::CSV) : {
+		feedback = WriteToCSV();
+		break;
+	}
+	case(FILETYPE::TXT) : {
+		feedback = WriteToTXT();
+		break;
+	}
+	case(FILETYPE::INVALID) : {
+		return _FEEDBACK_WRITE_FAILURE;
+		break;
+	}
+	}
+	return feedback;
+
+}
+
+string Storage::WriteToCSV(){
 	ostringstream out;
 	ofstream of;
 	of.open(_filename.c_str(), ios::app);
 	vector<Task*>::iterator iter;
 	try{
 		for (iter = taskList.begin(); iter != taskList.end(); ++iter){
-			out << (*iter)->ToString() << endl;
+			if (iter + 1 != taskList.end()){
+				out << (*iter)->ToCSVString() << endl;
+			}
+			else{
+				out << (*iter)->ToCSVString();
+			}
 		}
 		of << out.str();
 	}
@@ -301,4 +377,42 @@ string Storage::WriteVectors(){
 	}
 
 	return _FEEDBACK_WRITE_SUCCESS;
+}
+
+string Storage::WriteToTXT(){
+	ostringstream out;
+	ofstream of;
+	of.open(_filename.c_str(), ios::app);
+	vector<Task*>::iterator iter;
+	try{
+		for (iter = taskList.begin(); iter != taskList.end(); ++iter){
+			if (iter + 1 != taskList.end()){
+				out << (*iter)->ToString() << endl;
+			}
+			else{
+				out << (*iter)->ToString();
+			}
+		}
+		of << out.str();
+	}
+	catch (out_of_range){
+		throw out_of_range(_FEEDBACK_WRITE_FAILURE);
+		return _FEEDBACK_WRITE_FAILURE;
+	}
+
+	return _FEEDBACK_WRITE_SUCCESS;
+}
+
+Storage::FILETYPE Storage::IdentifyFileType(){
+	if (_filename.find(_FILE_EXTENSION_CSV) != string::npos){
+		return FILETYPE::CSV;
+	}
+	else{
+		if (_filename.find(_FILE_EXTENSION_TXT) != string::npos){
+			return FILETYPE::TXT;
+		}
+		else{
+			return FILETYPE::INVALID;
+		}
+	}
 }

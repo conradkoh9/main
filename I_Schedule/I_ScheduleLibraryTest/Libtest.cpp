@@ -8,7 +8,7 @@ namespace I_ScheduleLibraryTest{
 	TEST_CLASS(myLibTest)
 	{
 	public:
-		TEST_METHOD(STORAGE_ADD){
+		TEST_METHOD(STORAGE_TXT_ADD){
 			string expected[2];
 			vector<Task*> tasklist;
 			//testing the partiton n>0; boundary case n = 1; where n is the number of tasks added
@@ -21,7 +21,7 @@ namespace I_ScheduleLibraryTest{
 			task->SetPriority("1");
 			storage->Add(task);
 			tasklist = storage->GetTaskList();
-			
+
 			expected[0] = "Description: do homework\nStart: today\nEnd: tomorrow\nPriority: 1";
 			Assert::AreEqual(expected[0], tasklist[0]->ToString());
 
@@ -37,9 +37,9 @@ namespace I_ScheduleLibraryTest{
 			expected[1] = "Description: do homework 2\nStart: today2\nEnd: tomorrow2\nPriority: 12";
 			Assert::AreEqual(expected[1], tasklist[1]->ToString());
 			tasklist.clear();
-						
+
 		}
-		
+
 		TEST_METHOD(STORAGE_SEARCH){
 			//Storage* storage = new Storage("Storage_Search.txt");
 			//
@@ -90,10 +90,10 @@ namespace I_ScheduleLibraryTest{
 
 		}
 
-		TEST_METHOD(STORAGE_LOAD_REWRITE){
+		TEST_METHOD(STORAGE_TXT_LOAD_REWRITE){
 			//Testing the Load() and Rewrite() functions in storage
 			//testing the partition when n > 1; boundary case n = 1; where n is the number of entries to be loaded and rewritten
-			
+
 			Storage* storage = new Storage("Unit_test_IO2.txt");
 			storage->Clear();
 			Task* task = new Task();
@@ -114,7 +114,7 @@ namespace I_ScheduleLibraryTest{
 
 			delete storage;
 			storage = new Storage("Unit_test_IO2.txt");
-			
+
 			vector<Task*>::iterator tIter;
 			vector<Task*> taskList = storage->GetTaskList();
 			if (taskList.empty()){
@@ -131,11 +131,57 @@ namespace I_ScheduleLibraryTest{
 				string actual = taskptr->ToString();
 				Assert::AreEqual(expected[i], actual);
 				i++;
-				
+
 			}
 
 		}
 
+		TEST_METHOD(STORAGE_CSV_ADD_LOAD_REWRITE){
+
+			//Testing the Load() and Rewrite() functions in storage
+			//testing the partition when n > 1; boundary case n = 1; where n is the number of entries to be loaded and rewritten
+			Storage* storage = new Storage("UNIT_TEST_CSV_ADD_LOAD_REWRITE.csv");
+			storage->Clear();
+			Task* task = new Task();
+			task->SetDescription("do homework");
+			task->SetEndDate("tomorrow");
+			task->SetStartDate("today");
+			task->SetPriority("1");
+			storage->Add(task);
+
+			task = new Task();
+			task->SetDescription("do homework 2");
+			task->SetEndDate("tomorrow2");
+			task->SetStartDate("today2");
+			task->SetPriority("12");
+			storage->Add(task);
+
+			storage->Rewrite();
+
+			delete storage;
+			storage = new Storage("UNIT_TEST_CSV_ADD_LOAD_REWRITE.csv");
+
+			vector<Task*>::iterator tIter;
+			vector<Task*> taskList = storage->GetTaskList();
+			if (taskList.empty()){
+				Assert::AreEqual(1, 0);
+			}
+			string expected[2];
+			expected[0] = "Description: do homework\nStart: today\nEnd: tomorrow\nPriority: 1";
+			expected[1] = "Description: do homework 2\nStart: today2\nEnd: tomorrow2\nPriority: 12";
+			int i = 0;
+
+			for (tIter = (storage->taskList).begin(); tIter != storage->taskList.end(); ++tIter){
+				Task* taskptr;
+				taskptr = *tIter;
+				string actual = taskptr->ToString();
+				Assert::AreEqual(expected[i], actual);
+				i++;
+
+			}
+
+			
+		}
 
 		TEST_METHOD(Parser_IdentifyTaskFields){
 			Parser* parser = new Parser();
@@ -146,7 +192,7 @@ namespace I_ScheduleLibraryTest{
 			Assert::AreEqual(output[Smartstring::STARTDATE].c_str(), "today"); //NEED TO CHANGE FORMAT FOR FINAL TEST
 			Assert::AreEqual(output[Smartstring::PRIORITY].c_str(), "1");
 			Assert::AreEqual(output[Smartstring::ENDDATE].c_str(), "monday"); //NEED TO CHANGE FORMAT FOR FINAL TEST
-			
+
 			//Case: fields with length 1
 			input = "homework from: Monday priority: 1 end: Friday";
 			output.clear();
@@ -217,7 +263,7 @@ namespace I_ScheduleLibraryTest{
 			input = "search for homework";
 			expected = "for homework";
 			actual = parser->RemoveCommand(input);
-			Assert::AreEqual(expected, actual);			
+			Assert::AreEqual(expected, actual);
 		}
 
 		TEST_METHOD(TASK){
@@ -227,7 +273,7 @@ namespace I_ScheduleLibraryTest{
 			Assert::AreEqual("", task->GetStartDate().c_str());
 			Assert::AreEqual("", task->GetEndDate().c_str());
 			Assert::AreEqual("", task->GetPriority().c_str());
-			
+
 			//vector constructor test
 			vector<string> testinput;
 			testinput.push_back("do my homework");
@@ -241,16 +287,22 @@ namespace I_ScheduleLibraryTest{
 			Assert::AreEqual("tomorrow", vectTask->GetEndDate().c_str());
 			Assert::AreEqual("1", vectTask->GetPriority().c_str());
 
+			string actual = vectTask->ToCSVString();
+			string expected = "\"do my homework\",\"today\",\"tomorrow\",\"1\"";
+			Assert::AreEqual(expected, actual);
+
 		}
 
 		TEST_METHOD(LOGIC){
 			Logic* logic = new Logic();
+			logic->Clear();
 			string myinput = "add homework from: monday on: tuesday p: 1";
 			string expected = "Description: homework\nStart: monday\nEnd: tuesday\nPriority: 1";
 			string feedback;
 			feedback = logic->Run(myinput);
+			string output = logic->mout.str();
 
-			Assert::AreEqual(expected, feedback);
+			Assert::AreEqual(expected, output);
 		}
 		TEST_METHOD(LOGIC_EDIT){
 			Logic* logic = new Logic();
@@ -287,6 +339,21 @@ namespace I_ScheduleLibraryTest{
 			update = "meet my clients today tomorrow2 12";
 			Assert::AreEqual(update, logic->Display("2 description: meet my clients"));
 			*/
+		}
+
+		TEST_METHOD(SMARTSTRING_TOKENIZE){
+			string input = "\"hello\",\"how\",\"are\",\"you\",\"doing\",\"today\"";
+			Smartstring str(input);
+			vector<string> result = str.Tokenize(",\"");
+			int size = result.size();
+			Assert::AreEqual(6, size);
+			Assert::AreEqual("hello", result[0].c_str());
+			Assert::AreEqual("how", result[1].c_str());
+			Assert::AreEqual("are", result[2].c_str());
+			Assert::AreEqual("you", result[3].c_str());
+			Assert::AreEqual("doing", result[4].c_str());
+			Assert::AreEqual("today", result[5].c_str());
+
 		}
 
 

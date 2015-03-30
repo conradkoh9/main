@@ -174,6 +174,21 @@ string Smartstring::ToString(){
 	return description;
 }
 
+vector<string> Smartstring::Tokenize(string delimiters){
+	int found = 0;
+	int startIdx = 0;
+	vector<string> tokens;
+	while (found != string::npos){
+		found = description.find_first_of(delimiters.c_str(),startIdx);
+		int length = found - startIdx;
+		string result = description.substr(startIdx, length);
+		if (result.length() != 0){
+			tokens.push_back(result);
+		}
+		startIdx = found + 1;
+	}
+	return tokens;
+}
 
 
 //operator overloading

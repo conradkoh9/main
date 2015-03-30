@@ -1,99 +1,3 @@
-Description: homework
-Start: monday
-End: tuesday
-Priority: 1endlDescription: homeworkendlDescription: mondayendlDescription: tuesdayendlDescription: 1endlDescription: homework
-Description: mondayendlDescription: tuesday
-Start: 1endlDescription: homeworkendlDescription: monday
-End: tuesdayendlDescription: 1endlDescription: homeworkendlDescription: monday
-Priority: tuesdayendlDescription: 1endlDescription: homeworkendlDescription: monday
-Description: tuesday
-Start: 1endlDescription: homeworkendlDescription: mondayendlDescription: tuesdayendlDescription: 1endlDescription: homework
-End: monday
-Priority: tuesdayendlDescription: 1endlDescription: homework
-Description: mondayendlDescription: tuesdayendlDescription: 1endlDescription: homeworkendlDescription: monday
-Start: tuesday
-End: 1endlDescription: homeworkendlDescription: mondayendlDescription: tuesday
-Priority: 1endlDescription: homeworkendlDescription: monday
-Description: tuesdayendlDescription: 1endlDescription: homeworkendlDescription: monday
-Start: tuesday
-End: 1endlDescription: homeworkendlDescription: mondayendlDescription: tuesdayendlDescription: 1endlDescription: homework
-Priority: mondayendlDescription: tuesday
-Description: 1endlDescription: homework
-Start: mondayendlDescription: tuesdayendlDescription: 1endlDescription: homeworkendlDescription: monday
-End: tuesday
-Priority: 1endlDescription: homeworkendlDescription: mondayendlDescription: tuesday
-Description: 1endlDescription: homeworkendlDescription: mondayendlDescription: tuesday
-Start: 1endlDescription: homeworkendlDescription: monday
-End: tuesdayendlDescription: 1endl
-Priority: endlDescription: endlDescription: endlDescription: homework
-Description: monday
-Start: tuesday
-End: 1endlendlDescription: homeworkendlDescription: monday
-Priority: tuesday
-Description: 1endl
-Start: endlDescription: homework
-End: monday
-Priority: tuesday
-Description: 1endl
-Start: 
-End: 
-Priority: 
-Description: homework from monday
-Start: 
-End: tuesday priority 1
-Priority: 
-Description: homework from monday
-Start: 
-End: tuesday priority 1
-Priority: 
-Description: homework from monday
-Start: 
-End: tuesday priority 1
-Priority: 
-Description: homework from monday
-Start: 
-End: tuesday
-Priority: 1
-Description: homework
-Start: monday
-End: tuesday
-Priority: 1
-Description: homework
-Start: monday
-End: tuesday
-Priority: 1
-Description: homework
-Start: monday
-End: tuesday
-Priority: 1
-Description: homework
-Start: monday
-End: tuesday
-Priority: 1
-Description: homework
-Start: monday
-End: tuesday
-Priority: 1
-Description: homework
-Start: monday
-End: tuesday
-Priority: 1
-Description: homework
-Start: monday
-End: tuesday p: 1
-Priority: 
-Description: homework
-Start: monday
-End: tuesday p: 1
-Priority: 
-Description: homework
-Start: monday
-End: tuesday p: 1
-Priority: 
-Description: homework
-Start: monday
-End: tuesday
-Priority: 1
 Description: homework
 Start: monday
 End: tuesday

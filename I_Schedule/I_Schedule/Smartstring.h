@@ -29,7 +29,6 @@ public:
 	static const int NUMBER_OF_FIELDS;
 
 
-
 	static const string KEYWORD_ENDDATE_1;
 	static const string KEYWORD_ENDDATE_2;
 	static const string KEYWORD_ENDDATE_3;
@@ -58,6 +57,8 @@ public:
 	Smartstring();
 	Smartstring(string input);
 	~Smartstring();
+	//methods
+
 	void Initialize();
 	COMMAND Command();
 	FIELD Field();
@@ -65,7 +66,9 @@ public:
 	bool IsKeyword();
 
 	string ToString();
+	vector<string> Tokenize(string delimiters);
 
+	//operators
 	friend istream& operator>>(istream& is, Smartstring& ss);
 	friend ostream& operator<< (ostream& os, Smartstring& ss);
 	friend string& operator+ (string input, Smartstring &ss);

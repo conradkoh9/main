@@ -87,6 +87,15 @@ string Task::ToShortString(){
 	return out.str();
 }
 
+string Task::ToCSVString(){
+	ostringstream out;
+	out << "\"" << description << "\",";
+	out << "\"" << startdate << "\",";
+	out << "\"" << enddate<< "\",";
+	out << "\"" << priority << "\"";
+	return out.str();
+}
+
 ostream& operator<<(ostream& out, Task& task){
 	out << task.ToString();
 	return out;

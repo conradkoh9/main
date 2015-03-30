@@ -46,6 +46,7 @@ public:
 
 	string ToString();
 	string ToShortString();
+	string ToCSVString();
 
 	TASKTYPE GetType();
 	bool Contains(string input);
