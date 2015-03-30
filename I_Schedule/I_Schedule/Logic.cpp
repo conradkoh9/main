@@ -36,8 +36,8 @@ Logic::~Logic()
 
 string Logic::Run(string input){
 	string feedback = Execute(input);
-	storage->FilterTask();
 	mout << feedback;
+	storage->FilterTask();
 	fout << storage->GetFloatingList(); 
 	dout << storage->GetDeadlineList(); 
 	tout << storage->GetTimedList(); 

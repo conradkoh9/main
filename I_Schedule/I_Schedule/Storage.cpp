@@ -129,6 +129,9 @@ string Storage::ToString(){
 }
 
 void Storage::FilterTask(){
+	timedList.clear();
+	deadlineList.clear();
+	floatingList.clear();
 	int size_taskList = taskList.size();
 
 	for (int i = 0; i < size_taskList; i++){
@@ -191,6 +194,8 @@ string Storage::GetDeadlineList(){
 }
 
 string Storage::GetFloatingList(){
+	string output = ToString(floatingList);
+	int size = floatingList.size();
 	return ToString(floatingList);
 }
 
