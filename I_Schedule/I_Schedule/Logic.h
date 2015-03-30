@@ -27,6 +27,7 @@ public:
 	string Display();
 	string Edit(string taskInput);
 	string Search(string taskInput);
+	string Invalid();
 	string Clear();
 
 	//display streams
@@ -34,10 +35,15 @@ public:
 	static ostringstream tout; //timed task display stream
 	static ostringstream dout; //deadline task display stream
 	static ostringstream mout; //main display stream
-
+	static ostringstream status; //status bar display stream
 
 private:
 	static const string _FEEDBACK_ERROR_INVALID_INDEX;
+	static const string _FEEDBACK_DISPLAY;
+	static const string _FEEDBACK_EDIT;
+	static const string _FEEDBACK_SEARCH;
+	static const string _FEEDBACK_INVALID_COMMAND;
+	static const string _MESSAGE_WELCOME;
 
 };
 

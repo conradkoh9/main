@@ -31,6 +31,7 @@ namespace I_ScheduleGUI {
 			DISPLAY_TASK_DEADLINE->Text = gcnew String(controller->DISPLAY_TASK_DEADLINE.c_str());
 			DISPLAY_TASK_FLOAT->Text = gcnew String(controller->DISPLAY_TASK_FLOAT.c_str());
 			DISPLAY_MAIN->Text = gcnew String(controller->DISPLAY_MAIN.c_str());
+			DISPLAY_STATUS->Text = gcnew String(controller->DISPLAY_STATUS.c_str());
 		}
 
 	protected:
@@ -63,20 +64,6 @@ namespace I_ScheduleGUI {
 	protected:
 
 	protected:
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 	private:
@@ -115,7 +102,7 @@ namespace I_ScheduleGUI {
 			this->BUTTON_SEND->Location = System::Drawing::Point(867, 902);
 			this->BUTTON_SEND->Name = L"BUTTON_SEND";
 			this->BUTTON_SEND->Size = System::Drawing::Size(189, 40);
-			this->BUTTON_SEND->TabIndex = 0;
+			this->BUTTON_SEND->TabIndex = 1;
 			this->BUTTON_SEND->Text = L"SEND";
 			this->BUTTON_SEND->UseVisualStyleBackColor = true;
 			this->BUTTON_SEND->Click += gcnew System::EventHandler(this, &GUI::BUTTON_SEND_Click);
@@ -276,8 +263,8 @@ namespace I_ScheduleGUI {
 			// DISPLAY_STATUS
 			// 
 			this->DISPLAY_STATUS->Name = L"DISPLAY_STATUS";
-			this->DISPLAY_STATUS->Size = System::Drawing::Size(319, 40);
-			this->DISPLAY_STATUS->Text = L"Welcome to I_Schedule.";
+			this->DISPLAY_STATUS->Size = System::Drawing::Size(145, 40);
+			this->DISPLAY_STATUS->Text = L"Status Bar";
 			// 
 			// GUI
 			// 
@@ -304,6 +291,7 @@ namespace I_ScheduleGUI {
 		DISPLAY_TASK_DEADLINE->Text = gcnew String(controller->DISPLAY_TASK_DEADLINE.c_str());
 		DISPLAY_TASK_FLOAT->Text = gcnew String(controller->DISPLAY_TASK_FLOAT.c_str());
 		DISPLAY_MAIN->Text = gcnew String(controller->DISPLAY_MAIN.c_str());
+		DISPLAY_STATUS->Text = gcnew String(controller->DISPLAY_STATUS.c_str());
 		INPUT_CMDLN->Clear();
 	}
 	private: System::Void DISPLAY_TASK_DEADLINE_TextChanged(System::Object^  sender, System::EventArgs^  e) {

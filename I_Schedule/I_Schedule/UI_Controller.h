@@ -13,6 +13,7 @@ public:
 	string DISPLAY_TASK_FLOAT;
 	string DISPLAY_TASK_TIMED;
 	string DISPLAY_MAIN;
+	string DISPLAY_STATUS;
 	Logic* logic;
 
 	UI_Controller();

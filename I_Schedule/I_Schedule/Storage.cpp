@@ -4,12 +4,14 @@
 Storage::Storage(){
 	_filename = "default.txt";
 	Load();
+	FilterTask();
 	logfile << "Storage created";
 }
 
 Storage::Storage(string filename){
 	_filename = filename;
 	Load();
+	FilterTask();
 	logfile << "Storage created with filename: " + filename;
 }
 

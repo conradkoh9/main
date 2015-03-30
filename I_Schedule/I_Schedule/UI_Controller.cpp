@@ -52,6 +52,7 @@ string UI_Controller::UpdateDisplays(){
 	DISPLAY_TASK_FLOAT = Standardize(logic->fout.str());
 	DISPLAY_TASK_TIMED = Standardize(logic->tout.str());
 	DISPLAY_MAIN = Standardize(logic->mout.str());
+	DISPLAY_STATUS = Standardize(logic->status.str());
 	return feedback;
 }
 
@@ -65,5 +66,7 @@ string UI_Controller::ClearStreams(){
 	logic->tout.str("");
 	logic->mout.clear();
 	logic->mout.str("");
+	logic->status.clear();
+	logic->status.str("");
 	return feedback;
 }
