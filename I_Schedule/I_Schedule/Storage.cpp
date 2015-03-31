@@ -20,39 +20,65 @@ const string Storage::_FEEDBACK_SESSION_LOAD_FAILURE = "Session failed to load. 
 const string Storage::_FEEDBACK_SESSION_LOAD_SUCCESS = "Session loaded.";
 const string Storage::_FEEDBACK_SESSION_SAVE_SUCCESS = "Session saved";
 const string Storage::_FEEDBACK_SESSION_SAVE_FAILURE = "Session failed to save.";
+const string Storage::_FEEDBACK_RESET = "Reset";
 
-//PUBLIC
+
+//PUBLIC =================================================================================================
 Storage::Storage(){
 	status << Load();
 }
 
 Storage::Storage(string input){
 	_filename = input;
-	status << Load();
+//	Load();
 }
 
 Storage::~Storage(){
 }
+
+
 string Storage::Add(Task* task){
 	taskList.push_back(task);
 	string feedback = Rewrite();
+	Update();
 	return feedback;
+}
+
+string Storage::Delete(int position){
+	string feedback = "";
+	try{
+		feedback = Remove(position);
+		Rewrite();
+		Update();
+		return feedback;
+	}
+	catch (out_of_range){
+		return _FEEDBACK_DELETE_FAILURE;
+	}
 }
 
 string Storage::Load(){
 	logfile << "load called.";
 	string feedback;
 	logfile << LoadSessionData(); //change active file
-	logfile << ClearVectors();
+	ClearVectors();
 	feedback = LoadRawFileContent();
 	logfile << feedback;
 	logfile << LoadTaskList();
-	FilterTask();
+	Update();
 	logfile << "end of load.";
 	return feedback;
 }
 
-string Storage::Save(string newFileName){
+
+string Storage::Save(){
+	string feedback;
+	feedback = Rewrite();
+	feedback = SaveSessionData();
+	return feedback;
+}
+
+string Storage::SaveAs(string newFileName){
 	FILETYPE filetype = IdentifyFileType(newFileName);
 	if (FileEmpty(newFileName) && filetype!= FILETYPE::INVALID){
 		_filename = newFileName;
@@ -66,248 +92,32 @@ string Storage::Save(string newFileName){
 	
 }
 
-string Storage::LoadRawFileContent(){
-	string line;
-	vector<string> all_lines;
-	ifstream in(_filename.c_str());
-	try{
-		if (in.is_open()){
-			while (getline(in, line)){
-				if (line == _EMPTY_STRING){
-					return _FEEDBACK_FILE_EMPTY;
-				}
-				
-				all_lines.push_back(line);
-			}
-			_filecontent = all_lines;
-			return _FEEDBACK_LOAD_SUCCESS;
-		}
-	}
-	catch (out_of_range){
-		return _FEEDBACK_LOAD_FAILURE;
-	}
-	return _FEEDBACK_LOAD_FAILURE;
-}
-
-string Storage::LoadTaskList(){
-	FILETYPE filetype = IdentifyFileType(_filename);
-	string feedback;
-	switch (filetype){
-	case (FILETYPE::CSV) : {
-		feedback = LoadCSVContent();
-		break;
-	}
-	case(FILETYPE::TXT) : {
-		feedback = LoadTXTContent();
-		break;
-	}
-	case(FILETYPE::INVALID) : {
-		return _FEEDBACK_LOAD_FAILURE;
-		break;
-	}
-	}
-	return feedback;
-
-	//=======
-	
-}
-string Storage::LoadCSVContent(){
-	Smartstring str;
-	const int startfield = Smartstring::FIELD::DESCRIPTION;
-	int currentfield = startfield;
-	int fieldcount = Smartstring::NUMBER_OF_FIELDS;
-	vector<string>::iterator iter;
-	Task* taskptr = new Task();
-	try{
-		int msize = _filecontent.size();
-		for (iter = _filecontent.begin(); iter != _filecontent.end(); ++iter){
-			str = (*iter);
-			vector<string> output = str.Tokenize(_DELIMITERS_CSV);
-			vector<string>::iterator iter2;
-			for (iter2 = output.begin(); iter2 != output.end(); ++iter2){
-				int end = (*iter2).length() - 2;
-				*iter2 = (*iter2).substr(1, end);
-			}
-			string test = output.front();
-			if (output.size() != 4){
-				return _FEEDBACK_LOAD_FAILURE;
-			}
-			taskptr = new Task(output);
-			taskList.push_back(taskptr);
-		}
-	}
-
-	catch (out_of_range){
-		return _FEEDBACK_LOAD_FAILURE;
-	}
-	return _FEEDBACK_LOAD_SUCCESS;
-	return _FEEDBACK_LOAD_FAILURE;
-}
-string Storage::LoadTXTContent(){
-	Smartstring str;
-	const int startfield = Smartstring::FIELD::DESCRIPTION;
-	int currentfield = startfield;
-	int fieldcount = Smartstring::NUMBER_OF_FIELDS;
-	vector<string>::iterator iter;
-	Task* taskptr = new Task();
-	//remove field description from _filecontent
-	vector<string> taskContent;
-	for (iter = _filecontent.begin(); iter != _filecontent.end(); ++iter){
-		string line = (*iter);
-		istringstream is(line);
-		string buffer;
-		is >> buffer;
-		string output;
-		getline(is, output);
-		int length = line.length() - 1;
-		output = output.substr(1, length);
-		taskContent.push_back(output);
-	}
-	
-	//end remove field description from _filecontent
-	try{
-		for (iter = taskContent.begin(); iter != taskContent.end(); ++iter){
-			if (currentfield == Smartstring::FIELD::DESCRIPTION){
-				taskptr = new Task();
-				taskList.push_back(taskptr);
-			}
-			switch (currentfield){
-			case Smartstring::FIELD::DESCRIPTION:{
-				taskptr->SetDescription(*iter);
-				break;
-			}
-			case Smartstring::FIELD::STARTDATE:{
-				taskptr->SetStartDate(*iter);
-				break;
-			}
-			case Smartstring::FIELD::ENDDATE:{
-				taskptr->SetEndDate(*iter);
-				break;
-			}
-			case Smartstring::FIELD::PRIORITY:{
-				taskptr->SetPriority(*iter);
-				break;
-			}
-
-			}
-			currentfield = (currentfield + 1) % fieldcount;
-		}
-	}
-
-	catch (out_of_range){
-		return _FEEDBACK_LOAD_FAILURE;
-	}
-	return _FEEDBACK_LOAD_SUCCESS;
-}
-
-bool Storage::FileEmpty(string filename){
-	ifstream ifs;
-	ifs.open(filename);
-	string test;
-	ifs >> test;
-	if (test.empty()){
-		ifs.close();
-		return true;
-	}
-	else{
-		ifs.close();
-		return false;
-	}
-}
 string Storage::Rewrite(){
 	ClearFile();
-	string feedback = WriteVectors();
+	string feedback = WriteToFile();
 	return feedback;
 }
 
-string Storage::ToString(){
-	ostringstream out;
-	int index = 0;
-	vector<Task*>::iterator iter;
-	for (iter = taskList.begin(); iter != taskList.end(); ++iter){
-		++index;
-		if (iter + 1 != taskList.end()){
-			out << index << ": " << (*iter)->ToShortString() << endl;
-		}
-		else{
-			out << index << ": " << (*iter)->ToShortString();
-		}
-	}
-	return out.str();
-}
 
-void Storage::FilterTask(){
-	timedList.clear();
-	deadlineList.clear();
-	floatingList.clear();
-	int size_taskList = taskList.size();
-
-	for (int i = 0; i < size_taskList; i++){
-		if (taskList[i]->GetType() == Task::TASKTYPE::TIMED){
-			timedList.push_back(taskList[i]);
-		}else if (taskList[i]->GetType() == Task::TASKTYPE::DEADLINE){
-			deadlineList.push_back(taskList[i]);
-		}else if (taskList[i]->GetType() == Task::TASKTYPE::FLOATING){
-			floatingList.push_back(taskList[i]);
-		}else{
-		}
-	}
+string Storage::Reset(){
+	_filename = _FILENAME_DEFAULT;
+	Clear();
+	return _FEEDBACK_RESET;
 }
 
 string Storage::Clear(){
 	ClearFile();
 	ClearVectors();
+	Update();
 	return _FEEDBACK_CLEAR_SUCCESS;
 }
 
-string Storage::ClearFile(){
-	ofstream out(_filename, ofstream::trunc);
-	return _FEEDBACK_CLEAR_SUCCESS;
-}
-vector<string> Storage::GetContent(){
-	return _filecontent;
-}
 
-string Storage::ClearVectors(){
-	taskList.clear();
-	timedList.clear();
-	floatingList.clear();
-	deadlineList.clear();
-	_filecontent.clear();
-	return _FEEDBACK_CLEAR_SUCCESS;
-}
 
-string Storage::Delete(int position){
-	string feedback = "";
-	try{
-		feedback = Remove(position);
-		Rewrite();
-		return feedback;
-	}
-	catch (out_of_range){
-		return _FEEDBACK_DELETE_FAILURE;
-	}
-}
-
-vector<Task*> Storage::GetTaskList(){
-	return taskList;
-}
-
-string Storage::GetTimedList(){
-	return ToString(timedList);
-}
-
-string Storage::GetDeadlineList(){
-	return ToString(deadlineList);
-}
-
-string Storage::GetFloatingList(){
-	string output = ToString(floatingList);
-	int size = floatingList.size();
-	return ToString(floatingList);
-}
-
-string Storage::search(string input){
+//====================================================================
+//Power Search
+//====================================================================
+string Storage::Search(string input){
 	vector<Task*> PowerSearch_Result = PowerSearch(input);
 	vector<Task*> NearSearch_Result = NearSearch(input);
 	if (PowerSearch_Result.empty() && NearSearch_Result.empty()){
@@ -331,7 +141,6 @@ vector<Task*> Storage::PowerSearch(string input){
 			searchResult.push_back(currentTask);
 		}
 	}
-	currentScope = searchResult;
 	return searchResult;
 }
 
@@ -348,14 +157,66 @@ vector<Task*> Storage::NearSearch(string input){
 }
 
 /*vector<string> Storage::GetEmptySlots(string input){
-	vector<string> wholeDay;
-	string startTime;
-	string endTime; //use DateTime class to convert input
-	for (int i = 0; i < 24; i++){
-		wholeDay.push_back(""); //Use DateTime class to initialize 
-	}
+vector<string> wholeDay;
+string startTime;
+string endTime; //use DateTime class to convert input
+for (int i = 0; i < 24; i++){
+wholeDay.push_back(""); //Use DateTime class to initialize
+}
 
 }*/
+
+
+
+//====================================================================
+//STATS
+//====================================================================
+int Storage::Size(){
+	return taskList.size();
+}
+
+string Storage::GetTask(int index){
+	return taskList[index]->ToString();
+}
+
+string Storage::GetFileName(){
+	return _filename;
+}
+
+string Storage::GetFloatingList(){
+	string output = ToString(floatingList);
+	int size = floatingList.size();
+	return ToString(floatingList);
+}
+
+string Storage::GetDeadlineList(){
+	return ToString(deadlineList);
+}
+
+string Storage::GetTimedList(){
+	return ToString(timedList);
+}
+
+
+
+//====================================================================
+//To be refactored
+//====================================================================
+string Storage::ToString(){
+	ostringstream out;
+	int index = 0;
+	vector<Task*>::iterator iter;
+	for (iter = taskList.begin(); iter != taskList.end(); ++iter){
+		++index;
+		if (iter + 1 != taskList.end()){
+			out << index << ": " << (*iter)->ToShortString() << endl;
+		}
+		else{
+			out << index << ": " << (*iter)->ToShortString();
+		}
+	}
+	return out.str();
+}
 
 string Storage::ToString(vector<Task*> V){
 	ostringstream out;
@@ -374,6 +235,61 @@ string Storage::ToString(vector<Task*> V){
 }
 
 
+//PRIVATE==========================================================================================
+//====================================================================
+//Update Methods
+//====================================================================
+void Storage::Update(){
+	FilterTask();
+	SaveSessionData();
+	return;
+}
+
+
+
+//====================================================================
+//Filter Methods
+//====================================================================
+
+void Storage::FilterTask(){
+	timedList.clear();
+	deadlineList.clear();
+	floatingList.clear();
+	int size_taskList = taskList.size();
+
+	for (int i = 0; i < size_taskList; i++){
+		if (taskList[i]->GetType() == Task::TASKTYPE::TIMED){
+			timedList.push_back(taskList[i]);
+		}
+		else if (taskList[i]->GetType() == Task::TASKTYPE::DEADLINE){
+			deadlineList.push_back(taskList[i]);
+		}
+		else if (taskList[i]->GetType() == Task::TASKTYPE::FLOATING){
+			floatingList.push_back(taskList[i]);
+		}
+		else{
+		}
+	}
+}
+
+
+
+//====================================================================
+//Clear Methods
+//====================================================================
+void Storage::ClearFile(){
+	ofstream out(_filename, ofstream::trunc);
+	return;
+}
+
+void Storage::ClearVectors(){
+	taskList.clear();
+	timedList.clear();
+	floatingList.clear();
+	deadlineList.clear();
+	_filecontent.clear();
+	return;
+}
 
 string Storage::Remove(int position){
 	try{
@@ -389,7 +305,32 @@ string Storage::Remove(int position){
 	}
 	return _FEEDBACK_DELETE_SUCCESS;
 }
-string Storage::WriteVectors(){
+
+
+//====================================================================
+//Save methods
+//====================================================================
+string Storage::SaveSessionData(){
+	ofstream of;
+	string feedback;
+	of.open(_FILENAME_SESSION_DATA.c_str(), ios::trunc);
+	of << _filename;
+	of.close();
+	ifstream file;
+	file.open(_FILENAME_SESSION_DATA.c_str());
+	string buffer;
+	file >> buffer;
+	file.close();
+	if (buffer.empty()){
+		feedback = _FEEDBACK_SESSION_SAVE_FAILURE;
+	}
+	else{
+		feedback = _FEEDBACK_SESSION_SAVE_SUCCESS + " " + buffer;
+	}
+	return feedback;
+}
+
+string Storage::WriteToFile(){
 	FILETYPE filetype = IdentifyFileType(_filename);
 	string feedback;
 	switch (filetype){
@@ -458,6 +399,167 @@ string Storage::WriteToTXT(){
 	return _FEEDBACK_WRITE_SUCCESS;
 }
 
+
+//====================================================================
+//Load methods
+//====================================================================
+string Storage::LoadSessionData(){
+	ifstream file;
+	file.open(_FILENAME_SESSION_DATA);
+	getline(file, _filename);
+	string feedback;
+	if (_filename.empty()){
+		feedback = _FEEDBACK_LOAD_FAILURE;
+	}
+	else{
+		feedback = _FEEDBACK_LOAD_SUCCESS;
+	}
+	logfile << _filename;
+	logfile << feedback;
+
+	return feedback;
+}
+
+string Storage::LoadRawFileContent(){
+	string line;
+	vector<string> all_lines;
+	ifstream in(_filename.c_str());
+	try{
+		if (in.is_open()){
+			while (getline(in, line)){
+				if (line == _EMPTY_STRING){
+					return _FEEDBACK_FILE_EMPTY;
+				}
+
+				all_lines.push_back(line);
+			}
+			_filecontent = all_lines;
+			return _FEEDBACK_LOAD_SUCCESS;
+		}
+	}
+	catch (out_of_range){
+		return _FEEDBACK_LOAD_FAILURE;
+	}
+	return _FEEDBACK_LOAD_FAILURE;
+}
+
+string Storage::LoadTaskList(){
+	FILETYPE filetype = IdentifyFileType(_filename);
+	string feedback;
+	switch (filetype){
+	case (FILETYPE::CSV) : {
+		feedback = LoadCSVContent();
+		break;
+	}
+	case(FILETYPE::TXT) : {
+		feedback = LoadTXTContent();
+		break;
+	}
+	case(FILETYPE::INVALID) : {
+		return _FEEDBACK_LOAD_FAILURE;
+		break;
+	}
+	}
+	return feedback;
+
+	//=======
+	
+}
+
+string Storage::LoadCSVContent(){
+	Smartstring str;
+	const int startfield = Smartstring::FIELD::DESCRIPTION;
+	int currentfield = startfield;
+	int fieldcount = Smartstring::NUMBER_OF_FIELDS;
+	vector<string>::iterator iter;
+	Task* taskptr = new Task();
+	try{
+		int msize = _filecontent.size();
+		for (iter = _filecontent.begin(); iter != _filecontent.end(); ++iter){
+			str = (*iter);
+			vector<string> output = str.Tokenize(_DELIMITERS_CSV);
+			vector<string>::iterator iter2;
+			for (iter2 = output.begin(); iter2 != output.end(); ++iter2){
+				int end = (*iter2).length() - 2;
+				*iter2 = (*iter2).substr(1, end);
+			}
+			string test = output.front();
+			if (output.size() != 4){
+				return _FEEDBACK_LOAD_FAILURE;
+			}
+			taskptr = new Task(output);
+			taskList.push_back(taskptr);
+		}
+	}
+
+	catch (out_of_range){
+		return _FEEDBACK_LOAD_FAILURE;
+	}
+	return _FEEDBACK_LOAD_SUCCESS;
+	return _FEEDBACK_LOAD_FAILURE;
+}
+
+string Storage::LoadTXTContent(){
+	Smartstring str;
+	const int startfield = Smartstring::FIELD::DESCRIPTION;
+	int currentfield = startfield;
+	int fieldcount = Smartstring::NUMBER_OF_FIELDS;
+	vector<string>::iterator iter;
+	Task* taskptr = new Task();
+	//remove field description from _filecontent
+	vector<string> taskContent;
+	for (iter = _filecontent.begin(); iter != _filecontent.end(); ++iter){
+		string line = (*iter);
+		istringstream is(line);
+		string buffer;
+		is >> buffer;
+		string output;
+		getline(is, output);
+		int length = line.length() - 1;
+		output = output.substr(1, length);
+		taskContent.push_back(output);
+	}
+	
+	//end remove field description from _filecontent
+	try{
+		for (iter = taskContent.begin(); iter != taskContent.end(); ++iter){
+			if (currentfield == Smartstring::FIELD::DESCRIPTION){
+				taskptr = new Task();
+				taskList.push_back(taskptr);
+			}
+			switch (currentfield){
+			case Smartstring::FIELD::DESCRIPTION:{
+				taskptr->SetDescription(*iter);
+				break;
+			}
+			case Smartstring::FIELD::STARTDATE:{
+				taskptr->SetStartDate(*iter);
+				break;
+			}
+			case Smartstring::FIELD::ENDDATE:{
+				taskptr->SetEndDate(*iter);
+				break;
+			}
+			case Smartstring::FIELD::PRIORITY:{
+				taskptr->SetPriority(*iter);
+				break;
+			}
+
+			}
+			currentfield = (currentfield + 1) % fieldcount;
+		}
+	}
+
+	catch (out_of_range){
+		return _FEEDBACK_LOAD_FAILURE;
+	}
+	return _FEEDBACK_LOAD_SUCCESS;
+}
+
+
+//====================================================================
+//File analysis methods
+//====================================================================
 Storage::FILETYPE Storage::IdentifyFileType(string input){
 	if (input.find(_FILE_EXTENSION_CSV) != string::npos){
 		return FILETYPE::CSV;
@@ -472,39 +574,17 @@ Storage::FILETYPE Storage::IdentifyFileType(string input){
 	}
 }
 
-string Storage::SaveSessionData(){
-	ofstream of;
-	string feedback;
-	of.open(_FILENAME_SESSION_DATA.c_str(),ios::trunc);
-	of << _filename;
-	of.close();
-	ifstream file;
-	file.open(_FILENAME_SESSION_DATA.c_str());
-	string buffer;
-	file >> buffer;
-	file.close();
-	if (buffer.empty()){
-		feedback = _FEEDBACK_SESSION_SAVE_FAILURE;
+bool Storage::FileEmpty(string filename){
+	ifstream ifs;
+	ifs.open(filename);
+	string test;
+	ifs >> test;
+	if (test.empty()){
+		ifs.close();
+		return true;
 	}
 	else{
-		feedback = _FEEDBACK_SESSION_SAVE_SUCCESS + " " + buffer;
+		ifs.close();
+		return false;
 	}
-	return feedback;
-}
-
-string Storage::LoadSessionData(){
-	ifstream file;
-	file.open(_FILENAME_SESSION_DATA);
-	getline(file, _filename);
-	string feedback;
-	if (_filename.empty()){
-		feedback = _FEEDBACK_LOAD_FAILURE;
-	}
-	else{
-		feedback = _FEEDBACK_LOAD_SUCCESS;
-	}
-	logfile << _filename;
-	logfile << feedback;
-	
-	return feedback;
 }

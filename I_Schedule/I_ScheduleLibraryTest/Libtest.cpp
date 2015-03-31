@@ -20,10 +20,9 @@ namespace I_ScheduleLibraryTest{
 			task->SetStartDate("today");
 			task->SetPriority("1");
 			storage->Add(task);
-			tasklist = storage->GetTaskList();
 
 			expected[0] = "Description: do homework\nStart: today\nEnd: tomorrow\nPriority: 1";
-			Assert::AreEqual(expected[0], tasklist[0]->ToString());
+			Assert::AreEqual(expected[0], storage->GetTask(0));
 
 			//testing the partition when n>1; boundary case n = 2; where n is the number of tasks added
 			Task* task2 = new Task();
@@ -32,10 +31,10 @@ namespace I_ScheduleLibraryTest{
 			task2->SetStartDate("today2");
 			task2->SetPriority("12");
 			storage->Add(task2);
-			tasklist = storage->GetTaskList();
+			//tasklist = storage->GetTaskList();
 
 			expected[1] = "Description: do homework 2\nStart: today2\nEnd: tomorrow2\nPriority: 12";
-			Assert::AreEqual(expected[1], tasklist[1]->ToString());
+			Assert::AreEqual(expected[1], storage->GetTask(1));
 			tasklist.clear();
 
 		}
@@ -90,21 +89,12 @@ namespace I_ScheduleLibraryTest{
 
 		}
 
-		TEST_METHOD(STORAGE_EMPTY_FILE){
-			Storage* storage = new Storage("STORAGE_EMPTY_FILE_TEST.txt");
-			ofstream of;
-			of.open("STORAGE_EMPTY_FILE_TEST.txt");
-			of << "heawdkowdk";
-			storage->Clear();
-			Assert::IsTrue(storage->FileEmpty("STORAGE_EMPTY_FILE_TEST.txt"));
-		}
-
 		TEST_METHOD(STORAGE_TXT_LOAD_REWRITE){
 			//Testing the Load() and Rewrite() functions in storage
 			//testing the partition when n > 1; boundary case n = 1; where n is the number of entries to be loaded and rewritten
 
 			Storage* storage = new Storage("Unit_test_IO2.txt");
-			storage->Clear();
+			storage->Reset();
 			Task* task = new Task();
 			task->SetDescription("do homework");
 			task->SetEndDate("tomorrow");
@@ -122,25 +112,16 @@ namespace I_ScheduleLibraryTest{
 			storage->Rewrite();
 
 			delete storage;
-			storage = new Storage("Unit_test_IO2.txt");
+			storage = new Storage();
 
-			vector<Task*>::iterator tIter;
-			vector<Task*> taskList = storage->GetTaskList();
-			if (taskList.empty()){
-				Assert::AreEqual(1, 0);
-			}
+			int size = storage->Size();
+			Assert::IsTrue(size > 0);
 			string expected[2];
 			expected[0] = "Description: do homework\nStart: today\nEnd: tomorrow\nPriority: 1";
 			expected[1] = "Description: do homework 2\nStart: today2\nEnd: tomorrow2\nPriority: 12";
-			int i = 0;
 
-			for (tIter = (storage->taskList).begin(); tIter != storage->taskList.end(); ++tIter){
-				Task* taskptr;
-				taskptr = *tIter;
-				string actual = taskptr->ToString();
-				Assert::AreEqual(expected[i], actual);
-				i++;
-
+			for (int i = 0; i < size; i++){
+				Assert::AreEqual(expected[i], storage->GetTask(i));
 			}
 
 		}
@@ -165,31 +146,22 @@ namespace I_ScheduleLibraryTest{
 			task->SetPriority("12");
 			storage->Add(task);
 
-			storage->Rewrite();
+			storage->Save();
 
 			delete storage;
-			storage = new Storage("UNIT_TEST_CSV_ADD_LOAD_REWRITE.csv");
+			storage = new Storage();
 
-			vector<Task*>::iterator tIter;
-			vector<Task*> taskList = storage->GetTaskList();
-			if (taskList.empty()){
-				Assert::AreEqual(1, 0);
-			}
+
+			int size = storage->Size();
+			Assert::IsTrue(size > 0);
 			string expected[2];
 			expected[0] = "Description: do homework\nStart: today\nEnd: tomorrow\nPriority: 1";
 			expected[1] = "Description: do homework 2\nStart: today2\nEnd: tomorrow2\nPriority: 12";
-			int i = 0;
 
-			for (tIter = (storage->taskList).begin(); tIter != storage->taskList.end(); ++tIter){
-				Task* taskptr;
-				taskptr = *tIter;
-				string actual = taskptr->ToString();
-				Assert::AreEqual(expected[i], actual);
-				i++;
-
+			for (int i = 0; i < size; i++){
+				Assert::AreEqual(expected[i], storage->GetTask(i));
 			}
 
-			
 		}
 
 		TEST_METHOD(Parser_IdentifyTaskFields){
@@ -304,7 +276,11 @@ namespace I_ScheduleLibraryTest{
 
 		TEST_METHOD(LOGIC){
 			Logic* logic = new Logic();
+			logic->mout.clear();
+			logic->mout.str("");
 			logic->Clear();
+			logic->storage->Reset();
+			string file = logic->storage->GetFileName();
 			string myinput = "add homework from: monday on: tuesday p: 1";
 			string expected = "Description: homework\nStart: monday\nEnd: tuesday\nPriority: 1";
 			string feedback;

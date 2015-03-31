@@ -45,7 +45,6 @@ Logic::~Logic()
 string Logic::Run(string input){
 	string feedback = Execute(input);
 	status << feedback;
-	storage->FilterTask();
 	fout << storage->GetFloatingList(); 
 	dout << storage->GetDeadlineList(); 
 	tout << storage->GetTimedList(); 
@@ -162,12 +161,12 @@ string Logic::Edit(string taskInput){
 	return _FEEDBACK_EDIT;
 }
 string Logic::Search(string taskInput){
-	mout << storage->search(taskInput);
+	mout << storage->Search(taskInput);
 	return _FEEDBACK_SEARCH;
 }
 
 string Logic::Save(string input){
-	string feedback = storage->Save(input);
+	string feedback = storage->SaveAs(input);
 	return feedback;
 }
 string Logic::Invalid(){
