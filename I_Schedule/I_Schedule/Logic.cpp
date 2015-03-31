@@ -18,8 +18,8 @@ ostringstream Logic::status; //status bar display stream
 Logic::Logic()
 {
 	parser = new Parser();
-	storage = new Storage("default.txt");
-	status << _MESSAGE_WELCOME;
+	storage = new Storage();
+	status << _MESSAGE_WELCOME + " " + storage->status.str();
 	fout << storage->GetFloatingList();
 	dout << storage->GetDeadlineList();
 	tout << storage->GetTimedList();

@@ -20,7 +20,7 @@ public:
 	vector<Task*> timedList;
 	vector<Task*> deadlineList;
 	vector<Task*> currentScope;
-
+	ostringstream status;
 	//METHODS
 	Storage();
 	Storage(string filename);
@@ -51,25 +51,33 @@ private:
 	//VARIABLES
 	string _filename;
 	vector<string> _filecontent;
+	//Feedback Variables
+	static const string _FEEDBACK_GENERIC_SUCCESS;
+	static const string _FEEDBACK_GENERIC_FAILURE;
+	static const string _FEEDBACK_LOAD_SUCCESS;
+	static const string _FEEDBACK_LOAD_FAILURE;
+	static const string _FEEDBACK_WRITE_SUCCESS;
+	static const string _FEEDBACK_WRITE_FAILURE;
+	static const string _FEEDBACK_CLEAR_SUCCESS;
+	static const string _FEEDBACK_CLEAR_FAILURE;
+	static const string _FEEDBACK_DELETE_SUCCESS;
+	static const string _FEEDBACK_DELETE_FAILURE;
+	static const string _FEEDBACK_SEARCH_FAILURE;
+	static const string _FEEDBACK_FILE_EMPTY;
+	static const string _FEEDBACK_FILE_NOT_EMPTY;
+	static const string _FEEDBACK_INVALID_FILE_FORMAT;
+	static const string _EMPTY_STRING;
+	static const string _FEEDBACK_SESSION_LOAD_SUCCESS;
+	static const string _FEEDBACK_SESSION_LOAD_FAILURE;
+	static const string _FEEDBACK_SESSION_SAVE_SUCCESS;
+	static const string _FEEDBACK_SESSION_SAVE_FAILURE;
 
-	const string _FEEDBACK_GENERIC_SUCCESS = "STORAGE SUCCESS";
-	const string _FEEDBACK_GENERIC_FAILURE = "STORAGE FAILED";
-	const string _FEEDBACK_LOAD_SUCCESS = "LOAD SUCCESS";
-	const string _FEEDBACK_LOAD_FAILURE = "LOAD FAILED";
-	const string _FEEDBACK_WRITE_SUCCESS = "WRITE SUCCESS";
-	const string _FEEDBACK_WRITE_FAILURE = "WRITE FAILED";
-	const string _FEEDBACK_CLEAR_SUCCESS = "CLEAR SUCCESS";
-	const string _FEEDBACK_CLEAR_FAILURE = "CLEAR FAILED";
-	const string _FEEDBACK_DELETE_SUCCESS = "DELETE SUCCESS";
-	const string _FEEDBACK_DELETE_FAILURE = "DELETE FAILED";
-	const string _FEEDBACK_SEARCH_FAILURE = "SEARCH FAILED";
-	const string _FEEDBACK_FILE_EMPTY = "FILE EMPTY";
-	const string _FEEDBACK_FILE_NOT_EMPTY = "FILE NOT EMPTY";
-	const string _FEEDBACK_INVALID_FILE_FORMAT = "Invalid file format entered";
-	const string _EMPTY_STRING = "";
+	//File Details
 	const string _FILE_EXTENSION_CSV = ".csv";
 	const string _FILE_EXTENSION_TXT = ".txt";
-	const string _DELIMITERS_CSV = ",\"";
+	const string _DELIMITERS_CSV = ",";
+	const string _FILENAME_DEFAULT = "default.csv";
+	const string _FILENAME_SESSION_DATA = "data.sys";
 	enum FILETYPE {CSV, TXT, INVALID};
 
 	//METHODS
@@ -78,7 +86,12 @@ private:
 	string ClearVectors();
 	string LoadRawFileContent();
 	string Remove(int position);
-	FILETYPE IdentifyFileType();
+	FILETYPE IdentifyFileType(string input);
+
+	//session info storage methods
+	string SaveSessionData();
+	string LoadSessionData();
+
 	//write methods
 	string WriteVectors();
 	string WriteToCSV();

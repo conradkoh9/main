@@ -1,18 +1,34 @@
 #include "Storage.h"
 
+//Constant variable declaration
+const string Storage::_FEEDBACK_GENERIC_SUCCESS = "STORAGE SUCCESS";
+const string Storage::_FEEDBACK_GENERIC_FAILURE = "STORAGE FAILED";
+const string Storage::_FEEDBACK_LOAD_SUCCESS = "LOAD SUCCESS";
+const string Storage::_FEEDBACK_LOAD_FAILURE = "LOAD FAILED";
+const string Storage::_FEEDBACK_WRITE_SUCCESS = "WRITE SUCCESS";
+const string Storage::_FEEDBACK_WRITE_FAILURE = "WRITE FAILED";
+const string Storage::_FEEDBACK_CLEAR_SUCCESS = "CLEAR SUCCESS";
+const string Storage::_FEEDBACK_CLEAR_FAILURE = "CLEAR FAILED";
+const string Storage::_FEEDBACK_DELETE_SUCCESS = "DELETE SUCCESS";
+const string Storage::_FEEDBACK_DELETE_FAILURE = "DELETE FAILED";
+const string Storage::_FEEDBACK_SEARCH_FAILURE = "SEARCH FAILED";
+const string Storage::_FEEDBACK_FILE_EMPTY = "FILE EMPTY";
+const string Storage::_FEEDBACK_FILE_NOT_EMPTY = "FILE NOT EMPTY";
+const string Storage::_FEEDBACK_INVALID_FILE_FORMAT = "Invalid file format entered";
+const string Storage::_EMPTY_STRING= "";
+const string Storage::_FEEDBACK_SESSION_LOAD_FAILURE = "Session failed to load. Starting default session";
+const string Storage::_FEEDBACK_SESSION_LOAD_SUCCESS = "Session loaded.";
+const string Storage::_FEEDBACK_SESSION_SAVE_SUCCESS = "Session saved";
+const string Storage::_FEEDBACK_SESSION_SAVE_FAILURE = "Session failed to save.";
+
 //PUBLIC
 Storage::Storage(){
-	_filename = "default.txt";
-	Load();
-	FilterTask();
-	logfile << "Storage created";
+	status << Load();
 }
 
-Storage::Storage(string filename){
-	_filename = filename;
-	Load();
-	FilterTask();
-	logfile << "Storage created with filename: " + filename;
+Storage::Storage(string input){
+	_filename = input;
+	status << Load();
 }
 
 Storage::~Storage(){
@@ -24,21 +40,24 @@ string Storage::Add(Task* task){
 }
 
 string Storage::Load(){
-	try{
-		ClearVectors();
-		LoadRawFileContent();
-		LoadTaskList();
-	}
-	catch (out_of_range){
-		return _FEEDBACK_LOAD_FAILURE;
-	}
-	return _FEEDBACK_LOAD_SUCCESS;
+	logfile << "load called.";
+	string feedback;
+	logfile << LoadSessionData(); //change active file
+	logfile << ClearVectors();
+	feedback = LoadRawFileContent();
+	logfile << feedback;
+	logfile << LoadTaskList();
+	FilterTask();
+	logfile << "end of load.";
+	return feedback;
 }
 
 string Storage::Save(string newFileName){
-	if (FileEmpty(newFileName)){
+	FILETYPE filetype = IdentifyFileType(newFileName);
+	if (FileEmpty(newFileName) && filetype!= FILETYPE::INVALID){
 		_filename = newFileName;
 		string feedback = Rewrite();
+		feedback = SaveSessionData();
 		return feedback;
 	}
 	else{
@@ -71,7 +90,7 @@ string Storage::LoadRawFileContent(){
 }
 
 string Storage::LoadTaskList(){
-	FILETYPE filetype = IdentifyFileType();
+	FILETYPE filetype = IdentifyFileType(_filename);
 	string feedback;
 	switch (filetype){
 	case (FILETYPE::CSV) : {
@@ -100,9 +119,19 @@ string Storage::LoadCSVContent(){
 	vector<string>::iterator iter;
 	Task* taskptr = new Task();
 	try{
+		int msize = _filecontent.size();
 		for (iter = _filecontent.begin(); iter != _filecontent.end(); ++iter){
 			str = (*iter);
 			vector<string> output = str.Tokenize(_DELIMITERS_CSV);
+			vector<string>::iterator iter2;
+			for (iter2 = output.begin(); iter2 != output.end(); ++iter2){
+				int end = (*iter2).length() - 2;
+				*iter2 = (*iter2).substr(1, end);
+			}
+			string test = output.front();
+			if (output.size() != 4){
+				return _FEEDBACK_LOAD_FAILURE;
+			}
 			taskptr = new Task(output);
 			taskList.push_back(taskptr);
 		}
@@ -361,7 +390,7 @@ string Storage::Remove(int position){
 	return _FEEDBACK_DELETE_SUCCESS;
 }
 string Storage::WriteVectors(){
-	FILETYPE filetype = IdentifyFileType();
+	FILETYPE filetype = IdentifyFileType(_filename);
 	string feedback;
 	switch (filetype){
 	case (FILETYPE::CSV) : {
@@ -429,16 +458,53 @@ string Storage::WriteToTXT(){
 	return _FEEDBACK_WRITE_SUCCESS;
 }
 
-Storage::FILETYPE Storage::IdentifyFileType(){
-	if (_filename.find(_FILE_EXTENSION_CSV) != string::npos){
+Storage::FILETYPE Storage::IdentifyFileType(string input){
+	if (input.find(_FILE_EXTENSION_CSV) != string::npos){
 		return FILETYPE::CSV;
 	}
 	else{
-		if (_filename.find(_FILE_EXTENSION_TXT) != string::npos){
+		if (input.find(_FILE_EXTENSION_TXT) != string::npos){
 			return FILETYPE::TXT;
 		}
 		else{
 			return FILETYPE::INVALID;
 		}
 	}
+}
+
+string Storage::SaveSessionData(){
+	ofstream of;
+	string feedback;
+	of.open(_FILENAME_SESSION_DATA.c_str(),ios::trunc);
+	of << _filename;
+	of.close();
+	ifstream file;
+	file.open(_FILENAME_SESSION_DATA.c_str());
+	string buffer;
+	file >> buffer;
+	file.close();
+	if (buffer.empty()){
+		feedback = _FEEDBACK_SESSION_SAVE_FAILURE;
+	}
+	else{
+		feedback = _FEEDBACK_SESSION_SAVE_SUCCESS + " " + buffer;
+	}
+	return feedback;
+}
+
+string Storage::LoadSessionData(){
+	ifstream file;
+	file.open(_FILENAME_SESSION_DATA);
+	getline(file, _filename);
+	string feedback;
+	if (_filename.empty()){
+		feedback = _FEEDBACK_LOAD_FAILURE;
+	}
+	else{
+		feedback = _FEEDBACK_LOAD_SUCCESS;
+	}
+	logfile << _filename;
+	logfile << feedback;
+	
+	return feedback;
 }
