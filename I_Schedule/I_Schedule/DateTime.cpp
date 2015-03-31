@@ -31,3 +31,10 @@ string DateTime::Today(){
 	strftime(output, 80, "%d/%m/%Y", &timeinfo);
 	return output;
 }
+
+
+String DateTime::Tomorrow(){
+
+
+
+}

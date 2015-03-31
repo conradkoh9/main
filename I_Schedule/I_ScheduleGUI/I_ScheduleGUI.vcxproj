@@ -52,7 +52,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Users\ziqi\Desktop\CS2103\project\main\I_Schedule\I_Schedule;C:\Users\Charlotte\C\main\I_Schedule\I_Schedule;C:\Users\conra_000\Desktop\Project Testing\main\I_Schedule\I_Schedule;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Administrator\Desktop\project\main\I_Schedule\I_Schedule;C:\Users\ziqi\Desktop\CS2103\project\main\I_Schedule\I_Schedule;C:\Users\Charlotte\C\main\I_Schedule\I_Schedule;C:\Users\conra_000\Desktop\Project Testing\main\I_Schedule\I_Schedule;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
