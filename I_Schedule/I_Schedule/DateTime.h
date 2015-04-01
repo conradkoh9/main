@@ -11,6 +11,7 @@ public:
 	string now();
 	string today();
 	string tomorrow();
+	void displayTime();
 
 private:
 	int _day;

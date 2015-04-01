@@ -52,8 +52,8 @@ string DateTime::convertTime(string input){
 }
 
 void DateTime::displayTime(){
-
-
+	cout << "Today is ";
+	cout << today() << endl;
 }
 
 
