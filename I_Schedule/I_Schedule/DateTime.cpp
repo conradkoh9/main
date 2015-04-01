@@ -6,13 +6,15 @@ DateTime::DateTime()
 }
 
 DateTime::DateTime(string input){
+	
 }
 
-DateTime::~DateTime()
-{
+DateTime::~DateTime(){
+
+
 }
 
-string DateTime::Now(){
+string DateTime::now(){
 	time_t now = time(0); //raw time -> this is generally implemented as an integer offset from 00:00hours, jan1, 2970 UTC. This leads me to the assumption
 	//that you can use (time_t time + 60) to offset by 1 minute, (time_t time + 3600) to offset by 1 hour etc
 	struct tm timeinfo; //this struct is defined by the system
@@ -23,7 +25,7 @@ string DateTime::Now(){
 	return output;
 }
 
-string DateTime::Today(){
+string DateTime::today(){
 	time_t now = time(0);
 	struct tm timeinfo;
 	localtime_s(&timeinfo, &now);
@@ -33,8 +35,27 @@ string DateTime::Today(){
 }
 
 
-String DateTime::Tomorrow(){
+string DateTime::tomorrow(){
+	time_t now = time(0);
+	struct tm *ltm = localtime(&now);
 
+	char output[80];
+	strftime(output, 80, "%d/%m/%Y", &timeinfo);
+	return output;
 
 
 }
+
+string DateTime::convertTime(string input){
+
+
+}
+
+void DateTime::displayTime(){
+
+
+}
+
+
+
+

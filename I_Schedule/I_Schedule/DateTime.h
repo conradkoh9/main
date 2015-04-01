@@ -6,10 +6,11 @@ class DateTime
 {
 public:
 	DateTime();
-	DateTime(string input);
+	DateTime(string);
 	~DateTime();
-	string Now();
-	string Today();
+	string now();
+	string today();
+	string tomorrow();
 
 private:
 	int _day;
