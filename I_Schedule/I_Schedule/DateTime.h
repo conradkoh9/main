@@ -8,14 +8,14 @@ public:
 	DateTime();
 	DateTime(string);
 	~DateTime();
-	string now();
-	string today();
-	string tomorrow();
+	string Now();
+	string Today();
+	string Tomorrow();
 
-	string convertDate();
-	string convertDateTime(string);
-	string convertTime();
-	string getType(string);
+	string ConvertDate();
+	string ConvertDateTime(string);
+	string ConvertTime();
+	string GetType(string);
 
 	static const string DATETYPE_MONDAY1;
 	static const string DATETYPE_MONDAY2;

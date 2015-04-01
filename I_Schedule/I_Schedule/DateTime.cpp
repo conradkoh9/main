@@ -29,7 +29,7 @@ DateTime::DateTime(string input){
 DateTime::~DateTime(){
 }
 
-string DateTime::now(){
+string DateTime::Now(){
 	time_t now = time(0); //raw time -> this is generally implemented as an integer offset from 00:00hours, jan1, 2970 UTC. This leads me to the assumption
 	//that you can use (time_t time + 60) to offset by 1 minute, (time_t time + 3600) to offset by 1 hour etc
 	struct tm timeinfo; //this struct is defined by the system
@@ -40,7 +40,7 @@ string DateTime::now(){
 	return output;
 }
 
-string DateTime::today(){
+string DateTime::Today(){
 	time_t now = time(0);
 	struct tm timeinfo;
 	localtime_s(&timeinfo, &now);
@@ -50,7 +50,7 @@ string DateTime::today(){
 }
 
 
-string DateTime::tomorrow(){
+string DateTime::Tomorrow(){
 	time_t now = time(0);
 	struct tm timeinfo;
 	localtime_s(&timeinfo, &now);
@@ -62,14 +62,14 @@ string DateTime::tomorrow(){
 
 }
 
-string DateTime::convertDateTime(string input){
+string DateTime::ConvertDateTime(string input){
 	string task_date;
 	string task_time;
 	string output;
 	
-	getType(input); //this method is used to classify the input info into Date and Time for conversion 
-	task_date = convertDate(); //convert user's date to the proper one
-	task_time = convertTime();  //convert time to proper one 
+	GetType(input); //this method is used to classify the input info into Date and Time for conversion 
+	task_date = ConvertDate(); //convert user's date to the proper one
+	task_time = ConvertTime();  //convert time to proper one 
 	
 	output = task_date + task_time;
 
@@ -77,19 +77,25 @@ string DateTime::convertDateTime(string input){
 }
 
 
-string DateTime::getType(string input){
+string DateTime::GetType(string input){
 
 
 	//here i want to use the find. function to search whether the input contains any date or time keyword
+	string feedback = "";
+	return feedback;
 
 }
 
-string DateTime::convertDate(){
+string DateTime::ConvertDate(){
 	//make use of today() function, compare and add more days to get the supposed date 
+	string feedback = "";
+	return feedback;
 }
 
-string DateTime::convertTime(){
+string DateTime::ConvertTime(){
 	//this function is simply change the format e.g if they key in 2pm, here we change it to 0200pm
+	string feedback = "";
+	return feedback;
 }
 
 
