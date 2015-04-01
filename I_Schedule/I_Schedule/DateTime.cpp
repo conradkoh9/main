@@ -60,16 +60,16 @@ string DateTime::convertDateTime(string input){
 
 
 string DateTime::getType(string input){
-
+	//here i want to use the find. function to search whether the input contains any date or time keyword
 
 }
 
 string DateTime::convertDate(){
-
+	//make use of today() function, compare and add more days to get the supposed date 
 }
 
 string DateTime::convertTime(){
-
+	//this function is simply change the format e.g if they key in 2pm, here we change it to 0200pm
 }
 
 

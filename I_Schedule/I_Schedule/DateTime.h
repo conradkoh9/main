@@ -23,6 +23,18 @@ public:
 	static const string DATETYPE_TUESDAY2;
 	static const string DATETYPE_WENESDAY1;
 	static const string DATETYPE_WENESDAY2;
+	static const string DATETYPE_THURSDAY1;
+	static const string DATETYPE_THURSDAY2;
+	static const string DATETYPE_FRIDAY1;
+	static const string DATETYPE_FRIDAY2;
+	static const string DATETYPE_SATURDAY1;
+	static const string DATETYPE_SATURDAY2;
+	static const string DATETYPE_SUNDAY1;
+	static const string DATETYPE_SUNDAY2;
+
+	static const string TIMETYPE_AM;
+	static const string TIMETYPE_PM;
+
 	// my idea here is I have to search for the key words for day and time so 
 	// as to separate the info into date and time type
 private:
