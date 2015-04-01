@@ -1,5 +1,23 @@
 #include "DateTime.h"
 
+const string DATETYPE_MONDAY1 = "Monday";
+const string DATETYPE_MONDAY2 = "Mon";
+const string DATETYPE_TUESDAY1 = "Tuesday";
+const string DATETYPE_TUESDAY2 = "Tues";
+const string DATETYPE_WEDNESDAY1 = "Wednesday";
+const string DATETYPE_WEDNESDAY2 = "Wed";
+const string DATETYPE_THURSDAY1 = "Thursday";
+const string DATETYPE_THURSDAY2 = "Thurs";
+const string DATETYPE_FRIDAY1 = "Friday";
+const string DATETYPE_FRIDAY2 = "Fri";
+const string DATETYPE_SATURDAY1 = "Saturday";
+const string DATETYPE_SATURDAY2 = "Sat";
+const string DATETYPE_SUNDAY1 = "Sunday";
+const string DATETYPE_SUNDAY2 = "Sun";
+
+const string TIMETYPE_AM = "am";
+const string TIMETYPE_PM = "pm";
+
 
 DateTime::DateTime()
 {
@@ -60,6 +78,8 @@ string DateTime::convertDateTime(string input){
 
 
 string DateTime::getType(string input){
+
+
 	//here i want to use the find. function to search whether the input contains any date or time keyword
 
 }

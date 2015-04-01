@@ -21,8 +21,8 @@ public:
 	static const string DATETYPE_MONDAY2;
 	static const string DATETYPE_TUESDAY1;
 	static const string DATETYPE_TUESDAY2;
-	static const string DATETYPE_WENESDAY1;
-	static const string DATETYPE_WENESDAY2;
+	static const string DATETYPE_WEDNESDAY1;
+	static const string DATETYPE_WEDNESDAY2;
 	static const string DATETYPE_THURSDAY1;
 	static const string DATETYPE_THURSDAY2;
 	static const string DATETYPE_FRIDAY1;
