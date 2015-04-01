@@ -31,6 +31,10 @@ public:
 
 	//
 	DateTime* dateTime;
+	vector<Task*> daytask;
+	string daycalendar[48];
+	vector<string> emptyslots;
+
 
 	//CONSTRUCTORS
 	Storage();
@@ -54,8 +58,11 @@ public:
 	string Search(string input);
 	vector<Task*> PowerSearch(string input);
 	vector<Task*> NearSearch(string input);
-	//vector<string> GetEmptySlots(string input);
-
+	string SearchEmptySlots(string input);
+	void InitializeDayTask(string input);
+	void SetDayCalendar();
+	string GetEmptySlots();
+	
 	//STATS
 	int Size();
 	string GetTask(int index);
@@ -68,6 +75,7 @@ public:
 	//To be refactored because it is not apparent what storage->ToString should give
 	string ToString();
 	string ToString(vector<Task*> V);
+	string ToString(vector<string> v);
 
 private:
 

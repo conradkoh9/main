@@ -156,16 +156,54 @@ vector<Task*> Storage::NearSearch(string input){
 	return searchResult;
 }
 
-/*vector<string> Storage::GetEmptySlots(string input){
-vector<string> wholeDay;
-string startTime;
-string endTime; //use DateTime class to convert input
-for (int i = 0; i < 24; i++){
-wholeDay.push_back(""); //Use DateTime class to initialize
+string Storage::SearchEmptySlots(string input){
+	string date = dateTime->ConvertDateTime(input);
+	InitializeDayTask(date);
+	SetDayCalendar();
+	return GetEmptySlots();
 }
 
-}*/
+void Storage::InitializeDayTask(string date){
+	for (int i = 0; i < taskList.size(); i++){
+		if (taskList[i]->GetStartDate() == date)
+			daytask.push_back(taskList[i]);
+	}
+}
 
+void Storage::SetDayCalendar(){
+	//Set sleeping time
+	for (int i = 0; i < 14; i++){
+		daycalendar[i] = "sleeping";
+	}
+	daycalendar[48] = "sleeping";
+	daycalendar[47] = "sleeping";
+
+	for (int i = 0; i < daytask.size(); i++){ //need to consider the tasks without time
+		string startTime = daytask[i]->GetStandardStartDate();
+		string endTime = daytask[i]->GetStandardEndDate();
+
+	}
+}
+
+string Storage::GetEmptySlots(){
+	for (int i = 0; i < 48; i++){
+		if (daycalendar[i] == ""){
+			if (i % 2 == 0){
+				int hour = i / 2;
+				ostringstream oss;
+				oss << hour << ":" << "00";
+				emptyslots.push_back(oss.str());
+			}
+			else{
+				int hour = i / 2 - 1;
+				ostringstream oss;
+				oss << hour << ":" << "30";
+				emptyslots.push_back(oss.str());
+			}
+		}
+	}
+	return ToString(emptyslots);
+}
 
 
 //====================================================================
@@ -230,6 +268,15 @@ string Storage::ToString(vector<Task*> V){
 		else{
 			out << index << ": " << (*iter)->ToShortString();
 		}
+	}
+	return out.str();
+}
+
+string Storage::ToString(vector<string> input){
+	ostringstream out;
+	vector<string>::iterator iter;
+	for (iter = input.begin(); iter != input.end(); iter++){
+		out << *iter << endl;
 	}
 	return out.str();
 }
