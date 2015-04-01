@@ -5,13 +5,10 @@ DateTime::DateTime()
 {
 }
 
-DateTime::DateTime(string input){
-	
+DateTime::DateTime(string input){	
 }
 
 DateTime::~DateTime(){
-
-
 }
 
 string DateTime::now(){
@@ -37,8 +34,9 @@ string DateTime::today(){
 
 string DateTime::tomorrow(){
 	time_t now = time(0);
-	struct tm *ltm = localtime(&now);
-
+	struct tm timeinfo;
+	localtime_s(&timeinfo, &now);
+	timeinfo.tm_mday = timeinfo.tm_mday + 1;
 	char output[80];
 	strftime(output, 80, "%d/%m/%Y", &timeinfo);
 	return output;
@@ -46,15 +44,34 @@ string DateTime::tomorrow(){
 
 }
 
-string DateTime::convertTime(string input){
+string DateTime::convertDateTime(string input){
+	string task_date;
+	string task_time;
+	string output;
+	
+	getType(input); //this method is used to classify the input info into Date and Time for conversion 
+	task_date = convertDate(); //convert user's date to the proper one
+	task_time = convertTime();  //convert time to proper one 
+	
+	output = task_date + task_time;
+
+	return output;
+}
+
+
+string DateTime::getType(string input){
 
 
 }
 
-void DateTime::displayTime(){
-	cout << "Today is ";
-	cout << today() << endl;
+string DateTime::convertDate(){
+
 }
+
+string DateTime::convertTime(){
+
+}
+
 
 
 
