@@ -50,17 +50,6 @@ string DateTime::Today(){
 }
 
 
-string DateTime::Tomorrow(){
-	time_t now = time(0);
-	struct tm timeinfo;
-	localtime_s(&timeinfo, &now);
-	timeinfo.tm_mday = timeinfo.tm_mday + 1;
-	char output[80];
-	strftime(output, 80, "%d/%m/%Y", &timeinfo);
-	return output;
-
-
-}
 
 string DateTime::ConvertDateTime(string input){
 	string task_date;
