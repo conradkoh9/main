@@ -27,6 +27,7 @@ public:
 	string Display();
 	string Edit(string taskInput);
 	string Search(string taskInput);
+	string CloseSearch(string input);
 	string Invalid();
 	string Save(string input);
 	string Clear();

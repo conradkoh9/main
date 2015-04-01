@@ -19,6 +19,7 @@ public:
 	UI_Controller();
 	~UI_Controller();
 	string Run(string input);
+	string QuickSearch(string input);
 
 private:
 	string Standardize(string input);

@@ -98,6 +98,9 @@ string DateTime::ConvertTime(){
 	return feedback;
 }
 
+bool DateTime::CompareDateTime(string input1, string input2){
+	return true;
+}
 
 
 

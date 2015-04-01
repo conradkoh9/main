@@ -137,7 +137,7 @@ vector<Task*> Storage::PowerSearch(string input){
 	vector<Task*> searchResult;
 	for (iter = taskList.begin(); iter != taskList.end(); ++iter){
 		Task* currentTask = *iter;
-		if (currentTask->Contains(input)){
+		if (currentTask->isContains(input)){
 			searchResult.push_back(currentTask);
 		}
 	}
@@ -149,7 +149,7 @@ vector<Task*> Storage::NearSearch(string input){
 	vector<Task*> searchResult;
 	for (iter = taskList.begin(); iter != taskList.end(); ++iter){
 		Task* currentTask = *iter;
-		if (currentTask->NearMatch(input)){
+		if (currentTask->isNearMatch(input)){
 			searchResult.push_back(currentTask);
 		}
 	}
@@ -252,9 +252,12 @@ void Storage::Update(){
 //====================================================================
 
 void Storage::FilterTask(){
-	timedList.clear();
-	deadlineList.clear();
-	floatingList.clear();
+	sortTaskListsByTime();
+	initializeLists();
+	return;
+}
+
+void Storage::initializeLists(){
 	int size_taskList = taskList.size();
 
 	for (int i = 0; i < size_taskList; i++){
@@ -272,6 +275,20 @@ void Storage::FilterTask(){
 	}
 }
 
+void Storage::sortTaskListsByTime(){
+	int size_taskList = taskList.size();
+	for (int i = 1; i < size_taskList; i++){
+		for (int j = 1; j < size_taskList - i;++j){
+			string sdStart1 = taskList[j-1]->GetStandardStartDate();
+			string sdStart2 = taskList[j]->GetStandardStartDate();
+			if (dateTime->CompareDateTime(sdStart1,sdStart2)){
+				Task* temp = taskList[j-1];
+				taskList[j-1] = taskList[j];
+				taskList[j] = temp;
+			}
+		}
+	}
+}
 
 
 //====================================================================

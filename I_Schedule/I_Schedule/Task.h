@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #include "Smartstring.h"
+#include "DateTime.h"
 #include <iomanip>
 #include <cstring>
 #include <climits>
@@ -14,6 +15,10 @@ private:
 	string startdate;
 	string enddate;
 	string priority;
+	string standardStart;
+	string standardEnd;
+	DateTime* standardStartdt;
+	DateTime* standardEnddt;
 
 public:
 	Task();
@@ -33,26 +38,32 @@ public:
 	static const string _FEEDBACK_STARTDATE_SET;
 	static const string _FEEDBACK_ENDDATE_SET;
 	static const string _FEEDBACK_PRIORITY_SET;
+	static const string _FEEDBACK_STANDARD_START_DATE_SET;
+	static const string _FEEDBACK_STANDARD_END_DATE_SET;
 
 	string SetDescription(string input);
 	string SetStartDate(string input);
 	string SetEndDate(string input);
 	string SetPriority(string input);
+	string SetStandardStartDate();
+	string SetStandardEndDate();
 
 	string GetDescription();
 	string GetStartDate();
 	string GetEndDate();
 	string GetPriority();
+	string GetStandardStartDate();
+	string GetStandardEndDate();
 
 	string ToString();
 	string ToShortString();
 	string ToCSVString();
 
 	TASKTYPE GetType();
-	bool Contains(string input);
-	bool NearMatch(string input);
+	bool isContains(string input);
+	bool isNearMatch(string input);
 	size_t LevenshteinDistance(const std::string &s1, const std::string &s2);
-	//template<class T> unsigned int levenshtein_distance(const T &s1, const T & s2);
+	
 
 	bool isFloating();
 	bool isDeadline();

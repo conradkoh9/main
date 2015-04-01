@@ -16,6 +16,7 @@ public:
 	string ConvertDateTime(string);
 	string ConvertTime();
 	string GetType(string);
+	bool CompareDateTime(string, string);
 
 	static const string DATETYPE_MONDAY1;
 	static const string DATETYPE_MONDAY2;

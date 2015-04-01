@@ -29,6 +29,9 @@ public:
 	vector<Task*> timedList;
 	vector<Task*> deadlineList;
 
+	//
+	DateTime* dateTime;
+
 	//CONSTRUCTORS
 	Storage();
 	Storage(string filename);
@@ -104,6 +107,8 @@ private:
 
 	//filter methods
 	void FilterTask();
+	void sortTaskListsByTime();
+	void initializeLists();
 
 	//clear methods
 	void ClearFile();

@@ -165,6 +165,11 @@ string Logic::Search(string taskInput){
 	return _FEEDBACK_SEARCH;
 }
 
+string Logic::CloseSearch(string input){
+	mout << storage->ToString(storage->NearSearch(input));
+	return _FEEDBACK_SEARCH;
+}
+
 string Logic::Save(string input){
 	string feedback = storage->SaveAs(input);
 	return feedback;

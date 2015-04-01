@@ -10,6 +10,8 @@ const string Task::_FEEDBACK_DESCRIPTION_SET = "DESCRIPTION SET";
 const string Task::_FEEDBACK_STARTDATE_SET = "START DATE SET";
 const string Task::_FEEDBACK_ENDDATE_SET = "END DATE SET";
 const string Task::_FEEDBACK_PRIORITY_SET = "PRIORITY SET";
+const string Task::_FEEDBACK_STANDARD_START_DATE_SET = "STANDARD FORMAT OF START DATE SET";
+const string Task::_FEEDBACK_STANDARD_END_DATE_SET = "STAMDARD FORMAT OF END DATE SET";
 
 Task::Task()
 {
@@ -53,6 +55,19 @@ string Task::SetPriority(string input){
 	return _FEEDBACK_PRIORITY_SET;
 }
 
+string Task::SetStandardStartDate(){
+	string FormatToBeConverted = startdate;
+	standardStart=standardStartdt->ConvertDateTime(FormatToBeConverted);
+	return _FEEDBACK_STANDARD_START_DATE_SET;
+}
+
+
+string Task::SetStandardEndDate(){
+	string FormatToBeConverted = startdate;
+	standardEnd=standardEnddt->ConvertDateTime(FormatToBeConverted);
+	return _FEEDBACK_STANDARD_END_DATE_SET;
+}
+
 string Task::GetDescription(){
 	return description;
 }
@@ -67,6 +82,14 @@ string Task::GetEndDate(){
 
 string Task::GetPriority(){
 	return priority;
+}
+
+string Task::GetStandardStartDate(){
+	return standardStart;
+}
+
+string Task::GetStandardEndDate(){
+	return standardEnd;
 }
 
 string Task::ToString(){
@@ -113,7 +136,7 @@ Task::TASKTYPE Task::GetType(){
 	}
 }
 
-bool Task::Contains(string input){
+bool Task::isContains(string input){
 	bool found = false;
 	int pos;
 	vector<string> taskVect;
@@ -138,7 +161,7 @@ bool Task::Contains(string input){
 	return found;
 }
 
-bool Task::NearMatch(string input){
+bool Task::isNearMatch(string input){
 	bool match = false;
 	size_t difference;
 	size_t tolarent_diff = 3;

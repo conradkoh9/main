@@ -99,9 +99,10 @@ namespace I_ScheduleGUI {
 			// BUTTON_SEND
 			// 
 			this->BUTTON_SEND->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Bottom | System::Windows::Forms::AnchorStyles::Right));
-			this->BUTTON_SEND->Location = System::Drawing::Point(867, 902);
+			this->BUTTON_SEND->Location = System::Drawing::Point(650, 649);
+			this->BUTTON_SEND->Margin = System::Windows::Forms::Padding(2, 2, 2, 2);
 			this->BUTTON_SEND->Name = L"BUTTON_SEND";
-			this->BUTTON_SEND->Size = System::Drawing::Size(189, 40);
+			this->BUTTON_SEND->Size = System::Drawing::Size(142, 29);
 			this->BUTTON_SEND->TabIndex = 1;
 			this->BUTTON_SEND->Text = L"SEND";
 			this->BUTTON_SEND->UseVisualStyleBackColor = true;
@@ -113,11 +114,13 @@ namespace I_ScheduleGUI {
 				| System::Windows::Forms::AnchorStyles::Right));
 			this->INPUT_CMDLN->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->INPUT_CMDLN->Location = System::Drawing::Point(12, 904);
+			this->INPUT_CMDLN->Location = System::Drawing::Point(9, 651);
+			this->INPUT_CMDLN->Margin = System::Windows::Forms::Padding(2, 2, 2, 2);
 			this->INPUT_CMDLN->Multiline = true;
 			this->INPUT_CMDLN->Name = L"INPUT_CMDLN";
-			this->INPUT_CMDLN->Size = System::Drawing::Size(819, 40);
+			this->INPUT_CMDLN->Size = System::Drawing::Size(615, 30);
 			this->INPUT_CMDLN->TabIndex = 0;
+			this->INPUT_CMDLN->TextChanged += gcnew System::EventHandler(this, &GUI::INPUT_CMDLN_TextChanged);
 			// 
 			// DISPLAY_TASK_DEADLINE
 			// 
@@ -125,11 +128,12 @@ namespace I_ScheduleGUI {
 				| System::Windows::Forms::AnchorStyles::Right));
 			this->DISPLAY_TASK_DEADLINE->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Regular,
 				System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(0)));
-			this->DISPLAY_TASK_DEADLINE->Location = System::Drawing::Point(715, 49);
+			this->DISPLAY_TASK_DEADLINE->Location = System::Drawing::Point(536, 35);
+			this->DISPLAY_TASK_DEADLINE->Margin = System::Windows::Forms::Padding(2, 2, 2, 2);
 			this->DISPLAY_TASK_DEADLINE->Multiline = true;
 			this->DISPLAY_TASK_DEADLINE->Name = L"DISPLAY_TASK_DEADLINE";
 			this->DISPLAY_TASK_DEADLINE->ScrollBars = System::Windows::Forms::ScrollBars::Vertical;
-			this->DISPLAY_TASK_DEADLINE->Size = System::Drawing::Size(325, 460);
+			this->DISPLAY_TASK_DEADLINE->Size = System::Drawing::Size(245, 332);
 			this->DISPLAY_TASK_DEADLINE->TabIndex = 2;
 			this->DISPLAY_TASK_DEADLINE->TextChanged += gcnew System::EventHandler(this, &GUI::DISPLAY_TASK_DEADLINE_TextChanged);
 			// 
@@ -140,11 +144,12 @@ namespace I_ScheduleGUI {
 				| System::Windows::Forms::AnchorStyles::Right));
 			this->DISPLAY_TASK_FLOAT->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->DISPLAY_TASK_FLOAT->Location = System::Drawing::Point(364, 49);
+			this->DISPLAY_TASK_FLOAT->Location = System::Drawing::Point(273, 35);
+			this->DISPLAY_TASK_FLOAT->Margin = System::Windows::Forms::Padding(2, 2, 2, 2);
 			this->DISPLAY_TASK_FLOAT->Multiline = true;
 			this->DISPLAY_TASK_FLOAT->Name = L"DISPLAY_TASK_FLOAT";
 			this->DISPLAY_TASK_FLOAT->ScrollBars = System::Windows::Forms::ScrollBars::Vertical;
-			this->DISPLAY_TASK_FLOAT->Size = System::Drawing::Size(325, 460);
+			this->DISPLAY_TASK_FLOAT->Size = System::Drawing::Size(245, 332);
 			this->DISPLAY_TASK_FLOAT->TabIndex = 3;
 			this->DISPLAY_TASK_FLOAT->TextChanged += gcnew System::EventHandler(this, &GUI::DISPLAY_TASK_FLOAT_TextChanged);
 			// 
@@ -154,11 +159,12 @@ namespace I_ScheduleGUI {
 				| System::Windows::Forms::AnchorStyles::Left));
 			this->DISPLAY_TASK_TIMED->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->DISPLAY_TASK_TIMED->Location = System::Drawing::Point(12, 49);
+			this->DISPLAY_TASK_TIMED->Location = System::Drawing::Point(9, 35);
+			this->DISPLAY_TASK_TIMED->Margin = System::Windows::Forms::Padding(2, 2, 2, 2);
 			this->DISPLAY_TASK_TIMED->Multiline = true;
 			this->DISPLAY_TASK_TIMED->Name = L"DISPLAY_TASK_TIMED";
 			this->DISPLAY_TASK_TIMED->ScrollBars = System::Windows::Forms::ScrollBars::Vertical;
-			this->DISPLAY_TASK_TIMED->Size = System::Drawing::Size(325, 460);
+			this->DISPLAY_TASK_TIMED->Size = System::Drawing::Size(245, 332);
 			this->DISPLAY_TASK_TIMED->TabIndex = 4;
 			this->DISPLAY_TASK_TIMED->TextChanged += gcnew System::EventHandler(this, &GUI::DISPLAY_TASK_TIMED_TextChanged);
 			// 
@@ -168,11 +174,12 @@ namespace I_ScheduleGUI {
 				| System::Windows::Forms::AnchorStyles::Right));
 			this->DISPLAY_MAIN->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->DISPLAY_MAIN->Location = System::Drawing::Point(12, 550);
+			this->DISPLAY_MAIN->Location = System::Drawing::Point(9, 396);
+			this->DISPLAY_MAIN->Margin = System::Windows::Forms::Padding(2, 2, 2, 2);
 			this->DISPLAY_MAIN->Multiline = true;
 			this->DISPLAY_MAIN->Name = L"DISPLAY_MAIN";
 			this->DISPLAY_MAIN->ScrollBars = System::Windows::Forms::ScrollBars::Vertical;
-			this->DISPLAY_MAIN->Size = System::Drawing::Size(1044, 338);
+			this->DISPLAY_MAIN->Size = System::Drawing::Size(784, 244);
 			this->DISPLAY_MAIN->TabIndex = 5;
 			this->DISPLAY_MAIN->TextChanged += gcnew System::EventHandler(this, &GUI::DISPLAY_MAIN_TextChanged);
 			// 
@@ -182,11 +189,12 @@ namespace I_ScheduleGUI {
 			this->LABEL_MAIN->BorderStyle = System::Windows::Forms::BorderStyle::None;
 			this->LABEL_MAIN->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->LABEL_MAIN->Location = System::Drawing::Point(12, 513);
+			this->LABEL_MAIN->Location = System::Drawing::Point(9, 369);
+			this->LABEL_MAIN->Margin = System::Windows::Forms::Padding(2, 2, 2, 2);
 			this->LABEL_MAIN->Multiline = true;
 			this->LABEL_MAIN->Name = L"LABEL_MAIN";
 			this->LABEL_MAIN->ReadOnly = true;
-			this->LABEL_MAIN->Size = System::Drawing::Size(100, 31);
+			this->LABEL_MAIN->Size = System::Drawing::Size(75, 22);
 			this->LABEL_MAIN->TabIndex = 6;
 			this->LABEL_MAIN->Text = L"Main";
 			// 
@@ -197,11 +205,12 @@ namespace I_ScheduleGUI {
 			this->LABEL_TIMED_TASKS->BorderStyle = System::Windows::Forms::BorderStyle::None;
 			this->LABEL_TIMED_TASKS->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->LABEL_TIMED_TASKS->Location = System::Drawing::Point(364, 12);
+			this->LABEL_TIMED_TASKS->Location = System::Drawing::Point(273, 9);
+			this->LABEL_TIMED_TASKS->Margin = System::Windows::Forms::Padding(2, 2, 2, 2);
 			this->LABEL_TIMED_TASKS->Multiline = true;
 			this->LABEL_TIMED_TASKS->Name = L"LABEL_TIMED_TASKS";
 			this->LABEL_TIMED_TASKS->ReadOnly = true;
-			this->LABEL_TIMED_TASKS->Size = System::Drawing::Size(219, 31);
+			this->LABEL_TIMED_TASKS->Size = System::Drawing::Size(164, 22);
 			this->LABEL_TIMED_TASKS->TabIndex = 7;
 			this->LABEL_TIMED_TASKS->Text = L"Timed Tasks";
 			// 
@@ -211,11 +220,12 @@ namespace I_ScheduleGUI {
 			this->LABEL_DEADLINE_TASKS->BorderStyle = System::Windows::Forms::BorderStyle::None;
 			this->LABEL_DEADLINE_TASKS->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Regular,
 				System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(0)));
-			this->LABEL_DEADLINE_TASKS->Location = System::Drawing::Point(715, 12);
+			this->LABEL_DEADLINE_TASKS->Location = System::Drawing::Point(536, 9);
+			this->LABEL_DEADLINE_TASKS->Margin = System::Windows::Forms::Padding(2, 2, 2, 2);
 			this->LABEL_DEADLINE_TASKS->Multiline = true;
 			this->LABEL_DEADLINE_TASKS->Name = L"LABEL_DEADLINE_TASKS";
 			this->LABEL_DEADLINE_TASKS->ReadOnly = true;
-			this->LABEL_DEADLINE_TASKS->Size = System::Drawing::Size(219, 31);
+			this->LABEL_DEADLINE_TASKS->Size = System::Drawing::Size(164, 22);
 			this->LABEL_DEADLINE_TASKS->TabIndex = 8;
 			this->LABEL_DEADLINE_TASKS->Text = L"Deadline Tasks";
 			// 
@@ -224,11 +234,12 @@ namespace I_ScheduleGUI {
 			this->LABEL_FLOATING_TASK->BorderStyle = System::Windows::Forms::BorderStyle::None;
 			this->LABEL_FLOATING_TASK->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->LABEL_FLOATING_TASK->Location = System::Drawing::Point(12, 12);
+			this->LABEL_FLOATING_TASK->Location = System::Drawing::Point(9, 9);
+			this->LABEL_FLOATING_TASK->Margin = System::Windows::Forms::Padding(2, 2, 2, 2);
 			this->LABEL_FLOATING_TASK->Multiline = true;
 			this->LABEL_FLOATING_TASK->Name = L"LABEL_FLOATING_TASK";
 			this->LABEL_FLOATING_TASK->ReadOnly = true;
-			this->LABEL_FLOATING_TASK->Size = System::Drawing::Size(219, 31);
+			this->LABEL_FLOATING_TASK->Size = System::Drawing::Size(164, 22);
 			this->LABEL_FLOATING_TASK->TabIndex = 9;
 			this->LABEL_FLOATING_TASK->Text = L"Floating Tasks";
 			// 
@@ -247,35 +258,39 @@ namespace I_ScheduleGUI {
 			this->panel1->Controls->Add(this->DISPLAY_TASK_FLOAT);
 			this->panel1->Dock = System::Windows::Forms::DockStyle::Fill;
 			this->panel1->Location = System::Drawing::Point(0, 0);
+			this->panel1->Margin = System::Windows::Forms::Padding(2, 2, 2, 2);
 			this->panel1->Name = L"panel1";
-			this->panel1->Size = System::Drawing::Size(1071, 1001);
+			this->panel1->Size = System::Drawing::Size(803, 721);
 			this->panel1->TabIndex = 10;
 			// 
 			// STATUS_BAR
 			// 
 			this->STATUS_BAR->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(1) { this->DISPLAY_STATUS });
-			this->STATUS_BAR->Location = System::Drawing::Point(0, 956);
+			this->STATUS_BAR->Location = System::Drawing::Point(0, 692);
 			this->STATUS_BAR->Name = L"STATUS_BAR";
-			this->STATUS_BAR->Size = System::Drawing::Size(1071, 45);
+			this->STATUS_BAR->Padding = System::Windows::Forms::Padding(1, 0, 10, 0);
+			this->STATUS_BAR->Size = System::Drawing::Size(803, 29);
 			this->STATUS_BAR->TabIndex = 10;
 			this->STATUS_BAR->Text = L"Welcome to I_Schedule.";
 			// 
 			// DISPLAY_STATUS
 			// 
 			this->DISPLAY_STATUS->Name = L"DISPLAY_STATUS";
-			this->DISPLAY_STATUS->Size = System::Drawing::Size(145, 40);
+			this->DISPLAY_STATUS->Size = System::Drawing::Size(96, 24);
 			this->DISPLAY_STATUS->Text = L"Status Bar";
 			// 
 			// GUI
 			// 
 			this->AcceptButton = this->BUTTON_SEND;
-			this->AutoScaleDimensions = System::Drawing::SizeF(12, 25);
+			this->AutoScaleDimensions = System::Drawing::SizeF(9, 18);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(1071, 1001);
+			this->ClientSize = System::Drawing::Size(803, 721);
 			this->Controls->Add(this->panel1);
-			this->MinimumSize = System::Drawing::Size(1071, 1001);
+			this->Margin = System::Windows::Forms::Padding(2, 2, 2, 2);
+			this->MinimumSize = System::Drawing::Size(809, 736);
 			this->Name = L"GUI";
 			this->Text = L"GUI";
+			this->Load += gcnew System::EventHandler(this, &GUI::GUI_Load);
 			this->panel1->ResumeLayout(false);
 			this->panel1->PerformLayout();
 			this->STATUS_BAR->ResumeLayout(false);
@@ -320,5 +335,11 @@ namespace I_ScheduleGUI {
 		DISPLAY_TASK_TIMED->ScrollToCaret();
 		//end section
 	}
-	};
+	private: System::Void GUI_Load(System::Object^  sender, System::EventArgs^  e) {
+	}
+private: System::Void INPUT_CMDLN_TextChanged(System::Object^  sender, System::EventArgs^  e) {
+	string input = msclr::interop::marshal_as<std::string>(INPUT_CMDLN->Text);
+	DISPLAY_MAIN->Text = gcnew String(controller->QuickSearch(input).c_str());
+}
+};
 }
