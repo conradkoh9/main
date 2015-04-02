@@ -1,29 +1,36 @@
 #include "DateTime.h"
 
-const string DATETYPE_MONDAY1 = "Monday";
-const string DATETYPE_MONDAY2 = "Mon";
-const string DATETYPE_TUESDAY1 = "Tuesday";
-const string DATETYPE_TUESDAY2 = "Tues";
-const string DATETYPE_WEDNESDAY1 = "Wednesday";
-const string DATETYPE_WEDNESDAY2 = "Wed";
-const string DATETYPE_THURSDAY1 = "Thursday";
-const string DATETYPE_THURSDAY2 = "Thurs";
-const string DATETYPE_FRIDAY1 = "Friday";
-const string DATETYPE_FRIDAY2 = "Fri";
-const string DATETYPE_SATURDAY1 = "Saturday";
-const string DATETYPE_SATURDAY2 = "Sat";
-const string DATETYPE_SUNDAY1 = "Sunday";
-const string DATETYPE_SUNDAY2 = "Sun";
+const string DateTime::DATETYPE_MONDAY1 = "Monday";
+const string DateTime::DATETYPE_MONDAY2 = "Mon";
+const string DateTime::DATETYPE_TUESDAY1 = "Tuesday";
+const string DateTime::DATETYPE_TUESDAY2 = "Tues";
+const string DateTime::DATETYPE_WEDNESDAY1 = "Wednesday";
+const string DateTime::DATETYPE_WEDNESDAY2 = "Wed";
+const string DateTime::DATETYPE_THURSDAY1 = "Thursday";
+const string DateTime::DATETYPE_THURSDAY2 = "Thurs";
+const string DateTime::DATETYPE_FRIDAY1 = "Friday";
+const string DateTime::DATETYPE_FRIDAY2 = "Fri";
+const string DateTime::DATETYPE_SATURDAY1 = "Saturday";
+const string DateTime::DATETYPE_SATURDAY2 = "Sat";
+const string DateTime::DATETYPE_SUNDAY1 = "Sunday";
+const string DateTime::DATETYPE_SUNDAY2 = "Sun";
 
-const string TIMETYPE_AM = "am";
-const string TIMETYPE_PM = "pm";
+const string DateTime::TIMETYPE_AM = "am";
+const string DateTime::TIMETYPE_PM = "pm";
+
+bool DateTime::isInitialized = false;
+int DateTime::numberOfDateType;
+int DateTime::numberOfTimeType;
+vector<string> DateTime::dateType;
+vector<string> DateTime::timeType;
 
 
-DateTime::DateTime()
-{
+DateTime::DateTime(){	
+	Initialize();
 }
 
-DateTime::DateTime(string input){	
+DateTime::DateTime(string input){
+	Initialize();
 }
 
 DateTime::~DateTime(){
@@ -55,11 +62,11 @@ string DateTime::ConvertDateTime(string input){
 	string task_date;
 	string task_time;
 	string output;
-	
+
 	GetType(input); //this method is used to classify the input info into Date and Time for conversion 
 	task_date = ConvertDate(); //convert user's date to the proper one
 	task_time = ConvertTime();  //convert time to proper one 
-	
+
 	output = task_date + task_time;
 
 	return output;
@@ -67,21 +74,49 @@ string DateTime::ConvertDateTime(string input){
 
 
 string DateTime::GetType(string input){
+	string day;
+	string time;
+	string description;
+
+	description = input;
+
+	if (isDateType(description)){
+
+	}
+
+	if (isTimeType(description)){
+
+	}
 
 
-	//here i want to use the find. function to search whether the input contains any date or time keyword
+
 	string feedback = "";
 	return feedback;
 
 }
 
+
+bool DateTime::isDateType(string day){
+
+
+	return true;
+}
+
+bool DateTime::isTimeType(string time){
+
+
+	return true;
+}
+
 string DateTime::ConvertDate(){
+
 	//make use of today() function, compare and add more days to get the supposed date 
 	string feedback = "";
 	return feedback;
 }
 
 string DateTime::ConvertTime(){
+
 	//this function is simply change the format e.g if they key in 2pm, here we change it to 0200pm
 	string feedback = "";
 	return feedback;
@@ -91,6 +126,32 @@ bool DateTime::CompareDateTime(string input1, string input2){
 	return true;
 }
 
+void DateTime::Initialize(){
+	if (!isInitialized){
+		dateType.push_back(DATETYPE_MONDAY1);
+		dateType.push_back(DATETYPE_MONDAY2);
+		dateType.push_back(DATETYPE_TUESDAY1);
+		dateType.push_back(DATETYPE_TUESDAY2);
+		dateType.push_back(DATETYPE_WEDNESDAY1);
+		dateType.push_back(DATETYPE_WEDNESDAY2);
+		dateType.push_back(DATETYPE_THURSDAY1);
+		dateType.push_back(DATETYPE_THURSDAY2);
+		dateType.push_back(DATETYPE_FRIDAY1);
+		dateType.push_back(DATETYPE_FRIDAY2);
+		dateType.push_back(DATETYPE_SATURDAY1);
+		dateType.push_back(DATETYPE_SATURDAY2);
+		dateType.push_back(DATETYPE_SUNDAY1);
+		dateType.push_back(DATETYPE_SUNDAY2);
+
+		timeType.push_back(TIMETYPE_AM);
+		timeType.push_back(TIMETYPE_PM);
+
+		numberOfDateType = dateType.size();
+		numberOfTimeType = timeType.size();
+		isInitialized = true;
+	}
+
+}
 
 
 

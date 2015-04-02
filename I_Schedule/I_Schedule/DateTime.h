@@ -1,6 +1,9 @@
 #pragma once
+#include <iostream>
 #include <string>
+#include <vector>
 #include <time.h>
+
 using namespace std;
 class DateTime
 {
@@ -10,13 +13,22 @@ public:
 	~DateTime();
 	string Now();
 	string Today();
-
-
 	string ConvertDate();
 	string ConvertDateTime(string);
 	string ConvertTime();
 	string GetType(string);
+	void Initialize();
 	bool CompareDateTime(string, string);
+	bool isDateType(string);
+	bool isTimeType(string);
+
+	
+	static bool isInitialized;
+	static int numberOfDateType;
+	static int numberOfTimeType;
+
+	static vector<string> dateType;
+	static vector<string> timeType;
 
 	static const string DATETYPE_MONDAY1;
 	static const string DATETYPE_MONDAY2;
@@ -45,6 +57,7 @@ private:
 	int _hours;
 	int _mins;
 	int _seconds;
+	string _state; //this name needs to be redefined 
 
 	enum DATEKEY{ TODAY, TOMORROW };
 };

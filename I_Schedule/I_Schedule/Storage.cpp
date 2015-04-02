@@ -21,7 +21,9 @@ const string Storage::_FEEDBACK_SESSION_LOAD_SUCCESS = "Session loaded.";
 const string Storage::_FEEDBACK_SESSION_SAVE_SUCCESS = "Session saved";
 const string Storage::_FEEDBACK_SESSION_SAVE_FAILURE = "Session failed to save.";
 const string Storage::_FEEDBACK_RESET = "Reset";
-
+//formatting variables
+const string Storage::_rtfboldtagstart = "\\b ";
+const string Storage::_rtfboldtagend = "\\b0 ";
 
 //PUBLIC =================================================================================================
 Storage::Storage(){
@@ -247,10 +249,10 @@ string Storage::ToString(){
 	for (iter = taskList.begin(); iter != taskList.end(); ++iter){
 		++index;
 		if (iter + 1 != taskList.end()){
-			out << index << ": " << (*iter)->ToShortString() << endl;
+			out << _rtfboldtagstart << index << ": " << _rtfboldtagend << (*iter)->ToShortString() << endl;
 		}
 		else{
-			out << index << ": " << (*iter)->ToShortString();
+			out << _rtfboldtagstart << index << ": " << _rtfboldtagend << (*iter)->ToShortString();
 		}
 	}
 	return out.str();
@@ -263,10 +265,10 @@ string Storage::ToString(vector<Task*> V){
 	for (iter = V.begin(); iter != V.end(); ++iter){
 		++index;
 		if (iter + 1 != V.end()){
-			out << index << ": " << (*iter)->ToShortString() << endl;
+			out << _rtfboldtagstart << index << ": " << _rtfboldtagend << (*iter)->ToShortString() << endl;
 		}
 		else{
-			out << index << ": " << (*iter)->ToShortString();
+			out << _rtfboldtagstart << index << ": " << _rtfboldtagend << (*iter)->ToShortString();
 		}
 	}
 	return out.str();

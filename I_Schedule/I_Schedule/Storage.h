@@ -101,6 +101,10 @@ private:
 	static const string _FEEDBACK_SESSION_SAVE_FAILURE;
 	static const string _FEEDBACK_RESET;
 
+	//formatting variables
+	static const string _rtfboldtagstart;
+	static const string _rtfboldtagend;
+
 	//File Details
 	const string _FILE_EXTENSION_CSV = ".csv";
 	const string _FILE_EXTENSION_TXT = ".txt";
