@@ -27,11 +27,23 @@ namespace I_ScheduleGUI {
 
 		}
 		void Welcome(){
-			DISPLAY_TASK_TIMED->Text = gcnew String(controller->DISPLAY_TASK_TIMED.c_str());
-			DISPLAY_TASK_DEADLINE->Text = gcnew String(controller->DISPLAY_TASK_DEADLINE.c_str());
-			DISPLAY_TASK_FLOAT->Text = gcnew String(controller->DISPLAY_TASK_FLOAT.c_str());
-			DISPLAY_MAIN->Text = gcnew String(controller->DISPLAY_MAIN.c_str());
 			DISPLAY_STATUS->Text = gcnew String(controller->DISPLAY_STATUS.c_str());
+
+			DISPLAY_TASK_TIMED->LoadFile(gcnew String(controller->rtf_timed.c_str()));
+			DISPLAY_TASK_DEADLINE->LoadFile(gcnew String(controller->rtf_deadline.c_str()));
+			DISPLAY_TASK_FLOAT->LoadFile(gcnew String(controller->rtf_float.c_str()));
+			DISPLAY_MAIN->LoadFile(gcnew String(controller->rtf_main.c_str()));
+
+			//this section scrolls to the bottom of textboxes on load
+			DISPLAY_TASK_TIMED->SelectionStart = DISPLAY_TASK_TIMED->TextLength;
+			DISPLAY_TASK_TIMED->ScrollToCaret();
+			DISPLAY_TASK_FLOAT->SelectionStart = DISPLAY_TASK_FLOAT->TextLength;
+			DISPLAY_TASK_FLOAT->ScrollToCaret();
+			DISPLAY_MAIN->SelectionStart = DISPLAY_MAIN->TextLength;
+			DISPLAY_MAIN->ScrollToCaret();
+			DISPLAY_TASK_DEADLINE->SelectionStart = DISPLAY_TASK_DEADLINE->TextLength;
+			DISPLAY_TASK_DEADLINE->ScrollToCaret();
+			//end section
 		}
 
 	protected:
@@ -48,10 +60,10 @@ namespace I_ScheduleGUI {
 	private: System::Windows::Forms::Button^  BUTTON_SEND;
 	protected:
 	private: System::Windows::Forms::TextBox^  INPUT_CMDLN;
-	private: System::Windows::Forms::TextBox^  DISPLAY_TASK_DEADLINE;
-	private: System::Windows::Forms::TextBox^  DISPLAY_TASK_FLOAT;
-	private: System::Windows::Forms::TextBox^  DISPLAY_TASK_TIMED;
-	private: System::Windows::Forms::TextBox^  DISPLAY_MAIN;
+
+
+
+
 	private: System::Windows::Forms::TextBox^  LABEL_MAIN;
 	private: System::Windows::Forms::TextBox^  LABEL_TIMED_TASKS;
 	private: System::Windows::Forms::TextBox^  LABEL_DEADLINE_TASKS;
@@ -59,6 +71,12 @@ namespace I_ScheduleGUI {
 	private: System::Windows::Forms::Panel^  panel1;
 	private: System::Windows::Forms::StatusStrip^  STATUS_BAR;
 	private: System::Windows::Forms::ToolStripStatusLabel^  DISPLAY_STATUS;
+	private: System::Windows::Forms::RichTextBox^  DISPLAY_TASK_FLOAT;
+	private: System::Windows::Forms::RichTextBox^  DISPLAY_TASK_TIMED;
+
+	private: System::Windows::Forms::RichTextBox^  DISPLAY_MAIN;
+	private: System::Windows::Forms::RichTextBox^  DISPLAY_TASK_DEADLINE;
+
 
 
 	protected:
@@ -81,15 +99,15 @@ namespace I_ScheduleGUI {
 		{
 			this->BUTTON_SEND = (gcnew System::Windows::Forms::Button());
 			this->INPUT_CMDLN = (gcnew System::Windows::Forms::TextBox());
-			this->DISPLAY_TASK_DEADLINE = (gcnew System::Windows::Forms::TextBox());
-			this->DISPLAY_TASK_FLOAT = (gcnew System::Windows::Forms::TextBox());
-			this->DISPLAY_TASK_TIMED = (gcnew System::Windows::Forms::TextBox());
-			this->DISPLAY_MAIN = (gcnew System::Windows::Forms::TextBox());
 			this->LABEL_MAIN = (gcnew System::Windows::Forms::TextBox());
 			this->LABEL_TIMED_TASKS = (gcnew System::Windows::Forms::TextBox());
 			this->LABEL_DEADLINE_TASKS = (gcnew System::Windows::Forms::TextBox());
 			this->LABEL_FLOATING_TASK = (gcnew System::Windows::Forms::TextBox());
 			this->panel1 = (gcnew System::Windows::Forms::Panel());
+			this->DISPLAY_TASK_DEADLINE = (gcnew System::Windows::Forms::RichTextBox());
+			this->DISPLAY_TASK_TIMED = (gcnew System::Windows::Forms::RichTextBox());
+			this->DISPLAY_MAIN = (gcnew System::Windows::Forms::RichTextBox());
+			this->DISPLAY_TASK_FLOAT = (gcnew System::Windows::Forms::RichTextBox());
 			this->STATUS_BAR = (gcnew System::Windows::Forms::StatusStrip());
 			this->DISPLAY_STATUS = (gcnew System::Windows::Forms::ToolStripStatusLabel());
 			this->panel1->SuspendLayout();
@@ -99,10 +117,9 @@ namespace I_ScheduleGUI {
 			// BUTTON_SEND
 			// 
 			this->BUTTON_SEND->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Bottom | System::Windows::Forms::AnchorStyles::Right));
-			this->BUTTON_SEND->Location = System::Drawing::Point(650, 649);
-			this->BUTTON_SEND->Margin = System::Windows::Forms::Padding(2, 2, 2, 2);
+			this->BUTTON_SEND->Location = System::Drawing::Point(990, 824);
 			this->BUTTON_SEND->Name = L"BUTTON_SEND";
-			this->BUTTON_SEND->Size = System::Drawing::Size(142, 29);
+			this->BUTTON_SEND->Size = System::Drawing::Size(189, 40);
 			this->BUTTON_SEND->TabIndex = 1;
 			this->BUTTON_SEND->Text = L"SEND";
 			this->BUTTON_SEND->UseVisualStyleBackColor = true;
@@ -114,74 +131,12 @@ namespace I_ScheduleGUI {
 				| System::Windows::Forms::AnchorStyles::Right));
 			this->INPUT_CMDLN->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->INPUT_CMDLN->Location = System::Drawing::Point(9, 651);
-			this->INPUT_CMDLN->Margin = System::Windows::Forms::Padding(2, 2, 2, 2);
+			this->INPUT_CMDLN->Location = System::Drawing::Point(12, 827);
 			this->INPUT_CMDLN->Multiline = true;
 			this->INPUT_CMDLN->Name = L"INPUT_CMDLN";
-			this->INPUT_CMDLN->Size = System::Drawing::Size(615, 30);
+			this->INPUT_CMDLN->Size = System::Drawing::Size(942, 40);
 			this->INPUT_CMDLN->TabIndex = 0;
 			this->INPUT_CMDLN->TextChanged += gcnew System::EventHandler(this, &GUI::INPUT_CMDLN_TextChanged);
-			// 
-			// DISPLAY_TASK_DEADLINE
-			// 
-			this->DISPLAY_TASK_DEADLINE->Anchor = static_cast<System::Windows::Forms::AnchorStyles>(((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Bottom)
-				| System::Windows::Forms::AnchorStyles::Right));
-			this->DISPLAY_TASK_DEADLINE->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Regular,
-				System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(0)));
-			this->DISPLAY_TASK_DEADLINE->Location = System::Drawing::Point(536, 35);
-			this->DISPLAY_TASK_DEADLINE->Margin = System::Windows::Forms::Padding(2, 2, 2, 2);
-			this->DISPLAY_TASK_DEADLINE->Multiline = true;
-			this->DISPLAY_TASK_DEADLINE->Name = L"DISPLAY_TASK_DEADLINE";
-			this->DISPLAY_TASK_DEADLINE->ScrollBars = System::Windows::Forms::ScrollBars::Vertical;
-			this->DISPLAY_TASK_DEADLINE->Size = System::Drawing::Size(245, 332);
-			this->DISPLAY_TASK_DEADLINE->TabIndex = 2;
-			this->DISPLAY_TASK_DEADLINE->TextChanged += gcnew System::EventHandler(this, &GUI::DISPLAY_TASK_DEADLINE_TextChanged);
-			// 
-			// DISPLAY_TASK_FLOAT
-			// 
-			this->DISPLAY_TASK_FLOAT->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Bottom)
-				| System::Windows::Forms::AnchorStyles::Left)
-				| System::Windows::Forms::AnchorStyles::Right));
-			this->DISPLAY_TASK_FLOAT->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(0)));
-			this->DISPLAY_TASK_FLOAT->Location = System::Drawing::Point(273, 35);
-			this->DISPLAY_TASK_FLOAT->Margin = System::Windows::Forms::Padding(2, 2, 2, 2);
-			this->DISPLAY_TASK_FLOAT->Multiline = true;
-			this->DISPLAY_TASK_FLOAT->Name = L"DISPLAY_TASK_FLOAT";
-			this->DISPLAY_TASK_FLOAT->ScrollBars = System::Windows::Forms::ScrollBars::Vertical;
-			this->DISPLAY_TASK_FLOAT->Size = System::Drawing::Size(245, 332);
-			this->DISPLAY_TASK_FLOAT->TabIndex = 3;
-			this->DISPLAY_TASK_FLOAT->TextChanged += gcnew System::EventHandler(this, &GUI::DISPLAY_TASK_FLOAT_TextChanged);
-			// 
-			// DISPLAY_TASK_TIMED
-			// 
-			this->DISPLAY_TASK_TIMED->Anchor = static_cast<System::Windows::Forms::AnchorStyles>(((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Bottom)
-				| System::Windows::Forms::AnchorStyles::Left));
-			this->DISPLAY_TASK_TIMED->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(0)));
-			this->DISPLAY_TASK_TIMED->Location = System::Drawing::Point(9, 35);
-			this->DISPLAY_TASK_TIMED->Margin = System::Windows::Forms::Padding(2, 2, 2, 2);
-			this->DISPLAY_TASK_TIMED->Multiline = true;
-			this->DISPLAY_TASK_TIMED->Name = L"DISPLAY_TASK_TIMED";
-			this->DISPLAY_TASK_TIMED->ScrollBars = System::Windows::Forms::ScrollBars::Vertical;
-			this->DISPLAY_TASK_TIMED->Size = System::Drawing::Size(245, 332);
-			this->DISPLAY_TASK_TIMED->TabIndex = 4;
-			this->DISPLAY_TASK_TIMED->TextChanged += gcnew System::EventHandler(this, &GUI::DISPLAY_TASK_TIMED_TextChanged);
-			// 
-			// DISPLAY_MAIN
-			// 
-			this->DISPLAY_MAIN->Anchor = static_cast<System::Windows::Forms::AnchorStyles>(((System::Windows::Forms::AnchorStyles::Bottom | System::Windows::Forms::AnchorStyles::Left)
-				| System::Windows::Forms::AnchorStyles::Right));
-			this->DISPLAY_MAIN->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(0)));
-			this->DISPLAY_MAIN->Location = System::Drawing::Point(9, 396);
-			this->DISPLAY_MAIN->Margin = System::Windows::Forms::Padding(2, 2, 2, 2);
-			this->DISPLAY_MAIN->Multiline = true;
-			this->DISPLAY_MAIN->Name = L"DISPLAY_MAIN";
-			this->DISPLAY_MAIN->ScrollBars = System::Windows::Forms::ScrollBars::Vertical;
-			this->DISPLAY_MAIN->Size = System::Drawing::Size(784, 244);
-			this->DISPLAY_MAIN->TabIndex = 5;
-			this->DISPLAY_MAIN->TextChanged += gcnew System::EventHandler(this, &GUI::DISPLAY_MAIN_TextChanged);
 			// 
 			// LABEL_MAIN
 			// 
@@ -189,12 +144,11 @@ namespace I_ScheduleGUI {
 			this->LABEL_MAIN->BorderStyle = System::Windows::Forms::BorderStyle::None;
 			this->LABEL_MAIN->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->LABEL_MAIN->Location = System::Drawing::Point(9, 369);
-			this->LABEL_MAIN->Margin = System::Windows::Forms::Padding(2, 2, 2, 2);
+			this->LABEL_MAIN->Location = System::Drawing::Point(12, 435);
 			this->LABEL_MAIN->Multiline = true;
 			this->LABEL_MAIN->Name = L"LABEL_MAIN";
 			this->LABEL_MAIN->ReadOnly = true;
-			this->LABEL_MAIN->Size = System::Drawing::Size(75, 22);
+			this->LABEL_MAIN->Size = System::Drawing::Size(100, 31);
 			this->LABEL_MAIN->TabIndex = 6;
 			this->LABEL_MAIN->Text = L"Main";
 			// 
@@ -205,12 +159,11 @@ namespace I_ScheduleGUI {
 			this->LABEL_TIMED_TASKS->BorderStyle = System::Windows::Forms::BorderStyle::None;
 			this->LABEL_TIMED_TASKS->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->LABEL_TIMED_TASKS->Location = System::Drawing::Point(273, 9);
-			this->LABEL_TIMED_TASKS->Margin = System::Windows::Forms::Padding(2, 2, 2, 2);
+			this->LABEL_TIMED_TASKS->Location = System::Drawing::Point(12, 12);
 			this->LABEL_TIMED_TASKS->Multiline = true;
 			this->LABEL_TIMED_TASKS->Name = L"LABEL_TIMED_TASKS";
 			this->LABEL_TIMED_TASKS->ReadOnly = true;
-			this->LABEL_TIMED_TASKS->Size = System::Drawing::Size(164, 22);
+			this->LABEL_TIMED_TASKS->Size = System::Drawing::Size(342, 31);
 			this->LABEL_TIMED_TASKS->TabIndex = 7;
 			this->LABEL_TIMED_TASKS->Text = L"Timed Tasks";
 			// 
@@ -220,74 +173,115 @@ namespace I_ScheduleGUI {
 			this->LABEL_DEADLINE_TASKS->BorderStyle = System::Windows::Forms::BorderStyle::None;
 			this->LABEL_DEADLINE_TASKS->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Regular,
 				System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(0)));
-			this->LABEL_DEADLINE_TASKS->Location = System::Drawing::Point(536, 9);
-			this->LABEL_DEADLINE_TASKS->Margin = System::Windows::Forms::Padding(2, 2, 2, 2);
+			this->LABEL_DEADLINE_TASKS->Location = System::Drawing::Point(708, 12);
 			this->LABEL_DEADLINE_TASKS->Multiline = true;
 			this->LABEL_DEADLINE_TASKS->Name = L"LABEL_DEADLINE_TASKS";
 			this->LABEL_DEADLINE_TASKS->ReadOnly = true;
-			this->LABEL_DEADLINE_TASKS->Size = System::Drawing::Size(164, 22);
+			this->LABEL_DEADLINE_TASKS->Size = System::Drawing::Size(219, 31);
 			this->LABEL_DEADLINE_TASKS->TabIndex = 8;
 			this->LABEL_DEADLINE_TASKS->Text = L"Deadline Tasks";
 			// 
 			// LABEL_FLOATING_TASK
 			// 
+			this->LABEL_FLOATING_TASK->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Bottom | System::Windows::Forms::AnchorStyles::Right));
 			this->LABEL_FLOATING_TASK->BorderStyle = System::Windows::Forms::BorderStyle::None;
 			this->LABEL_FLOATING_TASK->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->LABEL_FLOATING_TASK->Location = System::Drawing::Point(9, 9);
-			this->LABEL_FLOATING_TASK->Margin = System::Windows::Forms::Padding(2, 2, 2, 2);
+			this->LABEL_FLOATING_TASK->Location = System::Drawing::Point(724, 434);
 			this->LABEL_FLOATING_TASK->Multiline = true;
 			this->LABEL_FLOATING_TASK->Name = L"LABEL_FLOATING_TASK";
 			this->LABEL_FLOATING_TASK->ReadOnly = true;
-			this->LABEL_FLOATING_TASK->Size = System::Drawing::Size(164, 22);
+			this->LABEL_FLOATING_TASK->Size = System::Drawing::Size(219, 31);
 			this->LABEL_FLOATING_TASK->TabIndex = 9;
 			this->LABEL_FLOATING_TASK->Text = L"Floating Tasks";
 			// 
 			// panel1
 			// 
+			this->panel1->Controls->Add(this->DISPLAY_TASK_DEADLINE);
+			this->panel1->Controls->Add(this->DISPLAY_TASK_TIMED);
+			this->panel1->Controls->Add(this->DISPLAY_MAIN);
+			this->panel1->Controls->Add(this->DISPLAY_TASK_FLOAT);
 			this->panel1->Controls->Add(this->STATUS_BAR);
 			this->panel1->Controls->Add(this->LABEL_FLOATING_TASK);
 			this->panel1->Controls->Add(this->BUTTON_SEND);
 			this->panel1->Controls->Add(this->INPUT_CMDLN);
-			this->panel1->Controls->Add(this->DISPLAY_MAIN);
 			this->panel1->Controls->Add(this->LABEL_MAIN);
 			this->panel1->Controls->Add(this->LABEL_DEADLINE_TASKS);
-			this->panel1->Controls->Add(this->DISPLAY_TASK_TIMED);
-			this->panel1->Controls->Add(this->DISPLAY_TASK_DEADLINE);
 			this->panel1->Controls->Add(this->LABEL_TIMED_TASKS);
-			this->panel1->Controls->Add(this->DISPLAY_TASK_FLOAT);
 			this->panel1->Dock = System::Windows::Forms::DockStyle::Fill;
 			this->panel1->Location = System::Drawing::Point(0, 0);
-			this->panel1->Margin = System::Windows::Forms::Padding(2, 2, 2, 2);
 			this->panel1->Name = L"panel1";
-			this->panel1->Size = System::Drawing::Size(803, 721);
+			this->panel1->Size = System::Drawing::Size(1194, 924);
 			this->panel1->TabIndex = 10;
+			// 
+			// DISPLAY_TASK_DEADLINE
+			// 
+			this->DISPLAY_TASK_DEADLINE->Anchor = static_cast<System::Windows::Forms::AnchorStyles>(((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Bottom)
+				| System::Windows::Forms::AnchorStyles::Right));
+			this->DISPLAY_TASK_DEADLINE->Location = System::Drawing::Point(724, 49);
+			this->DISPLAY_TASK_DEADLINE->Name = L"DISPLAY_TASK_DEADLINE";
+			this->DISPLAY_TASK_DEADLINE->Size = System::Drawing::Size(455, 379);
+			this->DISPLAY_TASK_DEADLINE->TabIndex = 15;
+			this->DISPLAY_TASK_DEADLINE->Text = L"";
+			this->DISPLAY_TASK_DEADLINE->TextChanged += gcnew System::EventHandler(this, &GUI::DISPLAY_TASK_DEADLINE_TextChanged);
+			// 
+			// DISPLAY_TASK_TIMED
+			// 
+			this->DISPLAY_TASK_TIMED->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Bottom)
+				| System::Windows::Forms::AnchorStyles::Left)
+				| System::Windows::Forms::AnchorStyles::Right));
+			this->DISPLAY_TASK_TIMED->Location = System::Drawing::Point(13, 49);
+			this->DISPLAY_TASK_TIMED->Name = L"DISPLAY_TASK_TIMED";
+			this->DISPLAY_TASK_TIMED->Size = System::Drawing::Size(689, 379);
+			this->DISPLAY_TASK_TIMED->TabIndex = 14;
+			this->DISPLAY_TASK_TIMED->Text = L"";
+			this->DISPLAY_TASK_TIMED->TextChanged += gcnew System::EventHandler(this, &GUI::DISPLAY_TASK_TIMED_TextChanged);
+			// 
+			// DISPLAY_MAIN
+			// 
+			this->DISPLAY_MAIN->Anchor = static_cast<System::Windows::Forms::AnchorStyles>(((System::Windows::Forms::AnchorStyles::Bottom | System::Windows::Forms::AnchorStyles::Left)
+				| System::Windows::Forms::AnchorStyles::Right));
+			this->DISPLAY_MAIN->Location = System::Drawing::Point(13, 473);
+			this->DISPLAY_MAIN->Name = L"DISPLAY_MAIN";
+			this->DISPLAY_MAIN->Size = System::Drawing::Size(689, 337);
+			this->DISPLAY_MAIN->TabIndex = 13;
+			this->DISPLAY_MAIN->Text = L"";
+			this->DISPLAY_MAIN->TextChanged += gcnew System::EventHandler(this, &GUI::DISPLAY_MAIN_TextChanged);
+			// 
+			// DISPLAY_TASK_FLOAT
+			// 
+			this->DISPLAY_TASK_FLOAT->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Bottom | System::Windows::Forms::AnchorStyles::Right));
+			this->DISPLAY_TASK_FLOAT->Location = System::Drawing::Point(724, 473);
+			this->DISPLAY_TASK_FLOAT->Name = L"DISPLAY_TASK_FLOAT";
+			this->DISPLAY_TASK_FLOAT->Size = System::Drawing::Size(455, 337);
+			this->DISPLAY_TASK_FLOAT->TabIndex = 11;
+			this->DISPLAY_TASK_FLOAT->Text = L"";
+			this->DISPLAY_TASK_FLOAT->TextChanged += gcnew System::EventHandler(this, &GUI::DISPLAY_TASK_FLOAT_TextChanged);
 			// 
 			// STATUS_BAR
 			// 
 			this->STATUS_BAR->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(1) { this->DISPLAY_STATUS });
-			this->STATUS_BAR->Location = System::Drawing::Point(0, 692);
+			this->STATUS_BAR->Location = System::Drawing::Point(0, 879);
 			this->STATUS_BAR->Name = L"STATUS_BAR";
-			this->STATUS_BAR->Padding = System::Windows::Forms::Padding(1, 0, 10, 0);
-			this->STATUS_BAR->Size = System::Drawing::Size(803, 29);
+			this->STATUS_BAR->Padding = System::Windows::Forms::Padding(1, 0, 13, 0);
+			this->STATUS_BAR->Size = System::Drawing::Size(1194, 45);
 			this->STATUS_BAR->TabIndex = 10;
 			this->STATUS_BAR->Text = L"Welcome to I_Schedule.";
 			// 
 			// DISPLAY_STATUS
 			// 
 			this->DISPLAY_STATUS->Name = L"DISPLAY_STATUS";
-			this->DISPLAY_STATUS->Size = System::Drawing::Size(96, 24);
+			this->DISPLAY_STATUS->Size = System::Drawing::Size(145, 40);
 			this->DISPLAY_STATUS->Text = L"Status Bar";
 			// 
 			// GUI
 			// 
 			this->AcceptButton = this->BUTTON_SEND;
-			this->AutoScaleDimensions = System::Drawing::SizeF(9, 18);
+			this->AutoScaleDimensions = System::Drawing::SizeF(12, 25);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(803, 721);
+			this->ClientSize = System::Drawing::Size(1194, 924);
 			this->Controls->Add(this->panel1);
-			this->Margin = System::Windows::Forms::Padding(2, 2, 2, 2);
-			this->MinimumSize = System::Drawing::Size(809, 736);
+			this->MinimumSize = System::Drawing::Size(1070, 995);
 			this->Name = L"GUI";
 			this->Text = L"GUI";
 			this->Load += gcnew System::EventHandler(this, &GUI::GUI_Load);
@@ -302,20 +296,21 @@ namespace I_ScheduleGUI {
 	private: System::Void BUTTON_SEND_Click(System::Object^  sender, System::EventArgs^  e) {
 		string input = msclr::interop::marshal_as<std::string>(INPUT_CMDLN->Text);
 		controller->Run(input);
-		DISPLAY_TASK_TIMED->Text = gcnew String(controller->DISPLAY_TASK_TIMED.c_str());
-		DISPLAY_TASK_DEADLINE->Text = gcnew String(controller->DISPLAY_TASK_DEADLINE.c_str());
-		DISPLAY_TASK_FLOAT->Text = gcnew String(controller->DISPLAY_TASK_FLOAT.c_str());
-		DISPLAY_MAIN->Text = gcnew String(controller->DISPLAY_MAIN.c_str());
+		//update displays from file
+		DISPLAY_TASK_TIMED->LoadFile(gcnew String(controller->rtf_timed.c_str()));
+		DISPLAY_TASK_DEADLINE->LoadFile(gcnew String(controller->rtf_deadline.c_str()));
+		DISPLAY_TASK_FLOAT->LoadFile(gcnew String(controller->rtf_float.c_str()));
+		DISPLAY_MAIN->LoadFile(gcnew String(controller->rtf_main.c_str()));
+		//end update displays from file
+
+		//update status bar
 		DISPLAY_STATUS->Text = gcnew String(controller->DISPLAY_STATUS.c_str());
+		//end update status bar
+
+		//clear the text in command line
 		INPUT_CMDLN->Clear();
 	}
-	private: System::Void DISPLAY_TASK_DEADLINE_TextChanged(System::Object^  sender, System::EventArgs^  e) {
-		//this section allows the text box to scroll to the end automatically
-		DISPLAY_TASK_DEADLINE->SelectionStart = DISPLAY_TASK_DEADLINE->TextLength;
-		DISPLAY_TASK_DEADLINE->ScrollToCaret();
-		//end section
 
-	}
 	private: System::Void DISPLAY_TASK_FLOAT_TextChanged(System::Object^  sender, System::EventArgs^  e) {
 		//this section allows the text box to scroll to the end automatically
 		DISPLAY_TASK_FLOAT->SelectionStart = DISPLAY_TASK_FLOAT->TextLength;
@@ -328,7 +323,7 @@ namespace I_ScheduleGUI {
 		DISPLAY_MAIN->SelectionStart = DISPLAY_MAIN->TextLength;
 		DISPLAY_MAIN->ScrollToCaret();
 		//end section
-	}
+	}	
 	private: System::Void DISPLAY_TASK_TIMED_TextChanged(System::Object^  sender, System::EventArgs^  e) {
 		//this section allows the text box to scroll to the end automatically
 		DISPLAY_TASK_TIMED->SelectionStart = DISPLAY_TASK_TIMED->TextLength;
@@ -339,8 +334,15 @@ namespace I_ScheduleGUI {
 	}
 	private: System::Void INPUT_CMDLN_TextChanged(System::Object^  sender, System::EventArgs^  e) {
 		string input = msclr::interop::marshal_as<std::string>(INPUT_CMDLN->Text);
-		DISPLAY_MAIN->Text = gcnew String(controller->QuickSearch(input).c_str());
-
+		controller->QuickSearch(input);
+		DISPLAY_MAIN->LoadFile(gcnew String(controller->rtf_main.c_str()));
 	}
+
+private: System::Void DISPLAY_TASK_DEADLINE_TextChanged(System::Object^  sender, System::EventArgs^  e) {
+	//this section allows the text box to scroll to the end automatically
+	DISPLAY_TASK_DEADLINE->SelectionStart = DISPLAY_TASK_DEADLINE->TextLength;
+	DISPLAY_TASK_DEADLINE->ScrollToCaret();
+	//end section
+}
 };
 }
