@@ -2,7 +2,9 @@ Description: do homework
 Start: today
 End: tomorrow
 Priority: 1
+Status: Incomplete
 Description: do homework 2
 Start: today2
 End: tomorrow2
 Priority: 12
+Status: Complete

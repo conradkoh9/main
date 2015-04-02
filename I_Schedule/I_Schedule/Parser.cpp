@@ -89,6 +89,7 @@ vector<string> Parser::IdentifyTaskFields(string input){
 			}
 			output[field] = info; 
 		}
+		output[Smartstring::FIELD::STATUS] = Task::_STATUS_INCOMPLETE; //sets the default status to incomplete when parsing user input
 	}
 	//NOTE THAT OUTPUT HAS EXCESS BLANKS
 	return output;

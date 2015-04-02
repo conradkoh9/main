@@ -4,14 +4,19 @@ const string Task::FIELD_DESCRIPTION = "Description: ";
 const string Task::FIELD_STARTDATE = "Start: ";
 const string Task::FIELD_ENDDATE = "End: ";
 const string Task::FIELD_PRIORITY = "Priority: ";
+const string Task::FIELD_STATUS = "Status: ";
 
 
 const string Task::_FEEDBACK_DESCRIPTION_SET = "DESCRIPTION SET";
 const string Task::_FEEDBACK_STARTDATE_SET = "START DATE SET";
 const string Task::_FEEDBACK_ENDDATE_SET = "END DATE SET";
 const string Task::_FEEDBACK_PRIORITY_SET = "PRIORITY SET";
+const string Task::_FEEDBACK_STATUS_SET = "STATUS SET";
 const string Task::_FEEDBACK_STANDARD_START_DATE_SET = "STANDARD FORMAT OF START DATE SET";
 const string Task::_FEEDBACK_STANDARD_END_DATE_SET = "STAMDARD FORMAT OF END DATE SET";
+
+const string Task::_STATUS_COMPLETE = "Complete";
+const string Task::_STATUS_INCOMPLETE = "Incomplete";
 
 
 Task::Task()
@@ -20,6 +25,7 @@ Task::Task()
 	description = "";
 	priority = "";
 	enddate = "";
+	status = _STATUS_INCOMPLETE;
 	numberOfFields = Smartstring::NUMBER_OF_FIELDS;
 }
 
@@ -28,6 +34,7 @@ Task::Task(vector<string> input){
 	enddate = input[Smartstring::FIELD::ENDDATE];
 	startdate = input[Smartstring::FIELD::STARTDATE];
 	priority = input[Smartstring::FIELD::PRIORITY];
+	status = input[Smartstring::FIELD::STATUS];
 	numberOfFields = Smartstring::NUMBER_OF_FIELDS;
 }
 
@@ -54,6 +61,11 @@ string Task::SetEndDate(string input){
 string Task::SetPriority(string input){
 	priority = input;
 	return _FEEDBACK_PRIORITY_SET;
+}
+
+string Task::SetStatus(string input){
+	status = input;
+	return _FEEDBACK_STATUS_SET;
 }
 
 string Task::SetStandardStartDate(){
@@ -85,6 +97,10 @@ string Task::GetPriority(){
 	return priority;
 }
 
+string Task::GetStatus(){
+	return status;
+}
+
 string Task::GetStandardStartDate(){
 	return standardStart;
 }
@@ -93,21 +109,37 @@ string Task::GetStandardEndDate(){
 	return standardEnd;
 }
 
+string Task::MarkComplete(){
+	status = _STATUS_COMPLETE;
+	return status;
+}
+
 string Task::ToString(){
 	ostringstream out;
 	out << FIELD_DESCRIPTION << description << endl;
 	out << FIELD_STARTDATE << startdate << endl;
 	out << FIELD_ENDDATE << enddate << endl;
-	out << FIELD_PRIORITY << priority;
+	out << FIELD_PRIORITY << priority << endl;
+	out << FIELD_STATUS << status;
 	return out.str();
 }
 
 string Task::ToShortString(){
 	ostringstream out;
-	out << description << "; ";
-	out << startdate << "; ";
-	out << enddate << "; ";
-	out << priority;
+	out << "[" << startdate << "]";
+	out << "[" << enddate << "] ";
+	out << description;
+	return out.str();
+}
+
+string Task::ToTXTString(){
+	//this to string method is used in storage to write to txt files
+	ostringstream out;
+	out << FIELD_DESCRIPTION << description << endl;
+	out << FIELD_STARTDATE << startdate << endl;
+	out << FIELD_ENDDATE << enddate << endl;
+	out << FIELD_PRIORITY << priority << endl;
+	out << FIELD_STATUS << status;
 	return out.str();
 }
 
@@ -116,7 +148,8 @@ string Task::ToCSVString(){
 	out << "\"" << description << "\",";
 	out << "\"" << startdate << "\",";
 	out << "\"" << enddate<< "\",";
-	out << "\"" << priority << "\"";
+	out << "\"" << priority << "\",";
+	out << "\"" << status << "\"";
 	return out.str();
 }
 

@@ -45,6 +45,7 @@ public:
 	//FUNCTIONS
 	string Add(Task* task);
 	string Delete(int position);
+	string Complete(int position);
 	string Load();
 
 	string Save();
@@ -100,6 +101,8 @@ private:
 	static const string _FEEDBACK_SESSION_SAVE_SUCCESS;
 	static const string _FEEDBACK_SESSION_SAVE_FAILURE;
 	static const string _FEEDBACK_RESET;
+	static const string _FEEDBACK_INVALID_INDEX;
+	static const string _FEEDBACK_UPDATE_SUCCESS;
 
 	//formatting variables
 	static const string _rtfboldtagstart;
@@ -140,6 +143,9 @@ private:
 	string LoadTaskList(); //chooses whether LoadCSVContent is called or LoadTXTContent is called, or that the current file has an invalid format
 	string LoadCSVContent(); //loads _filecontent vector into taskList vector assuming CSV format
 	string LoadTXTContent(); //loads _filecontent vector into taskList vector assuming TXT format
+
+	//Mark methods
+	string MarkComplete(int position);
 
 	//File analysis methods
 	FILETYPE IdentifyFileType(string input);

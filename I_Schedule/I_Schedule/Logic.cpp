@@ -80,7 +80,10 @@ string Logic::Execute(string input){
 			feedback = Clear();
 			break;
 		}
-
+		case (Smartstring::COMMAND::COMPLETE) : {
+			feedback = Complete(remainder);
+			break;
+		}
 		case (Smartstring::COMMAND::SAVE) : {
 			feedback = Save(remainder);
 			break;
@@ -174,6 +177,13 @@ string Logic::Save(string input){
 	string feedback = storage->SaveAs(input);
 	return feedback;
 }
+
+string Logic::Complete(string input){
+	int position = atoi(input.c_str());
+	string feedback = storage->Complete(position);
+	return feedback;
+}
+
 string Logic::Invalid(){
 	mout << storage->ToString();
 	return _FEEDBACK_INVALID_COMMAND;

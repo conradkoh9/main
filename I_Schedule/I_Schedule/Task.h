@@ -17,6 +17,7 @@ private:
 	string priority;
 	string standardStart;
 	string standardEnd;
+	string status;
 	DateTime* standardStartdt;
 	DateTime* standardEnddt;
 
@@ -32,19 +33,26 @@ public:
 	static const string FIELD_STARTDATE;
 	static const string FIELD_ENDDATE;
 	static const string FIELD_PRIORITY;
+	static const string FIELD_STATUS;
 
 
 	static const string _FEEDBACK_DESCRIPTION_SET;
 	static const string _FEEDBACK_STARTDATE_SET;
 	static const string _FEEDBACK_ENDDATE_SET;
 	static const string _FEEDBACK_PRIORITY_SET;
+	static const string _FEEDBACK_STATUS_SET;
 	static const string _FEEDBACK_STANDARD_START_DATE_SET;
 	static const string _FEEDBACK_STANDARD_END_DATE_SET;
+
+	static const string _STATUS_COMPLETE;
+	static const string _STATUS_INCOMPLETE;
+
 
 	string SetDescription(string input);
 	string SetStartDate(string input);
 	string SetEndDate(string input);
 	string SetPriority(string input);
+	string SetStatus(string input);
 	string SetStandardStartDate();
 	string SetStandardEndDate();
 
@@ -52,12 +60,16 @@ public:
 	string GetStartDate();
 	string GetEndDate();
 	string GetPriority();
+	string GetStatus();
 	string GetStandardStartDate();
 	string GetStandardEndDate();
 
+	string MarkComplete();
+	
 	string ToString();
-	string ToShortString();
-	string ToCSVString();
+	string ToShortString(); //used for display
+	string ToTXTString(); //used to write to txt files
+	string ToCSVString(); //used to write to csv files
 
 	TASKTYPE GetType();
 	bool isContains(string input);

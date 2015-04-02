@@ -30,6 +30,7 @@ public:
 	string CloseSearch(string input);
 	string Invalid();
 	string Save(string input);
+	string Complete(string input);
 	string Clear();
 
 	//display streams

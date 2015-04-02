@@ -21,6 +21,8 @@ const string Storage::_FEEDBACK_SESSION_LOAD_SUCCESS = "Session loaded.";
 const string Storage::_FEEDBACK_SESSION_SAVE_SUCCESS = "Session saved";
 const string Storage::_FEEDBACK_SESSION_SAVE_FAILURE = "Session failed to save.";
 const string Storage::_FEEDBACK_RESET = "Reset";
+const string Storage::_FEEDBACK_INVALID_INDEX = "Invalid index.";
+const string Storage::_FEEDBACK_UPDATE_SUCCESS = "Update success.";
 //formatting variables
 const string Storage::_rtfboldtagstart = "\\b ";
 const string Storage::_rtfboldtagend = "\\b0 ";
@@ -32,6 +34,7 @@ Storage::Storage(){
 
 Storage::Storage(string input){
 	_filename = input;
+	Update();
 //	Load();
 }
 
@@ -57,6 +60,14 @@ string Storage::Delete(int position){
 	catch (out_of_range){
 		return _FEEDBACK_DELETE_FAILURE;
 	}
+}
+
+string Storage::Complete(int position){
+	string feedback = "";
+	feedback = MarkComplete(position);
+	Rewrite();
+	Update();
+	return feedback;
 }
 
 string Storage::Load(){
@@ -431,6 +442,7 @@ string Storage::WriteToCSV(){
 	of.open(_filename.c_str(), ios::app);
 	vector<Task*>::iterator iter;
 	try{
+		int size = taskList.size();
 		for (iter = taskList.begin(); iter != taskList.end(); ++iter){
 			if (iter + 1 != taskList.end()){
 				out << (*iter)->ToCSVString() << endl;
@@ -439,6 +451,7 @@ string Storage::WriteToCSV(){
 				out << (*iter)->ToCSVString();
 			}
 		}
+		string str = out.str();
 		of << out.str();
 	}
 	catch (out_of_range){
@@ -457,10 +470,10 @@ string Storage::WriteToTXT(){
 	try{
 		for (iter = taskList.begin(); iter != taskList.end(); ++iter){
 			if (iter + 1 != taskList.end()){
-				out << (*iter)->ToString() << endl;
+				out << (*iter)->ToTXTString() << endl;
 			}
 			else{
-				out << (*iter)->ToString();
+				out << (*iter)->ToTXTString();
 			}
 		}
 		of << out.str();
@@ -558,7 +571,7 @@ string Storage::LoadCSVContent(){
 				*iter2 = (*iter2).substr(1, end);
 			}
 			string test = output.front();
-			if (output.size() != 4){
+			if (output.size() != Smartstring::NUMBER_OF_FIELDS){
 				return _FEEDBACK_LOAD_FAILURE;
 			}
 			taskptr = new Task(output);
@@ -618,6 +631,9 @@ string Storage::LoadTXTContent(){
 				taskptr->SetPriority(*iter);
 				break;
 			}
+			case Smartstring::FIELD::STATUS:{
+				taskptr->SetStatus(*iter);
+			}
 
 			}
 			currentfield = (currentfield + 1) % fieldcount;
@@ -630,6 +646,24 @@ string Storage::LoadTXTContent(){
 	return _FEEDBACK_LOAD_SUCCESS;
 }
 
+//====================================================================
+//Mark methods
+//====================================================================
+
+string Storage::MarkComplete(int position){
+	try{
+		int size_taskList = taskList.size();
+		if (position > size_taskList){
+			throw out_of_range("invalid index");
+		}
+		taskList[position - 1]->MarkComplete();
+	}
+	catch (out_of_range){
+		throw out_of_range("invalid index");
+		return _FEEDBACK_INVALID_INDEX;
+	}
+	return _FEEDBACK_UPDATE_SUCCESS;
+}
 
 //====================================================================
 //File analysis methods
