@@ -24,10 +24,12 @@ string UI_Controller::Run(string input){
 	return DISPLAY_TASK_TIMED;
 }
 string UI_Controller::QuickSearch(string input){
-	logic->Search(input);
-	DISPLAY_MAIN = Standardize(logic->mout.str());
-	logic->mout.clear();
-	logic->mout.str("");
+	if (!input.empty()){
+		logic->Search(input);
+		DISPLAY_MAIN = Standardize(logic->mout.str());
+		logic->mout.clear();
+		logic->mout.str("");
+	}
 	return DISPLAY_MAIN;
 }
 //the intended purpose of the standardize function is for the translation of characters from console to windows in 

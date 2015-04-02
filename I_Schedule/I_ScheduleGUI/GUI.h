@@ -337,9 +337,10 @@ namespace I_ScheduleGUI {
 	}
 	private: System::Void GUI_Load(System::Object^  sender, System::EventArgs^  e) {
 	}
-private: System::Void INPUT_CMDLN_TextChanged(System::Object^  sender, System::EventArgs^  e) {
-	string input = msclr::interop::marshal_as<std::string>(INPUT_CMDLN->Text);
-	DISPLAY_MAIN->Text = gcnew String(controller->QuickSearch(input).c_str());
-}
+	private: System::Void INPUT_CMDLN_TextChanged(System::Object^  sender, System::EventArgs^  e) {
+		string input = msclr::interop::marshal_as<std::string>(INPUT_CMDLN->Text);
+		DISPLAY_MAIN->Text = gcnew String(controller->QuickSearch(input).c_str());
+
+	}
 };
 }

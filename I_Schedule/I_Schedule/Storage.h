@@ -120,6 +120,7 @@ private:
 
 	//clear methods
 	void ClearFile();
+	void ClearFilteredLists();
 	void ClearVectors();
 	string Remove(int position);
 

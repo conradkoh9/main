@@ -299,6 +299,7 @@ void Storage::Update(){
 //====================================================================
 
 void Storage::FilterTask(){
+	ClearFilteredLists();
 	sortTaskListsByTime();
 	initializeLists();
 	return;
@@ -343,6 +344,13 @@ void Storage::sortTaskListsByTime(){
 //====================================================================
 void Storage::ClearFile(){
 	ofstream out(_filename, ofstream::trunc);
+	return;
+}
+
+void Storage::ClearFilteredLists(){
+	timedList.clear();
+	floatingList.clear();
+	deadlineList.clear();
 	return;
 }
 
