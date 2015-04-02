@@ -11,7 +11,7 @@ const string Storage::_FEEDBACK_CLEAR_SUCCESS = "CLEAR SUCCESS";
 const string Storage::_FEEDBACK_CLEAR_FAILURE = "CLEAR FAILED";
 const string Storage::_FEEDBACK_DELETE_SUCCESS = "DELETE SUCCESS";
 const string Storage::_FEEDBACK_DELETE_FAILURE = "DELETE FAILED";
-const string Storage::_FEEDBACK_SEARCH_FAILURE = "SEARCH FAILED";
+const string Storage::_FEEDBACK_SEARCH_FAILURE = "No results found.";
 const string Storage::_FEEDBACK_FILE_EMPTY = "FILE EMPTY";
 const string Storage::_FEEDBACK_FILE_NOT_EMPTY = "FILE NOT EMPTY";
 const string Storage::_FEEDBACK_INVALID_FILE_FORMAT = "Invalid file format entered";
@@ -322,6 +322,7 @@ void Storage::initializeLists(){
 	int size_taskList = taskList.size();
 
 	for (int i = 0; i < size_taskList; i++){
+		string dbg = taskList[i]->ToShortString();
 		if (taskList[i]->GetType() == Task::TASKTYPE::TIMED){
 			timedList.push_back(taskList[i]);
 		}

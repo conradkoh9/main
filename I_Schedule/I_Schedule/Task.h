@@ -67,6 +67,9 @@ public:
 	string MarkComplete();
 	
 	string ToString();
+	string ToFloatingString();
+	string ToDeadlineString();
+	string ToTimedString();
 	string ToShortString(); //used for display
 	string ToTXTString(); //used to write to txt files
 	string ToCSVString(); //used to write to csv files

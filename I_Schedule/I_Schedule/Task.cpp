@@ -125,6 +125,43 @@ string Task::ToString(){
 }
 
 string Task::ToShortString(){
+	string output = "";
+	TASKTYPE tasktype = GetType();
+	switch (tasktype){
+		case(TASKTYPE::DEADLINE) : {
+			output = ToDeadlineString();
+			break;
+		}
+		case(TASKTYPE::FLOATING) : {
+			output = ToFloatingString();
+			break;
+		}
+		case(TASKTYPE::TIMED) : {
+			output = ToTimedString();
+			break;
+		}
+		default:{
+			output = ToTimedString();
+			break;
+		}
+	}
+	return output;
+}
+
+string Task::ToDeadlineString(){
+	ostringstream out;
+	out << "[" << enddate << "] ";
+	out << description;
+	return out.str();
+}
+
+string Task::ToFloatingString(){
+	ostringstream out;
+	out << description;
+	return out.str();
+}
+
+string Task::ToTimedString(){
 	ostringstream out;
 	out << "[" << startdate << "]";
 	out << "[" << enddate << "] ";
@@ -160,13 +197,13 @@ ostream& operator<<(ostream& out, Task& task){
 
 Task::TASKTYPE Task::GetType(){     
 	if (enddate == "" && startdate == ""){
-		return Task::TASKTYPE::TIMED;
+		return Task::TASKTYPE::FLOATING;
 	}
-	else if (startdate == "" && enddate.size()>0){
+	else if (startdate == "" && enddate!=""){
 		return Task::TASKTYPE::DEADLINE;
 	}
 	else{
-		return Task::TASKTYPE::FLOATING;
+		return Task::TASKTYPE::TIMED;
 	}
 }
 

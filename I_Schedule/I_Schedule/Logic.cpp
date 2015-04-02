@@ -20,6 +20,7 @@ Logic::Logic()
 	parser = new Parser();
 	storage = new Storage();
 	status << _MESSAGE_WELCOME + " " + storage->status.str();
+	string test = storage->GetFloatingList();
 	fout << storage->GetFloatingList();
 	dout << storage->GetDeadlineList();
 	tout << storage->GetTimedList();
