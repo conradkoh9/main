@@ -35,6 +35,9 @@ Task::Task(vector<string> input){
 	startdate = input[Smartstring::FIELD::STARTDATE];
 	priority = input[Smartstring::FIELD::PRIORITY];
 	status = input[Smartstring::FIELD::STATUS];
+	if (status == ""){
+		status = _STATUS_INCOMPLETE;
+	}
 	numberOfFields = Smartstring::NUMBER_OF_FIELDS;
 }
 
