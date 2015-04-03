@@ -298,6 +298,7 @@ namespace I_ScheduleGUI {
 
 		}
 #pragma endregion
+	//@author A0099303A
 	private: System::Void BUTTON_SEND_Click(System::Object^  sender, System::EventArgs^  e) {
 		string input = msclr::interop::marshal_as<std::string>(INPUT_CMDLN->Text);
 		controller->Run(input);

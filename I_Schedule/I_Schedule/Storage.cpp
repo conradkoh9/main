@@ -27,6 +27,7 @@ const string Storage::_FEEDBACK_UPDATE_SUCCESS = "Update success.";
 const string Storage::_rtfboldtagstart = "\\b ";
 const string Storage::_rtfboldtagend = "\\b0 ";
 
+//@author A0099303A
 //PUBLIC =================================================================================================
 Storage::Storage(){
 	status << Load();
@@ -35,13 +36,12 @@ Storage::Storage(){
 Storage::Storage(string input){
 	_filename = input;
 	Update();
-//	Load();
 }
 
 Storage::~Storage(){
 }
 
-
+//@author A0099303A
 string Storage::Add(Task* task){
 	taskList.push_back(task);
 	string feedback = Rewrite();
@@ -49,6 +49,7 @@ string Storage::Add(Task* task){
 	return feedback;
 }
 
+//@author A0099303A
 string Storage::Delete(int position){
 	string feedback = "";
 	try{
@@ -62,6 +63,7 @@ string Storage::Delete(int position){
 	}
 }
 
+//@author A0099303A
 string Storage::Complete(int position){
 	string feedback = "";
 	feedback = MarkComplete(position);
@@ -70,6 +72,7 @@ string Storage::Complete(int position){
 	return feedback;
 }
 
+//@author A0099303A
 string Storage::Load(){
 	logfile << "load called.";
 	string feedback;
@@ -83,7 +86,7 @@ string Storage::Load(){
 	return feedback;
 }
 
-
+//@author A0099303A
 string Storage::Save(){
 	string feedback;
 	feedback = Rewrite();
@@ -91,6 +94,7 @@ string Storage::Save(){
 	return feedback;
 }
 
+//@author A0099303A
 string Storage::SaveAs(string newFileName){
 	FILETYPE filetype = IdentifyFileType(newFileName);
 	if (FileEmpty(newFileName) && filetype!= FILETYPE::INVALID){
@@ -105,19 +109,21 @@ string Storage::SaveAs(string newFileName){
 	
 }
 
+//@author A0099303A
 string Storage::Rewrite(){
 	ClearFile();
 	string feedback = WriteToFile();
 	return feedback;
 }
 
-
+//@author A0099303A
 string Storage::Reset(){
 	_filename = _FILENAME_DEFAULT;
 	Clear();
 	return _FEEDBACK_RESET;
 }
 
+//@author A0099303A
 string Storage::Clear(){
 	ClearFile();
 	ClearVectors();
@@ -126,7 +132,8 @@ string Storage::Clear(){
 }
 
 
-
+//@author Ziqi
+//please replace the tag above with your matriculation number
 //====================================================================
 //Power Search
 //====================================================================
@@ -218,7 +225,6 @@ string Storage::GetEmptySlots(){
 	return ToString(emptyslots);
 }
 
-
 //====================================================================
 //STATS
 //====================================================================
@@ -299,6 +305,7 @@ string Storage::ToString(vector<string> input){
 //====================================================================
 //Update Methods
 //====================================================================
+//@author A0099303A
 void Storage::Update(){
 	FilterTask();
 	SaveSessionData();
@@ -306,7 +313,7 @@ void Storage::Update(){
 }
 
 
-
+//@author Ziqi
 //====================================================================
 //Filter Methods
 //====================================================================
@@ -352,7 +359,7 @@ void Storage::sortTaskListsByTime(){
 	}
 }
 
-
+//@author A0099303A
 //====================================================================
 //Clear Methods
 //====================================================================
@@ -361,6 +368,7 @@ void Storage::ClearFile(){
 	return;
 }
 
+//@author A0099303A
 void Storage::ClearFilteredLists(){
 	timedList.clear();
 	floatingList.clear();
@@ -368,6 +376,7 @@ void Storage::ClearFilteredLists(){
 	return;
 }
 
+//@author A0099303A
 void Storage::ClearVectors(){
 	taskList.clear();
 	timedList.clear();
@@ -377,6 +386,7 @@ void Storage::ClearVectors(){
 	return;
 }
 
+//@author A0099303A
 string Storage::Remove(int position){
 	try{
 		int size_taskList = taskList.size();
@@ -396,6 +406,7 @@ string Storage::Remove(int position){
 //====================================================================
 //Save methods
 //====================================================================
+//@author A0099303A
 string Storage::SaveSessionData(){
 	ofstream of;
 	string feedback;
@@ -416,6 +427,7 @@ string Storage::SaveSessionData(){
 	return feedback;
 }
 
+//@author A0099303A
 string Storage::WriteToFile(){
 	FILETYPE filetype = IdentifyFileType(_filename);
 	string feedback;
@@ -437,6 +449,7 @@ string Storage::WriteToFile(){
 
 }
 
+//@author A0099303A
 string Storage::WriteToCSV(){
 	ostringstream out;
 	ofstream of;
@@ -463,6 +476,7 @@ string Storage::WriteToCSV(){
 	return _FEEDBACK_WRITE_SUCCESS;
 }
 
+//@author A0099303A
 string Storage::WriteToTXT(){
 	ostringstream out;
 	ofstream of;
@@ -491,6 +505,7 @@ string Storage::WriteToTXT(){
 //====================================================================
 //Load methods
 //====================================================================
+//@author A0099303A
 string Storage::LoadSessionData(){
 	ifstream file;
 	file.open(_FILENAME_SESSION_DATA);
@@ -508,6 +523,7 @@ string Storage::LoadSessionData(){
 	return feedback;
 }
 
+//@author A0099303A
 string Storage::LoadRawFileContent(){
 	string line;
 	vector<string> all_lines;
@@ -531,6 +547,7 @@ string Storage::LoadRawFileContent(){
 	return _FEEDBACK_LOAD_FAILURE;
 }
 
+//@author A0099303A
 string Storage::LoadTaskList(){
 	FILETYPE filetype = IdentifyFileType(_filename);
 	string feedback;
@@ -549,11 +566,10 @@ string Storage::LoadTaskList(){
 	}
 	}
 	return feedback;
-
-	//=======
 	
 }
 
+//@author A0099303A
 string Storage::LoadCSVContent(){
 	Smartstring str;
 	const int startfield = Smartstring::FIELD::DESCRIPTION;
@@ -587,6 +603,7 @@ string Storage::LoadCSVContent(){
 	return _FEEDBACK_LOAD_FAILURE;
 }
 
+//@author A0099303A
 string Storage::LoadTXTContent(){
 	Smartstring str;
 	const int startfield = Smartstring::FIELD::DESCRIPTION;
@@ -650,7 +667,7 @@ string Storage::LoadTXTContent(){
 //====================================================================
 //Mark methods
 //====================================================================
-
+//@author A0099303A
 string Storage::MarkComplete(int position){
 	try{
 		int size_taskList = taskList.size();
@@ -669,6 +686,7 @@ string Storage::MarkComplete(int position){
 //====================================================================
 //File analysis methods
 //====================================================================
+//@author A0099303A
 Storage::FILETYPE Storage::IdentifyFileType(string input){
 	if (input.find(_FILE_EXTENSION_CSV) != string::npos){
 		return FILETYPE::CSV;
@@ -683,6 +701,7 @@ Storage::FILETYPE Storage::IdentifyFileType(string input){
 	}
 }
 
+//@author A0099303A
 bool Storage::FileEmpty(string filename){
 	ifstream ifs;
 	ifs.open(filename);

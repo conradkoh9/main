@@ -12,7 +12,7 @@ const string UI_Controller::_rtfnewline = "\\line ";
 const string UI_Controller::_rtfboldtagstart = "\\b ";
 const string UI_Controller::_rtfboldtagend = "\\b0 ";
 
-
+//@author A0099303A
 UI_Controller::UI_Controller()
 {
 	logic = new Logic();
@@ -27,9 +27,6 @@ UI_Controller::~UI_Controller()
 }
 
 void UI_Controller::Run(string input){
-	//DISPLAY_TASK_TIMED = Standardize(logic->Run(input));
-	//DateTime* now = new DateTime();
-	//DISPLAY_TASK_DEADLINE = Standardize(now->Now());
 	logic->Run(input);
 	UpdateDisplays();
 	ClearStreams();

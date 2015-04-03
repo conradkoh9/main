@@ -1,5 +1,6 @@
 #include "Logger.h"
 
+//@author A0099303A
 namespace logging{
 	Logger::Logger()
 	{

@@ -8,6 +8,7 @@ namespace I_ScheduleLibraryTest{
 	TEST_CLASS(myLibTest)
 	{
 	public:
+		//@author A0099303A
 		TEST_METHOD(STORAGE_TXT_ADD){
 			string expected[2];
 			vector<Task*> tasklist;
@@ -41,6 +42,7 @@ namespace I_ScheduleLibraryTest{
 
 		}
 
+		//@author unknown
 		TEST_METHOD(STORAGE_SEARCH){
 			//Storage* storage = new Storage("Storage_Search.txt");
 			//
@@ -91,6 +93,7 @@ namespace I_ScheduleLibraryTest{
 
 		}
 
+		//@author A0099303A
 		TEST_METHOD(STORAGE_TXT_LOAD_REWRITE){
 			//Testing the Load() and Rewrite() functions in storage
 			//testing the partition when n > 1; boundary case n = 1; where n is the number of entries to be loaded and rewritten
@@ -130,6 +133,7 @@ namespace I_ScheduleLibraryTest{
 
 		}
 
+		//@author A0099303A
 		TEST_METHOD(STORAGE_CSV_ADD_LOAD_REWRITE){
 
 			//Testing the Load() and Rewrite() functions in storage
@@ -169,9 +173,10 @@ namespace I_ScheduleLibraryTest{
 
 		}
 
-		TEST_METHOD(Parser_IdentifyTaskFields){
+		//@author A0099303A
+		TEST_METHOD(PARSER_IdentifyTaskFields){
 			Parser* parser = new Parser();
-			//Case: fields with varied length 1
+			//Case: fields with varied length
 			string input = "go to school till: monday p: 1 from: today";
 			vector<string> output = parser->IdentifyTaskFields(input);
 			Assert::AreEqual(output[Smartstring::DESCRIPTION].c_str(), "go to school");
@@ -189,8 +194,8 @@ namespace I_ScheduleLibraryTest{
 			Assert::AreEqual(output[Smartstring::ENDDATE].c_str(), "Friday"); //NEED TO CHANGE FORMAT FOR FINAL TEST
 		}
 
-
-		TEST_METHOD(Parser_IdentifyCommand){
+		//@author A0099303A
+		TEST_METHOD(PARSER_IdentifyCommand){
 			Parser* parser = new Parser();
 			//Case: ADD
 			string input = "add homework from: Monday priority: 1 end: Friday";
@@ -231,7 +236,8 @@ namespace I_ScheduleLibraryTest{
 
 		}
 
-		TEST_METHOD(Parser_RemoveCommand){
+		//@author A0099303A
+		TEST_METHOD(PARSER_RemoveCommand){
 			Parser* parser = new Parser();
 			//Case: Test empty
 			string input = "";
@@ -281,6 +287,7 @@ namespace I_ScheduleLibraryTest{
 
 		}
 
+		//@author A0099303A
 		TEST_METHOD(LOGIC){
 			Logic* logic = new Logic();
 			logic->mout.clear();
@@ -296,6 +303,8 @@ namespace I_ScheduleLibraryTest{
 
 			Assert::AreEqual(expected, output);
 		}
+
+		//@author unknown
 		TEST_METHOD(LOGIC_EDIT){
 			Logic* logic = new Logic();
 			Storage* storage = new Storage("Storage_Edit.txt");
@@ -333,6 +342,7 @@ namespace I_ScheduleLibraryTest{
 			*/
 		}
 
+		//@author A0099303A
 		TEST_METHOD(SMARTSTRING_TOKENIZE){
 			string input = "\"hello\",\"how\",\"are\",\"you\",\"doing\",\"today\"";
 			Smartstring str(input);
