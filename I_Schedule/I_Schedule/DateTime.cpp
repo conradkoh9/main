@@ -1,22 +1,22 @@
 #include "DateTime.h"
 
-const string DateTime::DATETYPE_MONDAY1 = "Monday";
-const string DateTime::DATETYPE_MONDAY2 = "Mon";
-const string DateTime::DATETYPE_TUESDAY1 = "Tuesday";
-const string DateTime::DATETYPE_TUESDAY2 = "Tues";
-const string DateTime::DATETYPE_WEDNESDAY1 = "Wednesday";
-const string DateTime::DATETYPE_WEDNESDAY2 = "Wed";
-const string DateTime::DATETYPE_THURSDAY1 = "Thursday";
-const string DateTime::DATETYPE_THURSDAY2 = "Thurs";
-const string DateTime::DATETYPE_FRIDAY1 = "Friday";
-const string DateTime::DATETYPE_FRIDAY2 = "Fri";
-const string DateTime::DATETYPE_SATURDAY1 = "Saturday";
-const string DateTime::DATETYPE_SATURDAY2 = "Sat";
-const string DateTime::DATETYPE_SUNDAY1 = "Sunday";
-const string DateTime::DATETYPE_SUNDAY2 = "Sun";
+const string DATETYPE_MONDAY1 = "Monday";
+const string DATETYPE_MONDAY2 = "Mon";
+const string DATETYPE_TUESDAY1 = "Tuesday";
+const string DATETYPE_TUESDAY2 = "Tues";
+const string DATETYPE_WEDNESDAY1 = "Wednesday";
+const string DATETYPE_WEDNESDAY2 = "Wed";
+const string DATETYPE_THURSDAY1 = "Thursday";
+const string DATETYPE_THURSDAY2 = "Thurs";
+const string DATETYPE_FRIDAY1 = "Friday";
+const string DATETYPE_FRIDAY2 = "Fri";
+const string DATETYPE_SATURDAY1 = "Saturday";
+const string DATETYPE_SATURDAY2 = "Sat";
+const string DATETYPE_SUNDAY1 = "Sunday";
+const string DATETYPE_SUNDAY2 = "Sun";
 
-const string DateTime::TIMETYPE_AM = "am";
-const string DateTime::TIMETYPE_PM = "pm";
+const string TIMETYPE_AM = "am";
+const string TIMETYPE_PM = "pm";
 
 bool DateTime::isInitialized = false;
 int DateTime::numberOfDateType;
@@ -25,7 +25,7 @@ vector<string> DateTime::dateType;
 vector<string> DateTime::timeType;
 
 
-DateTime::DateTime(){	
+DateTime::DateTime(){
 	Initialize();
 }
 
@@ -96,13 +96,21 @@ string DateTime::GetType(string input){
 }
 
 
-bool DateTime::isDateType(string day){
+bool DateTime::isDateType(string input){
+	string userDateTime = input;
 
+	for (int i = 0; i < numberOfDateType; i++){
+		size_t found = userDateTime.find(dateType[i]);
 
-	return true;
+		if (found != string::npos){
+			return true;
+		}
+	}
+
+	return false;
 }
 
-bool DateTime::isTimeType(string time){
+bool DateTime::isTimeType(string input){
 
 
 	return true;

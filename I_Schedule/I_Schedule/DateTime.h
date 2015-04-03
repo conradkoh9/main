@@ -22,7 +22,7 @@ public:
 	bool isDateType(string);
 	bool isTimeType(string);
 
-	
+
 	static bool isInitialized;
 	static int numberOfDateType;
 	static int numberOfTimeType;
