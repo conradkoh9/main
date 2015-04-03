@@ -111,7 +111,17 @@ bool DateTime::isDateType(string input){
 }
 
 bool DateTime::isTimeType(string input){
+	string userDateTime = input;
 
+	for (int i = 0; i < numberOfTimeType; i++){
+		size_t found = userDateTime.find(timeType[i]);
+
+		if (found != string::npos){
+			return true;
+		}
+	}
+
+	return false;
 
 	return true;
 }
