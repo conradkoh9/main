@@ -122,8 +122,6 @@ bool DateTime::isTimeType(string input){
 	}
 
 	return false;
-
-	return true;
 }
 
 string DateTime::ConvertDate(){
