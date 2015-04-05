@@ -19,6 +19,7 @@ const string Smartstring::COMMAND_EDIT = "edit";
 const string Smartstring::COMMAND_SAVE = "save";
 const string Smartstring::COMMAND_SEARCH = "search";
 const string Smartstring::COMMAND_COMPLETE = "complete";
+const string Smartstring::COMMAND_EMPTYSLOTS = "emptyslots";
 
 
 const string Smartstring::KEYWORD_ENDDATE_1 = "e:";
@@ -51,7 +52,7 @@ const string Smartstring::FEEDBACK_SEARCH_FAIL="cannot find";
 bool Smartstring::classInitialized = false;
 int Smartstring::numberOfCommands;
 int Smartstring::numberOfKeywords;
-const int Smartstring::NUMBER_OF_FIELDS = 5;
+const int Smartstring::NUMBER_OF_FIELDS = 6;
 vector<string> Smartstring::commands;
 vector<string> Smartstring::keywords;
 
@@ -153,6 +154,9 @@ Smartstring::COMMAND Smartstring::Command(){
 	}
 	if (description == COMMAND_COMPLETE){
 		return Smartstring::COMMAND::COMPLETE;
+	}
+	if (description == COMMAND_EMPTYSLOTS){
+		return Smartstring::COMMAND::EMPTYSLOTS;
 	}
 
 	assert(!IsCommand()); //takes care of the case when we add cases to field but did not update static list commands[];

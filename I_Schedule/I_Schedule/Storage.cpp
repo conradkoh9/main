@@ -177,50 +177,55 @@ vector<Task*> Storage::NearSearch(string input){
 }
 
 string Storage::SearchEmptySlots(string input){
-	string date = dateTime->ConvertDateTime(input);
-	InitializeDayTask(date);
-	SetDayCalendar();
-	return GetEmptySlots();
+	if (dateTime->isDateType(input)){
+		string date = dateTime->ConvertDateTime(input);
+		InitializeDayTask(date);
+		SetDayCalendar();
+		return GetEmptySlots();
+	}else{
+		return _FEEDBACK_SEARCH_FAILURE;
+	}
 }
 
 void Storage::InitializeDayTask(string date){
 	for (int i = 0; i < taskList.size(); i++){
-		if (taskList[i]->GetStartDate() == date)
+		string dateTime = taskList[i]->GetStandardStartDateTime();
+		size_t position = 0;
+		position = dateTime.find_first_of(" ");
+		if (position != string::npos){
 			daytask.push_back(taskList[i]);
+		}	
 	}
 }
 
 void Storage::SetDayCalendar(){
-	//Set sleeping time
-	for (int i = 0; i < 48; i++)
-	{
+	//initialize daycalendar
+	for (int i = 0; i < 48; i++){
 		daycalendar[i] = "empty";
 	}
+	//Jim's sleeping time is from 23:00pm to 7:00am
+	int sleeping_time = 14; //from 00:00am to 7:00am 
 	for (int i = 0; i < 14; i++){
 		daycalendar[i] = "sleeping";
 	}
-	daycalendar[48] = "sleeping";
+	daycalendar[48] = "sleeping"; //from 23:00pm to 00:00am
 	daycalendar[47] = "sleeping";
 
 	for (int i = 0; i < daytask.size(); i++){ //need to consider the tasks without time
 		string startDateTime = daytask[i]->GetStandardStartDateTime();
 		string endDateTime = daytask[i]->GetStandardEndDateTime();
-		size_t start_endPos = 0, end_endPos = 0;
-		start_endPos = startDateTime.find_first_of(":");
-		end_endPos = endDateTime.find_first_of(":");
-		string startTime;
-		string endTime;
-		int startime;
-		int endtime;
-		if ((start_endPos != string::npos) && (end_endPos != string::npos)){
-			startTime = startDateTime.substr(0, start_endPos);
-			endTime = endDateTime.substr(0, end_endPos);
-			startime = atoi(startTime.c_str());
-			endtime = atoi(endTime.c_str());
-		}
-
-		int indexStart = 2 * startime;
-		int indexEnd = 2 * endtime;
+		size_t StartPos = 0, sPos = 0, ePos = 0;
+		sPos = startDateTime.find_first_of(":");
+		ePos = endDateTime.find_first_of(":");
+		string startTime, endTime;
+		int start_time, end_time;
+		startTime = startDateTime.substr(StartPos, sPos);
+		endTime = endDateTime.substr(StartPos, ePos);
+		start_time = atoi(startTime.c_str());
+		end_time = atoi(endTime.c_str());
+		
+		int indexStart = 2 * start_time;
+		int indexEnd = 2 * end_time;
 
 		for (int i = indexStart; i < indexEnd; i++){
 			daycalendar[i] = "busy";
@@ -229,17 +234,16 @@ void Storage::SetDayCalendar(){
 }
 string Storage::GetEmptySlots(){
 	for (int i = 0; i < 48; i++){
-		if (daycalendar[i] == ""){
+		if (daycalendar[i] == "empty"){
 			if (i % 2 == 0){
 				int hour = i / 2;
 				ostringstream oss;
-				oss << hour << ":" << "00";
+				oss << hour << ":" << "00"<<" "<<"to"<<" "<<hour<<":"<<30<<endl;
 				emptyslots.push_back(oss.str());
-			}
-			else{
+			}else{
 				int hour = i / 2 - 1;
 				ostringstream oss;
-				oss << hour << ":" << "30";
+				oss << hour << ":" << "30" << " " << "to" << " "<<hour+1<<":"<<00<<endl;
 				emptyslots.push_back(oss.str());
 			}
 		}

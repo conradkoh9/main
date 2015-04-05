@@ -89,6 +89,10 @@ string Logic::Execute(string input){
 			feedback = Save(remainder);
 			break;
 		}
+		case (Smartstring::COMMAND::EMPTYSLOTS) : {
+			feedback = EmptySlots(remainder);
+			break;
+		}
 		case(Smartstring::COMMAND::INVALID_CMD) : {
 			feedback = Invalid();
 			break;
@@ -176,6 +180,11 @@ string Logic::CloseSearch(string input){
 
 string Logic::Save(string input){
 	string feedback = storage->SaveAs(input);
+	return feedback;
+}
+
+string Logic::EmptySlots(string input){
+	string feedback = storage->SearchEmptySlots(input);
 	return feedback;
 }
 
