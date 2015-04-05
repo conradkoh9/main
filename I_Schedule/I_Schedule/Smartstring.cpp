@@ -52,7 +52,7 @@ const string Smartstring::FEEDBACK_SEARCH_FAIL="cannot find";
 bool Smartstring::classInitialized = false;
 int Smartstring::numberOfCommands;
 int Smartstring::numberOfKeywords;
-const int Smartstring::NUMBER_OF_FIELDS = 6;
+const int Smartstring::NUMBER_OF_FIELDS = 5;
 vector<string> Smartstring::commands;
 vector<string> Smartstring::keywords;
 

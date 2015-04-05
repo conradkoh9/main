@@ -615,6 +615,7 @@ string Storage::LoadCSVContent(){
 			}
 			string test = output.front();
 			if (output.size() != Smartstring::NUMBER_OF_FIELDS){
+				assert(false && "In Storage LoadCSVContent load failed, size does not match definition");
 				return _FEEDBACK_LOAD_FAILURE;
 			}
 			taskptr = new Task(output);

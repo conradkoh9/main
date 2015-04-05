@@ -125,11 +125,11 @@ namespace I_ScheduleLibraryTest{
 			Assert::IsTrue(size > 0);
 			string expected[2];
 			expected[0] = "Description: do homework\nStart: today\nEnd: tomorrow\nPriority: 1\nStatus: Complete";
-			expected[1] = "Description: do homework 2\nStart: today2\nEnd: tomorrow2\nPriority: 12\nStatus: Incomplete";
+			expected[1] = "Description: do homework 2\nStart: today2\nEnd: tomorrow2\nPriority: 1234\nStatus: Incomplete";
 
-			/*for (int i = 0; i < size; i++){
+			for (int i = 0; i < size; i++){
 				Assert::AreEqual(expected[i], storage->GetTask(i));
-			}*/
+			}
 
 		}
 
@@ -152,7 +152,7 @@ namespace I_ScheduleLibraryTest{
 			task->SetDescription("do homework 2");
 			task->SetEndDate("tomorrow2");
 			task->SetStartDate("today2");
-			task->SetPriority("12");
+			task->SetPriority("123");
 			storage->Add(task);
 
 			storage->Save();
@@ -165,7 +165,7 @@ namespace I_ScheduleLibraryTest{
 			Assert::IsTrue(size > 0);
 			string expected[2];
 			expected[0] = "Description: do homework\nStart: today\nEnd: tomorrow\nPriority: 1\nStatus: Complete";
-			expected[1] = "Description: do homework 2\nStart: today2\nEnd: tomorrow2\nPriority: 12\nStatus: Incomplete";
+			expected[1] = "Description: do homework 2\nStart: today2\nEnd: tomorrow2\nPriority: 123\nStatus: Incomplete";
 
 			for (int i = 0; i < size; i++){
 				Assert::AreEqual(expected[i], storage->GetTask(i));
