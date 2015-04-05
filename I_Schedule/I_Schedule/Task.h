@@ -61,11 +61,11 @@ public:
 	string GetEndDate();
 	string GetPriority();
 	string GetStatus();
-	string GetStandardStartDate();
-	string GetStandardEndDate();
+	string GetStandardStartDateTime();
+	string GetStandardEndDateTime();
 
 	string MarkComplete();
-	
+
 	string ToString();
 	string ToFloatingString();
 	string ToDeadlineString();
@@ -78,7 +78,7 @@ public:
 	bool isContains(string input);
 	bool isNearMatch(string input);
 	size_t LevenshteinDistance(const std::string &s1, const std::string &s2);
-	
+
 
 	bool isFloating();
 	bool isDeadline();
@@ -89,4 +89,3 @@ public:
 };
 
 ostream& operator<<(ostream& out, Task& task);
-

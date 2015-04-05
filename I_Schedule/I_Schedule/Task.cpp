@@ -104,11 +104,11 @@ string Task::GetStatus(){
 	return status;
 }
 
-string Task::GetStandardStartDate(){
+string Task::GetStandardStartDateTime(){
 	return standardStart;
 }
 
-string Task::GetStandardEndDate(){
+string Task::GetStandardEndDateTime(){
 	return standardEnd;
 }
 

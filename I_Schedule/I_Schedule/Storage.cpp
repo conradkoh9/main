@@ -192,6 +192,10 @@ void Storage::InitializeDayTask(string date){
 
 void Storage::SetDayCalendar(){
 	//Set sleeping time
+	for (int i = 0; i < 48; i++)
+	{
+		daycalendar[i] = "empty";
+	}
 	for (int i = 0; i < 14; i++){
 		daycalendar[i] = "sleeping";
 	}
@@ -199,12 +203,30 @@ void Storage::SetDayCalendar(){
 	daycalendar[47] = "sleeping";
 
 	for (int i = 0; i < daytask.size(); i++){ //need to consider the tasks without time
-		string startTime = daytask[i]->GetStandardStartDate();
-		string endTime = daytask[i]->GetStandardEndDate();
+		string startDateTime = daytask[i]->GetStandardStartDateTime();
+		string endDateTime = daytask[i]->GetStandardEndDateTime();
+		size_t start_endPos = 0, end_endPos = 0;
+		start_endPos = startDateTime.find_first_of(":");
+		end_endPos = endDateTime.find_first_of(":");
+		string startTime;
+		string endTime;
+		int startime;
+		int endtime;
+		if ((start_endPos != string::npos) && (end_endPos != string::npos)){
+			startTime = startDateTime.substr(0, start_endPos);
+			endTime = endDateTime.substr(0, end_endPos);
+			startime = atoi(startTime.c_str());
+			endtime = atoi(endTime.c_str());
+		}
 
+		int indexStart = 2 * startime;
+		int indexEnd = 2 * endtime;
+
+		for (int i = indexStart; i < indexEnd; i++){
+			daycalendar[i] = "busy";
+		}
 	}
 }
-
 string Storage::GetEmptySlots(){
 	for (int i = 0; i < 48; i++){
 		if (daycalendar[i] == ""){
@@ -348,8 +370,8 @@ void Storage::sortTaskListsByTime(){
 	int size_taskList = taskList.size();
 	for (int i = 1; i < size_taskList; i++){
 		for (int j = 1; j < size_taskList - i;++j){
-			string sdStart1 = taskList[j-1]->GetStandardStartDate();
-			string sdStart2 = taskList[j]->GetStandardStartDate();
+			string sdStart1 = taskList[j - 1]->GetStandardStartDateTime();
+			string sdStart2 = taskList[j]->GetStandardStartDateTime();
 			if (dateTime->CompareDateTime(sdStart1,sdStart2)){
 				Task* temp = taskList[j-1];
 				taskList[j-1] = taskList[j];
