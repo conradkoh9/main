@@ -62,6 +62,9 @@ public:
 	string SearchEmptySlots(string input);
 	void InitializeDayTask(string input);
 	void SetDayCalendar();
+	void InitializeDayCalendar();
+	void SetSleepingTime();
+	void SetOccupiedSlots();
 	string GetEmptySlots();
 	
 	//STATS

@@ -106,7 +106,6 @@ string Storage::SaveAs(string newFileName){
 	else{
 		return _FEEDBACK_FILE_NOT_EMPTY;
 	}
-	
 }
 
 //@author A0099303A
@@ -199,19 +198,28 @@ void Storage::InitializeDayTask(string date){
 }
 
 void Storage::SetDayCalendar(){
-	//initialize daycalendar
+	InitializeDayCalendar();
+	SetSleepingTime();
+	SetOccupiedSlots();
+}
+
+void Storage::InitializeDayCalendar(){
 	for (int i = 0; i < 48; i++){
 		daycalendar[i] = "empty";
 	}
-	//Jim's sleeping time is from 23:00pm to 7:00am
+}
+
+void Storage::SetSleepingTime(){
 	int sleeping_time = 14; //from 00:00am to 7:00am 
 	for (int i = 0; i < 14; i++){
 		daycalendar[i] = "sleeping";
 	}
 	daycalendar[48] = "sleeping"; //from 23:00pm to 00:00am
 	daycalendar[47] = "sleeping";
+}
 
-	for (int i = 0; i < daytask.size(); i++){ //need to consider the tasks without time
+void Storage::SetOccupiedSlots(){
+	for (int i = 0; i < daytask.size(); i++){
 		string startDateTime = daytask[i]->GetStandardStartDateTime();
 		string endDateTime = daytask[i]->GetStandardEndDateTime();
 		size_t StartPos = 0, sPos = 0, ePos = 0;
@@ -223,7 +231,7 @@ void Storage::SetDayCalendar(){
 		endTime = endDateTime.substr(StartPos, ePos);
 		start_time = atoi(startTime.c_str());
 		end_time = atoi(endTime.c_str());
-		
+
 		int indexStart = 2 * start_time;
 		int indexEnd = 2 * end_time;
 
@@ -232,6 +240,8 @@ void Storage::SetDayCalendar(){
 		}
 	}
 }
+
+
 string Storage::GetEmptySlots(){
 	for (int i = 0; i < 48; i++){
 		if (daycalendar[i] == "empty"){
