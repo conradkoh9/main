@@ -229,8 +229,8 @@ void Storage::SetOccupiedSlots(){
 		int start_time, end_time;
 		startTime = startDateTime.substr(StartPos, sPos);
 		endTime = endDateTime.substr(StartPos, ePos);
-		start_time = atoi(startTime.c_str());
-		end_time = atoi(endTime.c_str());
+		start_time = stoi(startTime.c_str());
+		end_time = stoi(endTime.c_str());
 
 		int indexStart = 2 * start_time;
 		int indexEnd = 2 * end_time;

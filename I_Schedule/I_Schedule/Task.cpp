@@ -30,10 +30,18 @@ Task::Task()
 }
 
 Task::Task(vector<string> input){
+	standardStartdt = new DateTime(input[Smartstring::FIELD::STARTDATE]);
+	standardEnddt = new DateTime(input[Smartstring::FIELD::ENDDATE]);
+	standardStart = standardStartdt->Standardized();
+	standardEnd = standardEnddt->Standardized();
+
+
 	description = input[Smartstring::FIELD::DESCRIPTION];
-	enddate = input[Smartstring::FIELD::ENDDATE];
-	startdate = input[Smartstring::FIELD::STARTDATE];
+	//enddate = input[Smartstring::FIELD::ENDDATE];
+	//startdate = input[Smartstring::FIELD::STARTDATE];
 	priority = input[Smartstring::FIELD::PRIORITY];
+	startdate = standardStart;
+	enddate = standardEnd;
 	status = input[Smartstring::FIELD::STATUS];
 	if (status == ""){
 		status = _STATUS_INCOMPLETE;
@@ -52,11 +60,15 @@ string Task::SetDescription(string input){
 }
 
 string Task::SetStartDate(string input){
+	DateTime dt(input);
+	startdate = dt.Standardized();
 	startdate = input;
 	return _FEEDBACK_STARTDATE_SET;
 }
 
 string Task::SetEndDate(string input){
+	DateTime dt(input);
+	enddate = dt.Standardized();
 	enddate = input;
 	return _FEEDBACK_ENDDATE_SET;
 }

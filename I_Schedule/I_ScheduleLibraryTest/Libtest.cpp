@@ -4,7 +4,8 @@
 using namespace std;
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
-namespace I_ScheduleLibraryTest{		
+namespace I_ScheduleLibraryTest{
+
 	TEST_CLASS(myLibTest)
 	{
 	public:
@@ -142,16 +143,16 @@ namespace I_ScheduleLibraryTest{
 			storage->Clear();
 			Task* task = new Task();
 			task->SetDescription("do homework");
-			task->SetEndDate("tomorrow");
-			task->SetStartDate("today");
+			task->SetEndDate("08/04/2015");
+			task->SetStartDate("07/04/2015");
 			task->SetPriority("1");
 			task->SetStatus("Complete");
 			storage->Add(task);
 
 			task = new Task();
 			task->SetDescription("do homework 2");
-			task->SetEndDate("tomorrow2");
-			task->SetStartDate("today2");
+			task->SetEndDate("10/04/2015");
+			task->SetStartDate("09/04/2015");
 			task->SetPriority("123");
 			storage->Add(task);
 
@@ -164,8 +165,8 @@ namespace I_ScheduleLibraryTest{
 			int size = storage->Size();
 			Assert::IsTrue(size > 0);
 			string expected[2];
-			expected[0] = "Description: do homework\nStart: today\nEnd: tomorrow\nPriority: 1\nStatus: Complete";
-			expected[1] = "Description: do homework 2\nStart: today2\nEnd: tomorrow2\nPriority: 123\nStatus: Incomplete";
+			expected[0] = "Description: do homework\nStart: 07/04/2015\nEnd: 08/04/2015\nPriority: 1\nStatus: Complete";
+			expected[1] = "Description: do homework 2\nStart: 09/04/2015\nEnd: 10/04/2015\nPriority: 123\nStatus: Incomplete";
 
 			for (int i = 0; i < size; i++){
 				Assert::AreEqual(expected[i], storage->GetTask(i));
@@ -269,22 +270,48 @@ namespace I_ScheduleLibraryTest{
 			//vector constructor test
 			vector<string> testinput;
 			testinput.push_back("do my homework");
-			testinput.push_back("today");
-			testinput.push_back("tomorrow");
+			testinput.push_back("09/10/2015");
+			testinput.push_back("10/10/2015");
 			testinput.push_back("1");
 			testinput.push_back("Incomplete");
 
 			Task* vectTask = new Task(testinput);
 			Assert::AreEqual("do my homework", vectTask->GetDescription().c_str());
-			Assert::AreEqual("today", vectTask->GetStartDate().c_str());
-			Assert::AreEqual("tomorrow", vectTask->GetEndDate().c_str());
+			Assert::AreEqual("09/10/2015", vectTask->GetStartDate().c_str());
+			Assert::AreEqual("10/10/2015", vectTask->GetEndDate().c_str());
 			Assert::AreEqual("1", vectTask->GetPriority().c_str());
 			Assert::AreEqual("Incomplete", vectTask->GetStatus().c_str());
 
 			string actual = vectTask->ToCSVString();
-			string expected = "\"do my homework\",\"today\",\"tomorrow\",\"1\",\"Incomplete\"";
+			string expected = "\"do my homework\",\"09/10/2015\",\"10/10/2015\",\"1\",\"Incomplete\"";
 			Assert::AreEqual(expected, actual);
 
+		}
+
+		TEST_METHOD(TASK_INTEGRATED){
+			//default constructor test
+			Task* task = new Task();
+			Assert::AreEqual("", task->GetDescription().c_str());
+			Assert::AreEqual("", task->GetStartDate().c_str());
+			Assert::AreEqual("", task->GetEndDate().c_str());
+			Assert::AreEqual("", task->GetPriority().c_str());
+
+			//vector constructor test
+			vector<string> testinput;
+			testinput.push_back("do my homework");
+			testinput.push_back("09/10/2015 at 5pm");
+			testinput.push_back("10/10/2015 at 6pm");
+			testinput.push_back("1");
+			testinput.push_back("Incomplete");
+			
+			Task* vectTask = new Task(testinput);
+
+			Assert::AreEqual("do my homework", vectTask->GetDescription().c_str());
+			Assert::AreEqual("05:00pm on 09/10/2015", vectTask->GetStartDate().c_str());
+			Assert::AreEqual("06:00pm on 10/10/2015", vectTask->GetEndDate().c_str());
+			Assert::AreEqual("1", vectTask->GetPriority().c_str());
+			Assert::AreEqual("Incomplete", vectTask->GetStatus().c_str());
+			
 		}
 
 		//@author A0099303A
@@ -295,8 +322,8 @@ namespace I_ScheduleLibraryTest{
 			logic->Clear();
 			logic->storage->Reset();
 			string file = logic->storage->GetFileName();
-			string myinput = "add homework from: monday till: tuesday p: 1";
-			string expected = "Description: homework\nStart: monday\nEnd: tuesday\nPriority: 1\nStatus: Incomplete";
+			string myinput = "add homework from: 07/04/2015 till: 08/04/2015 p: 1";
+			string expected = "Description: homework\nStart: 07/04/2015\nEnd: 08/04/2015\nPriority: 1\nStatus: Incomplete";
 			string feedback;
 			feedback = logic->Run(myinput);
 			string output = logic->mout.str();
@@ -356,9 +383,87 @@ namespace I_ScheduleLibraryTest{
 			Assert::AreEqual("doing", result[4].c_str());
 			Assert::AreEqual("today", result[5].c_str());
 
+			input = "";
+			str = Smartstring(input);
+			result = str.Tokenize(" ");
+			size = result.size();
+			Assert::AreEqual(size, 0);
 		}
 
+		TEST_METHOD(DATETIME_USER_INPUTS){
+			string input;
+			string expected[10];
+			string actual[10];
+			//testing the partition where no day reset is crossed
+			input = "Tuesday at 5pm";
+			DateTime dt(input);
+			actual[0] = dt.Standardized();
+			expected[0] = "05:00pm on 07/04/2015";
+			Assert::AreEqual(expected[0], actual[0]);
 
+			input = "5pm on Tuesday";
+			dt = DateTime(input);
+			actual[1] = dt.Standardized();
+			expected[1] = "05:00pm on 07/04/2015";
+			Assert::AreEqual(expected[1], actual[1]);
 
+			input = "Friday at 10pm";
+			dt = DateTime(input);
+			actual[2] = dt.Standardized();
+			expected[2] = "10:00pm on 10/04/2015";
+			Assert::AreEqual(expected[2], actual[2]);
+
+			//testing the partition where a day reset is crossed e.g today is wednesday, appointment on monday
+			input = "Monday at 6pm";
+			dt = DateTime(input);
+			actual[3] = dt.Standardized();
+			expected[3] = "06:00pm on 13/04/2015";
+			Assert::AreEqual(expected[3], actual[3]);
+
+			//testing that Standardized() does not change empty strings
+			input = "";
+			dt = DateTime(input);
+			actual[4] = dt.Standardized();
+			expected[4] = "";
+			Assert::AreEqual(expected[4], actual[4]);
+
+			//important lacking test: testing when month is crossed
+
+		}
+
+		TEST_METHOD(DATETIME_STANDARD_INPUTS){
+			string input;
+			string expected[10];
+			string actual[10];
+			DateTime dt;
+
+			//testing that standard inputs can be reconstructed
+			input = "06:00pm on 13/04/2015";
+			dt = DateTime(input);
+			actual[0] = dt.Standardized();
+			expected[0] = "06:00pm on 13/04/2015";
+			Assert::AreEqual(expected[0], actual[0]);
+
+			input = "13/04/2015 at 06:00pm";
+			dt = DateTime(input);
+			actual[3] = dt.Standardized();
+			expected[3] = "06:00pm on 13/04/2015";
+			Assert::AreEqual(expected[3], actual[3]);
+
+			//testing date only input
+			input = "13/04/2015";
+			dt = DateTime(input);
+			actual[1] = dt.Standardized();
+			expected[1] = "13/04/2015";
+			Assert::AreEqual(expected[1], actual[1]);
+
+			//testing time only input
+			input = "05:30pm";
+			dt = DateTime(input);
+			actual[2] = dt.Standardized();
+			expected[2] = "05:30pm";
+			Assert::AreEqual(expected[2], actual[2]);
+
+		}
 	};
 }
