@@ -50,8 +50,8 @@ namespace I_ScheduleLibraryTest{
 			storage->Clear();
 			Task* task = new Task();
 			task->SetDescription("do homework");
-			task->SetEndDate("tomorrow");
-			task->SetStartDate("today");
+			task->SetEndDate("16/04/2015");
+			task->SetStartDate("13/04/2015");
 			task->SetPriority("1");
 			task->SetStatus("Incomplete");
 			storage->Add(task);
@@ -60,8 +60,8 @@ namespace I_ScheduleLibraryTest{
 			string deadlinedTask = storage->GetDeadlineList();
 			string floatingTask = storage->GetFloatingList();
 			string expected[2];
-			//expected[0] = "[today][tomorrow][priority 1]do homework ";
-			expected[0] = "\\b 1: \\b0 [today][tomorrow] do homework";
+
+			expected[0] = "\\b 1: \\b0 [13/04/2015][16/04/2015] do homework";
 			expected[1] = "";
 			Assert::AreEqual(expected[0], timedTask);
 			Assert::AreEqual(expected[1], deadlinedTask);
