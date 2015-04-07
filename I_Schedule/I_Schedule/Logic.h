@@ -34,6 +34,7 @@ public:
 	string Complete(string input);
 	string Clear();
 	string Undo();
+	string Load(string input);
 
 	//display streams
 	static ostringstream fout; //floating task display stream

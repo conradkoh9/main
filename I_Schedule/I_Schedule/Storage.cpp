@@ -91,6 +91,28 @@ string Storage::Load(){
 }
 
 //@author A0099303A
+string Storage::Load(string filename){
+	FILETYPE filetype = IdentifyFileType(filename);
+	if (filetype != FILETYPE::INVALID){
+		string feedback;
+		_filename = filename;
+		filename;
+		ClearVectors();
+		feedback = LoadRawFileContent();
+		LoadTaskList();
+		Update();
+		logfile << _FEEDBACK_LOAD_SUCCESS << " " << filename;
+		return feedback;
+	}
+	else{
+		logfile << _FEEDBACK_FILE_NOT_EMPTY;
+		return _FEEDBACK_FILE_NOT_EMPTY;
+	}
+
+}
+
+
+//@author A0099303A
 string Storage::Save(){
 	string feedback;
 	feedback = Rewrite();

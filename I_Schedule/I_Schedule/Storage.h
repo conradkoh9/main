@@ -50,6 +50,7 @@ public:
 	string Delete(int position);
 	string Complete(int position);
 	string Load();
+	string Load(string filename);
 
 	string Save();
 	string SaveAs(string newFileName);

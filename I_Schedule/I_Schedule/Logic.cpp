@@ -97,6 +97,10 @@ string Logic::Execute(string input){
 			 feedback = Undo();
 			 break;
 		}
+		case (Smartstring::COMMAND::LOAD) : {
+			feedback = Load(remainder);
+			break;
+		}
 		case(Smartstring::COMMAND::INVALID_CMD) : {
 			feedback = Invalid();
 			break;
@@ -210,5 +214,10 @@ string Logic::Clear(){
 
 string Logic::Undo(){
 	string feedback = storage->Undo();
+	return feedback;
+}
+
+string Logic::Load(string input){
+	string feedback = storage->Load(input);
 	return feedback;
 }
