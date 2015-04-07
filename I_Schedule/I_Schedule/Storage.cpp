@@ -425,17 +425,21 @@ void Storage::initializeLists(){
 
 void Storage::sortTaskListsByTime(){
 	int size_taskList = taskList.size();
+
 	for (int i = 1; i < size_taskList; i++){
 		for (int j = 1; j < size_taskList - i;++j){
-			string sdStart1 = taskList[j - 1]->GetStandardStartDateTime();
-			string sdStart2 = taskList[j]->GetStandardStartDateTime();
-			if (dateTime->CompareDateTime(sdStart1,sdStart2)){
+			string sdStart1 = taskList[j - 1]->GetStartDate();
+			string sdStart2 = taskList[j]->GetStartDate();
+			DateTime dt1(sdStart1);
+			DateTime dt2(sdStart2);
+			if (dt2.IsEarlierThan(dt1)){
 				Task* temp = taskList[j-1];
 				taskList[j-1] = taskList[j];
 				taskList[j] = temp;
 			}
 		}
 	}
+
 }
 
 //@author A0099303A

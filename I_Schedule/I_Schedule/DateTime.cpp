@@ -424,7 +424,7 @@ bool DateTime::IsValidTime(string input){
 		//getting hour
 		string hour_s = result.substr(0, found);
 		hour = atoi(hour_s.c_str());
-		//getting mins
+		//getting min
 		int length = result.length();
 		string min_s = result.substr(found, length - 1);
 		mins = atoi(min_s.c_str());
