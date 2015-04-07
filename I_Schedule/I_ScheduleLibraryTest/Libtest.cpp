@@ -42,9 +42,85 @@ namespace I_ScheduleLibraryTest{
 			tasklist.clear();
 
 		}
+		
+		//@author A0119491B
+		TEST_METHOD(STORAGE_FILTER){
+			vector<Task*> tasklist;
+			Storage* storage = new Storage("Storage_Filter.txt");
+			//set new task
+			storage->Clear();
+			Task* task = new Task();
+			task->SetDescription("do homework");
+			task->SetEndDate("tomorrow");
+			task->SetStartDate("today");
+			task->SetPriority("1");
+			task->SetStatus("Incomplete");
+			storage->Add(task);
+	
+			string timedTask = storage->GetTimedList();
+			string deadlinedTask = storage->GetDeadlineList();
+			string floatingTask = storage->GetFloatingList();
+			string expected[3];
+			expected[3] = "homework from monday to tuesday priority 1 ";
+			expected[4] = "";
+			Assert::AreEqual(expected[3], timedTask);
+			Assert::AreEqual(expected[4], deadlinedTask);
+			Assert::AreEqual(expected[4], floatingTask);
+			tasklist.clear();
 
-		//@author unknown
+		}
+		//@author A0119491B
 		TEST_METHOD(STORAGE_SEARCH){
+			Storage* storage = new Storage("Storage_PowerSearch.txt");
+			vector<Task*> RESULT;
+			vector<string> input;
+			string expected[3], result;
+			expected[3]= "homework from monday to tuesday priority 1 ";
+			expected[4] = "cannot find";
+			
+			//Testing search by description
+			input.clear();
+			input[Smartstring::FIELD::DESCRIPTION] = "homework";
+			result = storage->Search(input[Smartstring::FIELD::DESCRIPTION]);
+			Assert::AreEqual(expected[3], result);
+			
+			//Testing search by start date
+			input.clear();
+			input[Smartstring::FIELD::STARTDATE] = "monday";
+			result = storage->Search(input[Smartstring::FIELD::STARTDATE]);
+			Assert::AreEqual(expected[3], result);
+			
+			//Testing search by end date
+			input.clear();
+			input[Smartstring::FIELD::ENDDATE] = "tuesday";
+			result = storage->Search(input[Smartstring::FIELD::ENDDATE]);
+			Assert::AreEqual(expected[3], result);
+			
+			//Testing search by priority
+			input.clear();
+			input[Smartstring::FIELD::PRIORITY] = "1";
+			result = storage->Search(input[Smartstring::FIELD::PRIORITY]);
+			Assert::AreEqual(expected[3], result);
+
+			//Testing Failure case
+			input.clear();
+			input[Smartstring::FIELD::DESCRIPTION] = "shopping";
+			result = storage->Search(input[Smartstring::FIELD::DESCRIPTION]);
+			Assert::AreEqual(expected[3], result);
+
+			//Testing Close Search
+			input.clear();
+			input[Smartstring::FIELD::DESCRIPTION] = "howork";
+			RESULT = storage->NearSearch(input[Smartstring::FIELD::DESCRIPTION]);
+			result = storage->ToString(RESULT);
+			Assert::AreEqual(expected[3], result);
+
+		}
+		
+		/*TEST_METHOD(STORAGE_SEARCH){
+			Storage* storage = new Storage("Storage_PowerSearch.txt");
+			vector<string> input;
+
 			//Storage* storage = new Storage("Storage_Search.txt");
 			//
 			////Testing FilterTask function
@@ -54,7 +130,7 @@ namespace I_ScheduleLibraryTest{
 			//string floatingTask = storage->ToString(storage->floatingList);
 			///*cout<< "Timed Task List:" << "\n" << timedTask << endl;
 			//cout<< "Deadline Task List:" << "\n" << deadlineTask << endl;
-			//cout<< "Floating Task List:" << "\n" << floatingTask << endl;*/
+			//cout<< "Floating Task List:" << "\n" << floatingTask << endl;
 			//
 			//string expected[5];
 			//
@@ -92,7 +168,7 @@ namespace I_ScheduleLibraryTest{
 			//result = storage->search(input);
 			//Assert::AreEqual(expected[4], result);
 
-		}
+		}*/
 
 		//@author A0099303A
 		TEST_METHOD(STORAGE_TXT_LOAD_REWRITE){
