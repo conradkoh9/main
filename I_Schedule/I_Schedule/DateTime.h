@@ -89,7 +89,8 @@ private:
 	string StandardizeDate(string input); //Standardize input assuming that it is a date
 	string StandardizeDay(string input); //Standardize input assuming that it is a day
 	string StandardizeTime(string input);
-
+	bool CompareDate(string, string);
+	bool CompareTime(string, string);
 	bool IsValidDayDate(string input); //Check if input is a valid day or date
 	bool IsValidDate(string input); //Check if input is a valid date
 	bool IsValidDay(string input); //Check if input is a valid day

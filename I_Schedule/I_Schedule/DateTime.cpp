@@ -622,9 +622,164 @@ string DateTime::ConvertTime(){
 }
 
 bool DateTime::CompareDateTime(string input1, string input2){
+	bool isGreater = true;
+	Smartstring input_1(input1);
+	vector<string> tokens1 = input_1.Tokenize(" ");
+	int size1 = tokens1.size();
+
+	Smartstring input_2(input2);
+	vector<string> tokens2 = input_2.Tokenize(" ");
+	int size2 = tokens2.size();
 
 
-	return true;
+	switch (size1){
+	case 1:{
+		if (IsValidDate(tokens1[0])){
+			if (IsValidTime(tokens2[0])){
+				isGreater = false;
+			}
+			else if (IsValidDate(tokens2[0])){
+				isGreater = CompareDate(tokens1[0], tokens2[0]);
+			}
+		}
+
+		if (IsValidTime(tokens1[0])){
+			if (IsValidTime(tokens2[0])){
+				isGreater = CompareTime(tokens1[0], tokens2[0]);
+			}
+
+		}
+
+		break;
+	}
+
+	case 3:{
+		if (size2 == 1){
+			if (IsValidTime(tokens2[0])){
+				isGreater = CompareTime(tokens1[0], tokens2[0]);
+			}
+			else if (IsValidDate(tokens2[0])){
+				isGreater = CompareDate(tokens1[2], tokens2[0]);
+			}
+		}
+
+		if (size2 == 3){
+			if (!CompareDate(tokens1[2], tokens2[2])){
+				isGreater = false;
+			}
+			else if (tokens1[2] == tokens2[2]){
+				isGreater = CompareTime(tokens1[0], tokens2[0]);
+			}
+		}
+		break;
+	}
+
+	default:
+		break;
+	}
+
+
+	return isGreater;
+}
+
+bool DateTime::CompareDate(string date1, string date2){
+	int day1, day2;
+	int mon1, mon2;
+	int year1, year2;
+	int length;
+	string day_s, mon_s, year_s;
+	size_t start, end;
+	bool isGreater = true;
+
+	// tokenize first string date 
+	start = 0;
+	end = date1.find_first_of("/");
+	day_s = date1.substr(start, end - start);
+	day1 = atoi(day_s.c_str());
+
+	start = end + 1;
+	end = date1.find_first_of("/", start);
+	mon_s = date1.substr(start, end - start);
+	mon1 = atoi(mon_s.c_str());
+
+	start = end + 1;
+	length = date1.length();
+	year_s = date1.substr(start, length - start);
+	year1 = atoi(mon_s.c_str());
+
+
+	//tokenize second string date
+
+	start = 0;
+	end = date1.find_first_of("/");
+	day_s = date2.substr(start, end - start);
+	day2 = atoi(day_s.c_str());
+
+	start = end + 1;
+	end = date2.find_first_of("/", start);
+	mon_s = date2.substr(start, end - start);
+	mon2 = atoi(mon_s.c_str());
+
+	start = end + 1;
+	length = date2.length();
+	year_s = date2.substr(start, length - start);
+	year2 = atoi(mon_s.c_str());
+
+	//compare
+	if (year1 == year2){
+		if (mon1 == mon2){
+			if (day1 < day2){
+				isGreater = false;
+			}
+		}
+		else if (mon1 < mon2){
+			isGreater = false;
+		}
+	}
+	else if (year1 < year2){
+		isGreater = false;
+	}
+
+
+
+	return isGreater;
+}
+
+bool DateTime::CompareTime(string time1, string time2){
+	int hour1, hour2;
+	int min1, min2;
+	int length;
+	string hour_s;
+	string min_s;
+	size_t found;
+	bool isGreater = true;
+
+
+	found = time1.find_first_of(":");
+	hour_s = time1.substr(0, found);
+	hour1 = atoi(hour_s.c_str());
+	length = time1.length();
+	min_s = time1.substr(found + 1, length);
+	min1 = atoi(min_s.c_str());
+
+	found = time2.find_first_of(":");
+	hour_s = time2.substr(0, found);
+	hour2 = atoi(hour_s.c_str());
+	length = time2.length();
+	min_s = time2.substr(found + 1, length);
+	min2 = atoi(min_s.c_str());
+
+	if (hour1 == hour2){
+		if (min1 < min2){
+			isGreater = false;
+		}
+	}
+
+	if (hour1 < hour2){
+		isGreater = false;
+	}
+
+	return isGreater;
 }
 
 void DateTime::Initialize(){
