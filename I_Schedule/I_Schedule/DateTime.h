@@ -11,55 +11,8 @@ using namespace std;
 class DateTime
 {
 	enum DATEKEY{ TODAY, TOMORROW };
-	enum DAY{ SUNDAY, MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, INVALID
-};
-
-public:
-	DateTime();
-	DateTime(string);
-	~DateTime();
-
-
-	//Variables
-	string unformattedDateTime;
-	string formattedDateTime;
-	bool isValidFormat;
-
-	//Methods
-	string Standardized();
-	string StandardizeTime(string input);
-
-	string StandardizeDayDate(string input);
-	string StandardizeDate(string input);
-	string StandardizeDay(string input);
-
-	bool IsValidDayDate(string input);
-	bool IsValidDate(string input);
-	bool IsValidDay(string input);
-	bool IsValidTime(string input);
-
-	time_t OffsetByDay(time_t timeReference, time_t offset);
-	
-	DAY GetDayEnum(string input);
-	int CalculateOffset(DAY startday, DAY endday);
-
-	string GetDayFromTime(time_t time);
-	string GetStandardDate(time_t time);
-	string GetStandardTime(time_t time);
-	//======================================
-	//Methods
-
-	string Now();
-	string Today();
-	string ConvertDate();
-	string ConvertDateTime(string);
-	string ConvertTime();
-	string GetType(string);
-	void Initialize();
-	bool CompareDateTime(string, string);
-	bool isDateType(string);
-	bool isTimeType(string);
-
+	enum DAY{ SUNDAY, MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, INVALID };
+private:
 
 	static bool isInitialized;
 	static int numberOfDateType;
@@ -102,6 +55,67 @@ public:
 
 	// my idea here is I have to search for the key words for day and time so 
 	// as to separate the info into date and time type
+
+public:
+	DateTime();
+	DateTime(string);
+	~DateTime();
+
+	//==========================================================
+	//Methods suggested by Conrad
+	//Note: these methods are currently used in
+	//==========================================================
+public:
+	//Variables
+	string unformattedDateTime;
+	string formattedDateTime;
+	bool isValidFormat;
+
+	//Methods
+	string Standardized();
+
+private:
+
+	string StandardizeDayDate(string input); //Standardize input assuming that it is either a day, or a date
+	string StandardizeDate(string input); //Standardize input assuming that it is a date
+	string StandardizeDay(string input); //Standardize input assuming that it is a day
+	string StandardizeTime(string input);
+
+	bool IsValidDayDate(string input); //Check if input is a valid day or date
+	bool IsValidDate(string input); //Check if input is a valid date
+	bool IsValidDay(string input); //Check if input is a valid day
+	bool IsValidTime(string input); //Check if input is a valid time
+
+
+	DAY GetDayEnum(string input); //Gets the DAY in enum format of an input string. i.e. sunday = 0, monday = 1...
+	int CalculateOffset(DAY startday, DAY endday); //Gets the offset for the next occurance of endday based on startday.
+
+	string GetDayFromTime(time_t time); 
+	string GetStandardDate(time_t time);
+	string GetStandardTime(time_t time);
+	time_t OffsetByDay(time_t startday, time_t offset_in_days); //given a startday and number of days to offset by, converts to a time_t value
+
+	//==========================================================
+	//End section Methods suggested by Conrad
+	//==========================================================
+
+
+	//==========================================================
+	//Methods
+	//==========================================================
+public:
+	string Now();
+	string Today();
+	string ConvertDate();
+	string ConvertDateTime(string);
+	string ConvertTime();
+	string GetType(string);
+	void Initialize();
+	bool CompareDateTime(string, string);
+	bool isDateType(string);
+	bool isTimeType(string);
+
+
 private:
 	int _day;
 	int _month;

@@ -37,6 +37,9 @@ int DateTime::numberOfTimeType;
 vector<string> DateTime::dateType;
 vector<string> DateTime::timeType;
 
+//==========================================================
+//Methods suggested by Conrad
+//==========================================================
 
 DateTime::DateTime(){
 	Initialize();
@@ -77,6 +80,9 @@ string DateTime::Standardized(){
 				else{
 					if (IsValidTime(tokens[0])){
 						formattedDateTime = StandardizeTime(tokens[0]);
+					}
+					else{
+						formattedDateTime = unformattedDateTime;
 					}
 				}
 				break;
@@ -231,10 +237,17 @@ string DateTime::StandardizeTime(string input){
 	}
 	else{
 		//attempt to convert string to hour in case: 5pm as input
+		//note that this converts invalid strings to 0 so the time will display as 00:00 if it is invalid which may seem like a valid time
 		if (result.length() <= 2){
 			hour = atoi(result.c_str());
 			mins = 0;
 		}
+	}
+
+	if (hour > 12){
+		//if the hour is in 24 hour format
+		hour = hour % 12;
+		period = "pm";
 	}
 
 	ostringstream minout;
@@ -246,19 +259,88 @@ string DateTime::StandardizeTime(string input){
 	return output;
 }
 
-time_t DateTime::OffsetByDay(time_t timeReference,time_t offset_in_days){
-	time_t output;
-	time_t offset_in_seconds = offset_in_days * 24 * 60 * 60;
-	output = timeReference + offset_in_seconds;
-	return output;
+bool DateTime::IsValidDayDate(string input){
+	if (IsValidDay(input) || IsValidDate(input)){
+		return true;
+	}
+	else{
+		return false;
+	}
 }
 
-string DateTime::GetDayFromTime(time_t time){
-	struct tm timeinfo;
-	localtime_s(&timeinfo, &time);
-	char output[80];
-	strftime(output, 80, "%A", &timeinfo);
-	return output;
+bool DateTime::IsValidDate(string input){
+	string dbg = input;
+	int found = 0;
+	int startIdx = 0;
+	int count = 0;
+	bool isValid = false;
+	while (found != string::npos){
+		found = input.find_first_of("/", startIdx);
+		if (found != string::npos){
+			count++;
+		}
+		startIdx = found + 1;
+	}
+
+
+	if (count == 2){
+		isValid = true;
+	}
+
+	return isValid;
+}
+
+bool DateTime::IsValidDay(string input){
+
+	bool isValid = false;
+	vector<string>::iterator iter;
+	for (iter = dateType.begin(); iter != dateType.end(); ++iter){
+		if (*iter == input){
+			isValid = true;
+		}
+	}
+	return isValid;
+}
+
+bool DateTime::IsValidTime(string input){
+	string dbg = input;
+	bool isValid = false;
+	string result = input;
+	int hour;
+	int mins;
+
+	int found = input.find("pm");
+	if (found != string::npos){
+		result = input.substr(0, found);
+	}
+	found = result.find("am");
+	if (found != string::npos){
+		result = result.substr(0, found);
+	}
+
+	found = result.find_first_of(":");
+	if (found != string::npos){
+		//getting hour
+		string hour_s = result.substr(0, found);
+		hour = atoi(hour_s.c_str());
+		//getting mins
+		int length = result.length();
+		string min_s = result.substr(found, length - 1);
+		mins = atoi(min_s.c_str());
+		if (hour >= 0 && hour < 24 && mins >= 0 && mins < 60){
+			isValid = true;
+		}
+	}
+	else{
+		//attempt to convert string to hour in case: 5pm as input
+		if (result.length() < 3){
+			hour = atoi(result.c_str());
+			mins = 0;
+			isValid = true;
+		}
+	}
+	
+	return isValid;
 }
 
 DateTime::DAY DateTime::GetDayEnum(string input){
@@ -301,6 +383,14 @@ int DateTime::CalculateOffset(DAY startday, DAY endday){
 	return result;
 }
 
+string DateTime::GetDayFromTime(time_t time){
+	struct tm timeinfo;
+	localtime_s(&timeinfo, &time);
+	char output[80];
+	strftime(output, 80, "%A", &timeinfo);
+	return output;
+}
+
 string DateTime::GetStandardDate(time_t time){
 	struct tm timeinfo;
 	localtime_s(&timeinfo, &time);
@@ -317,93 +407,17 @@ string DateTime::GetStandardTime(time_t time){
 	return output;
 }
 
-bool DateTime::IsValidDayDate(string input){
-	if (IsValidDay(input) || IsValidDate(input)){
-		return true;
-	}
-	else{
-		return false;
-	}
+
+time_t DateTime::OffsetByDay(time_t timeReference, time_t offset_in_days){
+	time_t output;
+	time_t offset_in_seconds = offset_in_days * 24 * 60 * 60;
+	output = timeReference + offset_in_seconds;
+	return output;
 }
 
-bool DateTime::IsValidDate(string input){
-	string dbg = input;
-	int found = 0;
-	int startIdx = 0;
-	int count = 0;
-	bool isValid = false;
-	while (found != string::npos){
-		found = input.find_first_of("/", startIdx);
-		if (found != string::npos){
-			count++;
-		}
-		startIdx = found + 1;
-	}
-
-
-	if (count == 2){
-		isValid = true;
-	}
-
-	return isValid;
-}
-
-
-bool DateTime::IsValidDay(string input){
-
-	bool isValid = false;
-	vector<string>::iterator iter;
-	for (iter = dateType.begin(); iter != dateType.end(); ++iter){
-		if (*iter == input){
-			isValid = true;
-		}
-	}
-	return isValid;
-}
-
-bool DateTime::IsValidTime(string input){
-	string dbg = input;
-	bool isValid = false;
-	string result;
-	int hour;
-	int mins;
-
-	int found = input.find("pm");
-	if (found != string::npos){
-		result = input.substr(0, found);
-	}
-	found = result.find("am");
-	if (found != string::npos){
-		result = result.substr(0, found);
-	}
-
-	found = result.find_first_of(":");
-	if (found != string::npos){
-		//getting hour
-		string hour_s = result.substr(0, found);
-		hour = atoi(hour_s.c_str());
-		//getting mins
-		int length = result.length();
-		string min_s = result.substr(found, length - 1);
-		mins = atoi(min_s.c_str());
-		if (hour >= 0 && hour < 24 && mins >= 0 && mins < 60){
-			isValid = true;
-		}
-	}
-	else{
-		//attempt to convert string to hour in case: 5pm as input
-		if (result.length() < 3){
-			hour = atoi(result.c_str());
-			mins = 0;
-			isValid = true;
-		}
-	}
-	
-	return isValid;
-}
-
-
-
+//==========================================================
+//End section Methods suggested by Conrad
+//==========================================================
 
 string DateTime::Now(){
 	time_t now = time(0); //raw time -> this is generally implemented as an integer offset from 00:00hours, jan1, 2970 UTC. This leads me to the assumption

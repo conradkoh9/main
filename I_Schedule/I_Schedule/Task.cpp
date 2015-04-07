@@ -62,14 +62,14 @@ string Task::SetDescription(string input){
 string Task::SetStartDate(string input){
 	DateTime dt(input);
 	startdate = dt.Standardized();
-	startdate = input;
+	//startdate = input;
 	return _FEEDBACK_STARTDATE_SET;
 }
 
 string Task::SetEndDate(string input){
 	DateTime dt(input);
 	enddate = dt.Standardized();
-	enddate = input;
+	//enddate = input;
 	return _FEEDBACK_ENDDATE_SET;
 }
 

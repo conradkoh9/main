@@ -18,13 +18,13 @@ namespace I_ScheduleLibraryTest{
 			storage->Clear();
 			Task* task = new Task();
 			task->SetDescription("do homework");
-			task->SetEndDate("tomorrow");
-			task->SetStartDate("today");
+			task->SetEndDate("07/06/2015");
+			task->SetStartDate("05/06/2015");
 			task->SetPriority("1");
 			task->SetStatus("Incomplete");
 			storage->Add(task);
 
-			expected[0] = "Description: do homework\nStart: today\nEnd: tomorrow\nPriority: 1\nStatus: Incomplete";
+			expected[0] = "Description: do homework\nStart: 05/06/2015\nEnd: 07/06/2015\nPriority: 1\nStatus: Incomplete";
 			Assert::AreEqual(expected[0], storage->GetTask(0));
 
 			//testing the partition when n>1; boundary case n = 2; where n is the number of tasks added
@@ -103,16 +103,16 @@ namespace I_ScheduleLibraryTest{
 			storage->Clear();
 			Task* task = new Task();
 			task->SetDescription("do homework");
-			task->SetEndDate("tomorrow");
-			task->SetStartDate("today");
+			task->SetEndDate("07/06/2015 at 4pm");
+			task->SetStartDate("06/06/2015 at 3pm");
 			task->SetPriority("1");
 			task->SetStatus("Complete");
 			storage->Add(task);
 
 			task = new Task();
 			task->SetDescription("do homework 2");
-			task->SetEndDate("tomorrow2");
-			task->SetStartDate("today2");
+			task->SetEndDate("05/02/2015 at 1pm");
+			task->SetStartDate("01/02/2015 at 1pm");
 			task->SetPriority("1234");
 			task->SetStatus("Incomplete");
 			storage->Add(task);
@@ -125,8 +125,8 @@ namespace I_ScheduleLibraryTest{
 			int size = storage->Size();
 			Assert::IsTrue(size > 0);
 			string expected[2];
-			expected[0] = "Description: do homework\nStart: today\nEnd: tomorrow\nPriority: 1\nStatus: Complete";
-			expected[1] = "Description: do homework 2\nStart: today2\nEnd: tomorrow2\nPriority: 1234\nStatus: Incomplete";
+			expected[0] = "Description: do homework\nStart: 03:00pm on 06/06/2015\nEnd: 04:00pm on 07/06/2015\nPriority: 1\nStatus: Complete";
+			expected[1] = "Description: do homework 2\nStart: 01:00pm on 01/02/2015\nEnd: 01:00pm on 05/02/2015\nPriority: 1234\nStatus: Incomplete";
 
 			for (int i = 0; i < size; i++){
 				Assert::AreEqual(expected[i], storage->GetTask(i));
