@@ -57,10 +57,10 @@ DateTime::~DateTime(){
 
 string DateTime::Standardized(){
 	string dbg = unformattedDateTime;
-	Smartstring input_s(unformattedDateTime);
-	vector<string> tokens = input_s.Tokenize(" ");
 	string date;
 	string time;
+	Smartstring input_s(unformattedDateTime);
+	vector<string> tokens = input_s.Tokenize(" ");
 	int size = tokens.size();
 
 	if (size > 3){
@@ -69,82 +69,100 @@ string DateTime::Standardized(){
 	}
 	else{
 		switch (size){
-			case 0:{
-				return unformattedDateTime;
-				break;
+		case 0:{
+			return unformattedDateTime;
+			break;
+		}
+		case 1:{
+			//this case assumes only either date or time has been entered
+			if (IsValidDayDate(tokens[0])){
+				formattedDateTime = StandardizeDayDate(tokens[0]);
 			}
-			case 1:{
-				//this case assumes only either date or time has been entered
+			else{
+				if (IsValidTime(tokens[0])){
+					formattedDateTime = StandardizeTime(tokens[0]);
+				}
+				else{
+					formattedDateTime = unformattedDateTime;
+				}
+			}
+			break;
+		}
+
+		case 3:{
+
+			string prefix;
+			string suffix;
+
+			if (tokens[1] == "at"){
+				//at implies day prefix and time suffix. i.e. "thursday at 5pm" and not "5pm at thursday"
 				if (IsValidDayDate(tokens[0])){
-					formattedDateTime = StandardizeDayDate(tokens[0]);
+					date = StandardizeDayDate(tokens[0]);
+
 				}
 				else{
+					date = tokens[0];
+				}
+				if (IsValidTime(tokens[2])){
+					time = StandardizeTime(tokens[2]);
+				}
+				else{
+					time = tokens[2];
+				}
+
+			}
+			else{
+				if (tokens[1] == "on"){
+					//on implex time prefix and day suffix. i.e. "5pm on friday" and not "friday on 5pm"
+					if (IsValidDayDate(tokens[2])){
+						date = StandardizeDayDate(tokens[2]);
+					}
+					else{
+						date = tokens[2];
+					}
 					if (IsValidTime(tokens[0])){
-						formattedDateTime = StandardizeTime(tokens[0]);
+						time = StandardizeTime(tokens[0]);
 					}
 					else{
-						formattedDateTime = unformattedDateTime;
-						isValidFormat = false;
+						time = tokens[0];
 					}
 				}
-				break;
 			}
+			formattedDateTime = time + " on " + date;
 
-			case 3:{
-				string prefix;
-				string suffix;
-				if (tokens[1] == "at"){
-					//at implies day prefix and time suffix. i.e. "thursday at 5pm" and not "5pm at thursday"
-					if (IsValidDayDate(tokens[0])){
-						date = StandardizeDayDate(tokens[0]);
-						
-					}
-					else{
-						date = tokens[0];
-						isValidFormat = false;
-					}
-					if (IsValidTime(tokens[2])){
-						time = StandardizeTime(tokens[2]);
-					}
-					else{
-						time = tokens[2];
-						isValidFormat = false;
-					}
-					
+
+			if (tokens[1] == "by"){
+				// i.e "5pm by friday"
+				if (IsValidTime(tokens[0])){
+					time = StandardizeTime(tokens[0]);
 				}
 				else{
-					if (tokens[1] == "on"){
-						//on implex time prefix and day suffix. i.e. "5pm on friday" and not "friday on 5pm"
-						if (IsValidDayDate(tokens[2])){
-							date = StandardizeDayDate(tokens[2]);
-						}
-						else{
-							date = tokens[2];
-							isValidFormat = false;
-						}
-						if (IsValidTime(tokens[0])){
-							time = StandardizeTime(tokens[0]);
-						}
-						else{
-							time = tokens[0];
-							isValidFormat = false;
-						}
-					}
+					time = tokens[0];
 				}
-				formattedDateTime = time + " on " + date;
-				break;
-			}
 
-			default: {
-				formattedDateTime = unformattedDateTime;
-				isValidFormat = false;
-				break;
+				if (IsValidDayDate(tokens[2])){
+					date = StandardizeDayDate(tokens[2]);
+				}
+				else{
+					date = tokens[2];
+				}
+
 			}
+			formattedDateTime = time + " by " + date;
+
+			break;
+		}
+
+		default: {
+			formattedDateTime = unformattedDateTime;
+			break;
+		}
 		}
 	}
 
 	return formattedDateTime;
 }
+
 
 string DateTime::StandardizeDayDate(string input){
 	string output = input;
