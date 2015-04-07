@@ -29,6 +29,7 @@ public:
 	vector<Task*> floatingList;
 	vector<Task*> timedList;
 	vector<Task*> deadlineList;
+	vector<Task*> lastList;
 	vector<Task*> archiveList;
 
 	//
@@ -56,6 +57,7 @@ public:
 
 	string Reset();
 	string Clear();
+	string Undo();
 
 	//Power Search Method
 	string Search(string input);

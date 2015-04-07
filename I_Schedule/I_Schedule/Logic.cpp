@@ -93,6 +93,10 @@ string Logic::Execute(string input){
 			feedback = EmptySlots(remainder);
 			break;
 		}
+		case (Smartstring::COMMAND::UNDO) : {
+			 feedback = Undo();
+			 break;
+		}
 		case(Smartstring::COMMAND::INVALID_CMD) : {
 			feedback = Invalid();
 			break;
@@ -201,5 +205,10 @@ string Logic::Invalid(){
 
 string Logic::Clear(){
 	string feedback = storage->Clear();
+	return feedback;
+}
+
+string Logic::Undo(){
+	string feedback = storage->Undo();
 	return feedback;
 }
