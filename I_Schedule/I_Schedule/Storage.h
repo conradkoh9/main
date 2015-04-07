@@ -137,6 +137,7 @@ private:
 	void ClearFile();
 	void ClearFilteredLists();
 	void ClearVectors();
+	void ClearUndoVector();
 	string Remove(int position);
 
 	//Save methods

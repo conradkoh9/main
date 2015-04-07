@@ -98,6 +98,7 @@ string Storage::Load(string filename){
 		_filename = filename;
 		filename;
 		ClearVectors();
+		ClearUndoVector();
 		feedback = LoadRawFileContent();
 		LoadTaskList();
 		Update();
@@ -461,6 +462,12 @@ void Storage::ClearVectors(){
 	floatingList.clear();
 	deadlineList.clear();
 	_filecontent.clear();
+	return;
+}
+
+//@author A0099303A
+void Storage::ClearUndoVector(){
+	lastList.clear();
 	return;
 }
 
