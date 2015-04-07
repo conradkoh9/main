@@ -178,6 +178,7 @@ vector<Task*> Storage::NearSearch(string input){
 string Storage::SearchEmptySlots(string input){
 	if (dateTime->isDateType(input)){
 		string date = dateTime->ConvertDateTime(input);
+		
 		InitializeDayTask(date);
 		SetDayCalendar();
 		return GetEmptySlots();

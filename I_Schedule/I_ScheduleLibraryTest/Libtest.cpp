@@ -42,9 +42,8 @@ namespace I_ScheduleLibraryTest{
 			tasklist.clear();
 
 		}
-		
 		//@author A0119491B
-		TEST_METHOD(STORAGE_FILTER){
+			TEST_METHOD(STORAGE_FILTER){
 			vector<Task*> tasklist;
 			Storage* storage = new Storage("Storage_Filter.txt");
 			//set new task
@@ -56,119 +55,73 @@ namespace I_ScheduleLibraryTest{
 			task->SetPriority("1");
 			task->SetStatus("Incomplete");
 			storage->Add(task);
-	
+
 			string timedTask = storage->GetTimedList();
 			string deadlinedTask = storage->GetDeadlineList();
 			string floatingTask = storage->GetFloatingList();
-			string expected[3];
-			expected[3] = "homework from monday to tuesday priority 1 ";
-			expected[4] = "";
-			Assert::AreEqual(expected[3], timedTask);
-			Assert::AreEqual(expected[4], deadlinedTask);
-			Assert::AreEqual(expected[4], floatingTask);
+			string expected[2];
+			//expected[0] = "[today][tomorrow][priority 1]do homework ";
+			expected[0] = "\\b 1: \\b0 [today][tomorrow] do homework";
+			expected[1] = "";
+			Assert::AreEqual(expected[0], timedTask);
+			Assert::AreEqual(expected[1], deadlinedTask);
+			Assert::AreEqual(expected[1], floatingTask);
 			tasklist.clear();
 
 		}
+
+
 		//@author A0119491B
 		TEST_METHOD(STORAGE_SEARCH){
 			Storage* storage = new Storage("Storage_PowerSearch.txt");
+			storage->Clear();
+			//Setting a task to be seached
+			Task* task = new Task();
+			task->SetDescription("homework");
+			task->SetEndDate("08/04/2015");
+			task->SetStartDate("07/04/2015");
+			task->SetPriority("1");
+			task->SetStatus("Incomplete");
+			storage->Add(task);
+
 			vector<Task*> RESULT;
-			vector<string> input;
-			string expected[3], result;
-			expected[3]= "homework from monday to tuesday priority 1 ";
-			expected[4] = "cannot find";
-			
+			vector<string> input(10);
+			string expected[2], result;
+			expected[0] = "\\b 1: \\b0 [07/04/2015][08/04/2015] homework";
+			expected[1] = "No results found.";
+
 			//Testing search by description
-			input.clear();
 			input[Smartstring::FIELD::DESCRIPTION] = "homework";
 			result = storage->Search(input[Smartstring::FIELD::DESCRIPTION]);
-			Assert::AreEqual(expected[3], result);
-			
+			Assert::AreEqual(expected[0], result);
+
 			//Testing search by start date
-			input.clear();
-			input[Smartstring::FIELD::STARTDATE] = "monday";
+			input[Smartstring::FIELD::STARTDATE] = "07/04/2015";
 			result = storage->Search(input[Smartstring::FIELD::STARTDATE]);
-			Assert::AreEqual(expected[3], result);
-			
+			Assert::AreEqual(expected[0], result);
+
 			//Testing search by end date
-			input.clear();
-			input[Smartstring::FIELD::ENDDATE] = "tuesday";
+			input[Smartstring::FIELD::ENDDATE] = "08/04/2015";
 			result = storage->Search(input[Smartstring::FIELD::ENDDATE]);
-			Assert::AreEqual(expected[3], result);
-			
+			Assert::AreEqual(expected[0], result);
+
 			//Testing search by priority
-			input.clear();
 			input[Smartstring::FIELD::PRIORITY] = "1";
 			result = storage->Search(input[Smartstring::FIELD::PRIORITY]);
-			Assert::AreEqual(expected[3], result);
+			Assert::AreEqual(expected[0], result);
 
 			//Testing Failure case
-			input.clear();
 			input[Smartstring::FIELD::DESCRIPTION] = "shopping";
 			result = storage->Search(input[Smartstring::FIELD::DESCRIPTION]);
-			Assert::AreEqual(expected[3], result);
+			Assert::AreEqual(expected[1], result);
 
 			//Testing Close Search
-			input.clear();
 			input[Smartstring::FIELD::DESCRIPTION] = "howork";
 			RESULT = storage->NearSearch(input[Smartstring::FIELD::DESCRIPTION]);
 			result = storage->ToString(RESULT);
-			Assert::AreEqual(expected[3], result);
+			Assert::AreEqual(expected[0], result);
 
 		}
-		
-		/*TEST_METHOD(STORAGE_SEARCH){
-			Storage* storage = new Storage("Storage_PowerSearch.txt");
-			vector<string> input;
-
-			//Storage* storage = new Storage("Storage_Search.txt");
-			//
-			////Testing FilterTask function
-			//storage->FilterTask();
-			//string timedTask = storage->ToString(storage->timedList);
-			//string deadlineTask = storage->ToString(storage->deadlineList);
-			//string floatingTask = storage->ToString(storage->floatingList);
-			///*cout<< "Timed Task List:" << "\n" << timedTask << endl;
-			//cout<< "Deadline Task List:" << "\n" << deadlineTask << endl;
-			//cout<< "Floating Task List:" << "\n" << floatingTask << endl;
-			//
-			//string expected[5];
-			//
-			//string result;
-			//expected[3] = "homework from monday to tuesday priority 1 ";
-			//expected[4] = "cannot find";
-			//
-			////Testing seach by description
-			//vector<string> input;
-			//input[Smartstring::FIELD::DESCRIPTION] = "homework";
-			//result=storage->search(input);
-			//Assert::AreEqual(expected[3], result);
-			//
-			////Testing search by start date
-			//input.clear();
-			//input[Smartstring::FIELD::STARTDATE] = "monday";
-			//result = storage->search(input);
-			//Assert::AreEqual(expected[3], result);
-			//
-			////Testing search by end date
-			//input.clear();
-			//input[Smartstring::FIELD::ENDDATE] = "friday";
-			//result = storage->search(input);
-			//Assert::AreEqual(expected[3], result);
-			//
-			////Testing search by priority
-			//input.clear();
-			//input[Smartstring::FIELD::PRIORITY] = "1";
-			//result = storage->search(input);
-			//Assert::AreEqual(expected[3], result);
-			//
-			////Testing failure case
-			//input.clear();
-			//input[Smartstring::FIELD::PRIORITY] = "1000";
-			//result = storage->search(input);
-			//Assert::AreEqual(expected[4], result);
-
-		}*/
 
 		//@author A0099303A
 		TEST_METHOD(STORAGE_TXT_LOAD_REWRITE){
