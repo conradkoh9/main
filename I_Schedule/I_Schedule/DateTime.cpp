@@ -317,14 +317,16 @@ bool DateTime::IsValidDate(string input){
 
 bool DateTime::IsValidDay(string input){
 
-	bool isValid = false;
-	vector<string>::iterator iter;
-	for (iter = dateType.begin(); iter != dateType.end(); ++iter){
-		if (*iter == input){
-			isValid = true;
+	for (int i = 0; i < numberOfDateType; i++){
+		size_t found = input.find(dateType[i]);
+
+		if (found != string::npos){
+			return true;
 		}
 	}
-	return isValid;
+
+	return false;
+
 }
 
 bool DateTime::IsValidTime(string input){
@@ -547,11 +549,14 @@ string DateTime::ConvertTime(){
 }
 
 bool DateTime::CompareDateTime(string input1, string input2){
+
+
 	return true;
 }
 
 void DateTime::Initialize(){
 	if (!isInitialized){
+
 		dateType.push_back(DATETYPE_MONDAY1);
 		dateType.push_back(DATETYPE_MONDAY2);
 		dateType.push_back(DATETYPE_MONDAY3);
