@@ -61,13 +61,13 @@ string DateTime::Standardized(){
 	vector<string> tokens = input_s.Tokenize(" ");
 	string date;
 	string time;
+	int size = tokens.size();
 
-	if (tokens.size() > 3){
+	if (size > 3){
 		isValidFormat = false;
 		return unformattedDateTime;
 	}
 	else{
-		int size = tokens.size();
 		switch (size){
 			case 0:{
 				return unformattedDateTime;
