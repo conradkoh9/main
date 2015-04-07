@@ -74,13 +74,8 @@ public:
 
 	//Methods
 	string Standardized();
-	string GetInfo();
+
 private:
-	void SetDefaults();
-	void SetStandards();
-	
-	string StandardizeSingle(string input);
-	string StandardizeTriple(vector<string> input);
 
 	string StandardizeDayDate(string input); //Standardize input assuming that it is either a day, or a date
 	string StandardizeDate(string input); //Standardize input assuming that it is a date
@@ -100,7 +95,6 @@ private:
 	string GetStandardDate(time_t time);
 	string GetStandardTime(time_t time);
 	time_t OffsetByDay(time_t startday, time_t offset_in_days); //given a startday and number of days to offset by, converts to a time_t value
-
 
 	//==========================================================
 	//End section Methods suggested by Conrad
@@ -128,7 +122,7 @@ private:
 	int _year;
 	int _hours;
 	int _mins;
-	//int _seconds;
+	int _seconds;
 	string _state; //this name needs to be redefined 
 
 	

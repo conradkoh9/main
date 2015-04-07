@@ -456,13 +456,6 @@ namespace I_ScheduleLibraryTest{
 			expected[4] = "";
 			Assert::AreEqual(expected[4], actual[4]);
 
-			//test the partition where only a time is set
-			input = "5pm";
-			dt = DateTime(input);
-			actual[5] = dt.Standardized();
-			expected[5] = "05:00pm";
-			Assert::AreEqual(expected[5], actual[5]);
-
 			//important lacking test: testing when month is crossed
 
 		}
@@ -499,38 +492,6 @@ namespace I_ScheduleLibraryTest{
 			actual[2] = dt.Standardized();
 			expected[2] = "05:30pm";
 			Assert::AreEqual(expected[2], actual[2]);
-
-		}
-
-		TEST_METHOD(DATETIME_INTERNAL_INFO){
-			string input;
-			string expected[10];
-			string actual[10];
-			DateTime dt;
-
-			input = "13/04/2015";
-			dt = DateTime(input);
-			actual[0] = dt.GetInfo();
-			expected[0] = "Date: 13/04/2015\nTime: 00:00";
-			Assert::AreEqual(expected[0], actual[0]);
-
-			input = "13/04/2015 at 5pm";
-			dt = DateTime(input);
-			actual[1] = dt.GetInfo();
-			expected[1] = "Date: 13/04/2015\nTime: 17:00";
-			Assert::AreEqual(expected[1], actual[1]);
-
-			input = "13/04/2014 at 7:30am";
-			dt = DateTime(input);
-			actual[2] = dt.GetInfo();
-			expected[2] = "Date: 13/04/2014\nTime: 07:30";
-			Assert::AreEqual(expected[2], actual[2]);
-
-			input = "8:09pm";
-			dt = DateTime(input);
-			actual[3] = dt.GetInfo();
-			expected[3] = "Date: 07/04/2015\nTime: 20:09";
-			Assert::AreEqual(expected[3], actual[3]);
 
 		}
 	};

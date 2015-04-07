@@ -49,13 +49,12 @@ DateTime::DateTime(string input){
 	unformattedDateTime = input;
 	isValidFormat = true;
 	Initialize();
-	SetDefaults();
-	SetStandards();
 }
 
 DateTime::~DateTime(){
 }
 
+<<<<<<< HEAD
 string DateTime::Standardized(){
 <<<<<<< HEAD
 	return formattedDateTime;
@@ -88,23 +87,42 @@ void DateTime::SetStandards(){
 	string date;
 	string time;
 >>>>>>> dd05c894fb5b2cc343a2f7c44376a503f5e8ff67
+=======
+
+string DateTime::Standardized(){
+	string dbg = unformattedDateTime;
+>>>>>>> parent of e23b63e... bug fixes for dateTime, refactor code, added default dateTime settings
 	Smartstring input_s(unformattedDateTime);
 	vector<string> tokens = input_s.Tokenize(" ");
+	string date;
+	string time;
 	int size = tokens.size();
 
 	if (size > 3){
 		isValidFormat = false;
+		return unformattedDateTime;
 	}
 	else{
 		switch (size){
 <<<<<<< HEAD
 			case 0:{
-				isValidFormat = false;
+				return unformattedDateTime;
 				break;
 			}
 			case 1:{
 				//this case assumes only either date or time has been entered
-				formattedDateTime = StandardizeSingle(tokens[0]);
+				if (IsValidDayDate(tokens[0])){
+					formattedDateTime = StandardizeDayDate(tokens[0]);
+				}
+				else{
+					if (IsValidTime(tokens[0])){
+						formattedDateTime = StandardizeTime(tokens[0]);
+					}
+					else{
+						formattedDateTime = unformattedDateTime;
+						isValidFormat = false;
+					}
+				}
 				break;
 =======
 		case 0:{
@@ -135,11 +153,52 @@ void DateTime::SetStandards(){
 
 <<<<<<< HEAD
 			case 3:{
-				formattedDateTime = StandardizeTriple(tokens);
+				string prefix;
+				string suffix;
+				if (tokens[1] == "at"){
+					//at implies day prefix and time suffix. i.e. "thursday at 5pm" and not "5pm at thursday"
+					if (IsValidDayDate(tokens[0])){
+						date = StandardizeDayDate(tokens[0]);
+						
+					}
+					else{
+						date = tokens[0];
+						isValidFormat = false;
+					}
+					if (IsValidTime(tokens[2])){
+						time = StandardizeTime(tokens[2]);
+					}
+					else{
+						time = tokens[2];
+						isValidFormat = false;
+					}
+					
+				}
+				else{
+					if (tokens[1] == "on"){
+						//on implex time prefix and day suffix. i.e. "5pm on friday" and not "friday on 5pm"
+						if (IsValidDayDate(tokens[2])){
+							date = StandardizeDayDate(tokens[2]);
+						}
+						else{
+							date = tokens[2];
+							isValidFormat = false;
+						}
+						if (IsValidTime(tokens[0])){
+							time = StandardizeTime(tokens[0]);
+						}
+						else{
+							time = tokens[0];
+							isValidFormat = false;
+						}
+					}
+				}
+				formattedDateTime = time + " on " + date;
 				break;
 			}
 
 			default: {
+				formattedDateTime = unformattedDateTime;
 				isValidFormat = false;
 				break;
 =======
@@ -209,71 +268,8 @@ void DateTime::SetStandards(){
 		}
 		}
 	}
-}
 
-string DateTime::StandardizeSingle(string input){
-	string output;
-	if (IsValidDayDate(input)){
-		output = StandardizeDayDate(input);
-	}
-	else{
-		if (IsValidTime(input)){
-			output = StandardizeTime(input);
-		}
-		else{
-			output = input;
-			isValidFormat = false;
-		}
-	}
-	return output;
-}
-
-string DateTime::StandardizeTriple(vector<string> input){
-	string output;
-	string prefix;
-	string suffix;
-	string date;
-	string time;
-	if (input[1] == "at"){
-		//at implies day prefix and time suffix. i.e. "thursday at 5pm" and not "5pm at thursday"
-		if (IsValidDayDate(input[0])){
-			date = StandardizeDayDate(input[0]);
-
-		}
-		else{
-			date = input[0];
-			isValidFormat = false;
-		}
-		if (IsValidTime(input[2])){
-			time = StandardizeTime(input[2]);
-		}
-		else{
-			time = input[2];
-			isValidFormat = false;
-		}
-
-	}
-	else{
-		if (input[1] == "on"){
-			//on implex time prefix and day suffix. i.e. "5pm on friday" and not "friday on 5pm"
-			if (IsValidDayDate(input[2])){
-				date = StandardizeDayDate(input[2]);
-			}
-			else{
-				date = input[2];
-				isValidFormat = false;
-			}
-			if (IsValidTime(input[0])){
-				time = StandardizeTime(input[0]);
-			}
-			else{
-				time = input[0];
-				isValidFormat = false;
-			}
-		}
-	}
-	output = time + " on " + date;
-	return output;
+	return formattedDateTime;
 }
 
 
@@ -311,11 +307,6 @@ string DateTime::StandardizeDate(string input){
 		}
 	}
 
-	//setting the day month and year values in DateTime object
-	_day = day;
-	_month = month;
-	_year = atoi(tokens[2].c_str());
-
 	ostringstream monthout;
 	monthout << setw(2) << setfill('0') << month;
 	ostringstream dayout;
@@ -339,13 +330,6 @@ string DateTime::StandardizeDay(string input){
 		int offset_in_days = CalculateOffset(startday, endday);
 		time_t timeresult = OffsetByDay(now, offset_in_days);
 		output = GetStandardDate(timeresult);
-
-		//set Day, month, year valies in DateTime object
-		struct tm timeinfo;
-		localtime_s(&timeinfo, &timeresult);
-		_day = timeinfo.tm_mday;
-		_month = timeinfo.tm_mon;
-		_year = timeinfo.tm_year + 1900;
 	}
 	else{
 		output = input;
@@ -355,7 +339,7 @@ string DateTime::StandardizeDay(string input){
 
 string DateTime::StandardizeTime(string input){
 	string output;
-	string result = input;
+	string result;
 	string period;
 	int found;
 	int hour;
@@ -399,18 +383,6 @@ string DateTime::StandardizeTime(string input){
 		hour = hour % 12;
 		period = "pm";
 	}
-
-	//set standardized hours, mins and seconds
-	if (period == "pm"){
-		_hours = hour % 12 + 12;
-		_mins = mins % 60;
-	}
-	else{
-		_hours = hour % 24;
-		_mins = mins % 60;
-	}
-	
-
 
 	ostringstream minout;
 	minout << setw(2) << setfill('0') << mins;
@@ -570,6 +542,7 @@ string DateTime::GetStandardTime(time_t time){
 	strftime(output, 80, "%I:%M%p", &timeinfo);
 	return output;
 }
+
 
 time_t DateTime::OffsetByDay(time_t timeReference, time_t offset_in_days){
 	time_t output;
