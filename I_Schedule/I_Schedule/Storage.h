@@ -99,6 +99,8 @@ private:
 	static const string _FEEDBACK_CLEAR_FAILURE;
 	static const string _FEEDBACK_DELETE_SUCCESS;
 	static const string _FEEDBACK_DELETE_FAILURE;
+	static const string _FEEDBACK_UNDO_SUCCESS;
+	static const string _FEEDBACK_UNDO_FAILURE;
 	static const string _FEEDBACK_SEARCH_FAILURE;
 	static const string _FEEDBACK_FILE_EMPTY;
 	static const string _FEEDBACK_FILE_NOT_EMPTY;

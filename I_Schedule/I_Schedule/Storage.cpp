@@ -11,6 +11,8 @@ const string Storage::_FEEDBACK_CLEAR_SUCCESS = "CLEAR SUCCESS";
 const string Storage::_FEEDBACK_CLEAR_FAILURE = "CLEAR FAILED";
 const string Storage::_FEEDBACK_DELETE_SUCCESS = "DELETE SUCCESS";
 const string Storage::_FEEDBACK_DELETE_FAILURE = "DELETE FAILED";
+const string Storage::_FEEDBACK_UNDO_SUCCESS = "UNDO SUCCESS";
+const string Storage::_FEEDBACK_UNDO_FAILURE = "UNDO FAILED";
 const string Storage::_FEEDBACK_SEARCH_FAILURE = "No results found.";
 const string Storage::_FEEDBACK_FILE_EMPTY = "FILE EMPTY";
 const string Storage::_FEEDBACK_FILE_NOT_EMPTY = "FILE NOT EMPTY";
@@ -50,7 +52,7 @@ string Storage::Add(Task* task){
 	return feedback;
 }
 
-//@author A0099303A
+//@author A0119513L
 string Storage::Delete(int position){
 	string feedback = "";
 	try{

@@ -8,6 +8,7 @@ const string Logic::_FEEDBACK_ERROR_INVALID_INDEX = "INVALID INDEX";
 const string Logic::_FEEDBACK_DISPLAY = "Displaying all tasks.";
 const string Logic::_FEEDBACK_EDIT = "Task edited.";
 const string Logic::_FEEDBACK_SEARCH = "Displaying search results.";
+const string Logic::_FEEDBACK_UNDO = "Undo previous command.";
 const string Logic::_FEEDBACK_INVALID_COMMAND = "Invalid command entered.";
 const string Logic::_MESSAGE_WELCOME = "Welcome to I_Schedule.";
 ostringstream Logic::fout; //floating task display stream

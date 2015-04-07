@@ -48,6 +48,7 @@ private:
 	static const string _FEEDBACK_DISPLAY;
 	static const string _FEEDBACK_EDIT;
 	static const string _FEEDBACK_SEARCH;
+	static const string _FEEDBACK_UNDO;
 	static const string _FEEDBACK_INVALID_COMMAND;
 	static const string _MESSAGE_WELCOME;
 
