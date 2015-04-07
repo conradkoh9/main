@@ -116,7 +116,6 @@ public:
 	bool isDateType(string);
 	bool isTimeType(string);
 
-
 private:
 	int _day;
 	int _month;

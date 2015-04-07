@@ -67,6 +67,7 @@ string Storage::Delete(int position){
 string Storage::Complete(int position){
 	string feedback = "";
 	feedback = MarkComplete(position);
+	Archive(position);
 	Rewrite();
 	Update();
 	return feedback;
@@ -111,6 +112,7 @@ string Storage::SaveAs(string newFileName){
 //@author A0099303A
 string Storage::Rewrite(){
 	ClearFile();
+	WriteToArchive();
 	string feedback = WriteToFile();
 	return feedback;
 }
@@ -538,7 +540,27 @@ string Storage::WriteToTXT(){
 	return _FEEDBACK_WRITE_SUCCESS;
 }
 
+string Storage::WriteToArchive(){
+	ostringstream out;
+	ofstream of;
+	of.open(_archivefile.c_str(), ios::app);
+	vector<Task*>::iterator iter;
+	try{
+		int size = archiveList.size();
+		for (iter = archiveList.begin(); iter != archiveList.end(); ++iter){
+			out << (*iter)->ToCSVString() << endl;
+		}
+		archiveList.clear();
+		string str = out.str();
+		of << out.str();
+	}
+	catch (out_of_range){
+		throw out_of_range(_FEEDBACK_WRITE_FAILURE);
+		return _FEEDBACK_WRITE_FAILURE;
+	}
 
+	return _FEEDBACK_WRITE_SUCCESS;
+}
 //====================================================================
 //Load methods
 //====================================================================
@@ -719,6 +741,12 @@ string Storage::MarkComplete(int position){
 		return _FEEDBACK_INVALID_INDEX;
 	}
 	return _FEEDBACK_UPDATE_SUCCESS;
+}
+
+void Storage::Archive(int position){
+		int size_taskList = taskList.size();
+		archiveList.push_back(taskList[position - 1]);
+		taskList.erase(taskList.begin() + position - 1);
 }
 
 //====================================================================

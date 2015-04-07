@@ -16,6 +16,7 @@ class Storage
 private:
 	enum FILETYPE { CSV, TXT, INVALID };
 	string _filename;
+	const string _archivefile = "archive.csv";
 
 	//DATA STORAGE VARIABLES
 	vector<string> _filecontent;
@@ -28,6 +29,7 @@ public:
 	vector<Task*> floatingList;
 	vector<Task*> timedList;
 	vector<Task*> deadlineList;
+	vector<Task*> archiveList;
 
 	//
 	DateTime* dateTime;
@@ -139,6 +141,7 @@ private:
 	string WriteToFile(); //chooses whether to write using WriteToCSV method or WriteToTXT method
 	string WriteToCSV(); //writes tasks to CSV readable format
 	string WriteToTXT(); //writes tasks to TXT readable format
+	string WriteToArchive(); //writes archive vector to archive
 
 	//Load methods
 	string LoadSessionData();
@@ -147,8 +150,10 @@ private:
 	string LoadCSVContent(); //loads _filecontent vector into taskList vector assuming CSV format
 	string LoadTXTContent(); //loads _filecontent vector into taskList vector assuming TXT format
 
-	//Mark methods
+	//Complete methods
 	string MarkComplete(int position);
+	void Archive(int position);
+	void SaveToArchive();
 
 	//File analysis methods
 	FILETYPE IdentifyFileType(string input);
