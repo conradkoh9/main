@@ -33,6 +33,7 @@ public:
 	string Save(string input);
 	string Complete(string input);
 	string Clear();
+	string Undo();
 
 	//display streams
 	static ostringstream fout; //floating task display stream

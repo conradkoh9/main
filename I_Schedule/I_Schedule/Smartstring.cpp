@@ -20,6 +20,7 @@ const string Smartstring::COMMAND_SAVE = "save";
 const string Smartstring::COMMAND_SEARCH = "search";
 const string Smartstring::COMMAND_COMPLETE = "complete";
 const string Smartstring::COMMAND_EMPTYSLOTS = "emptyslots";
+const string Smartstring::COMMAND_UNDO ="undo";
 
 
 const string Smartstring::KEYWORD_ENDDATE_1 = "e:";
@@ -78,6 +79,7 @@ void Smartstring::Initialize(){
 		commands.push_back(COMMAND_SAVE);
 		commands.push_back(COMMAND_SEARCH);
 		commands.push_back(COMMAND_COMPLETE);
+		commands.push_back(COMMAND_UNDO);
 
 		keywords.push_back(KEYWORD_ENDDATE_1);
 		keywords.push_back(KEYWORD_ENDDATE_2);
@@ -157,6 +159,9 @@ Smartstring::COMMAND Smartstring::Command(){
 	}
 	if (description == COMMAND_EMPTYSLOTS){
 		return Smartstring::COMMAND::EMPTYSLOTS;
+	}
+	if (description == COMMAND_UNDO){
+		return Smartstring::COMMAND::UNDO;
 	}
 
 	assert(!IsCommand()); //takes care of the case when we add cases to field but did not update static list commands[];

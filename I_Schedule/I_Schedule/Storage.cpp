@@ -43,6 +43,7 @@ Storage::~Storage(){
 
 //@author A0099303A
 string Storage::Add(Task* task){
+	lastList = taskList;
 	taskList.push_back(task);
 	string feedback = Rewrite();
 	Update();
@@ -53,6 +54,7 @@ string Storage::Add(Task* task){
 string Storage::Delete(int position){
 	string feedback = "";
 	try{
+		lastList = taskList;
 		feedback = Remove(position);
 		Rewrite();
 		Update();
@@ -66,6 +68,7 @@ string Storage::Delete(int position){
 //@author A0099303A
 string Storage::Complete(int position){
 	string feedback = "";
+	lastList = taskList;
 	feedback = MarkComplete(position);
 	Rewrite();
 	Update();
@@ -124,10 +127,18 @@ string Storage::Reset(){
 
 //@author A0099303A
 string Storage::Clear(){
+	lastList = taskList;
 	ClearFile();
 	ClearVectors();
 	Update();
 	return _FEEDBACK_CLEAR_SUCCESS;
+}
+
+string Storage::Undo(){
+	taskList = lastList;
+	Rewrite();
+	Update();
+	return "success";
 }
 
 
