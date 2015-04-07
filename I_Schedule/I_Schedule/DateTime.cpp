@@ -57,6 +57,7 @@ DateTime::~DateTime(){
 }
 
 string DateTime::Standardized(){
+<<<<<<< HEAD
 	return formattedDateTime;
 }
 
@@ -82,6 +83,11 @@ void DateTime::SetDefaults(){
 
 void DateTime::SetStandards(){
 	formattedDateTime = unformattedDateTime;
+=======
+	string dbg = unformattedDateTime;
+	string date;
+	string time;
+>>>>>>> dd05c894fb5b2cc343a2f7c44376a503f5e8ff67
 	Smartstring input_s(unformattedDateTime);
 	vector<string> tokens = input_s.Tokenize(" ");
 	int size = tokens.size();
@@ -91,6 +97,7 @@ void DateTime::SetStandards(){
 	}
 	else{
 		switch (size){
+<<<<<<< HEAD
 			case 0:{
 				isValidFormat = false;
 				break;
@@ -99,8 +106,34 @@ void DateTime::SetStandards(){
 				//this case assumes only either date or time has been entered
 				formattedDateTime = StandardizeSingle(tokens[0]);
 				break;
+=======
+		case 0:{
+			return unformattedDateTime;
+			break;
+		}
+		case 1:{
+			//this case assumes only either date or time has been entered
+			if (IsValidDayDate(tokens[0])){
+				formattedDateTime = StandardizeDayDate(tokens[0]);
 			}
+			else{
+				if (IsValidTime(tokens[0])){
+					formattedDateTime = StandardizeTime(tokens[0]);
+				}
+				else{
+					formattedDateTime = unformattedDateTime;
+				}
+>>>>>>> dd05c894fb5b2cc343a2f7c44376a503f5e8ff67
+			}
+			break;
+		}
 
+		case 3:{
+
+			string prefix;
+			string suffix;
+
+<<<<<<< HEAD
 			case 3:{
 				formattedDateTime = StandardizeTriple(tokens);
 				break;
@@ -109,7 +142,71 @@ void DateTime::SetStandards(){
 			default: {
 				isValidFormat = false;
 				break;
+=======
+			if (tokens[1] == "at"){
+				//at implies day prefix and time suffix. i.e. "thursday at 5pm" and not "5pm at thursday"
+				if (IsValidDayDate(tokens[0])){
+					date = StandardizeDayDate(tokens[0]);
+
+				}
+				else{
+					date = tokens[0];
+				}
+				if (IsValidTime(tokens[2])){
+					time = StandardizeTime(tokens[2]);
+				}
+				else{
+					time = tokens[2];
+				}
+
 			}
+			else{
+				if (tokens[1] == "on"){
+					//on implex time prefix and day suffix. i.e. "5pm on friday" and not "friday on 5pm"
+					if (IsValidDayDate(tokens[2])){
+						date = StandardizeDayDate(tokens[2]);
+					}
+					else{
+						date = tokens[2];
+					}
+					if (IsValidTime(tokens[0])){
+						time = StandardizeTime(tokens[0]);
+					}
+					else{
+						time = tokens[0];
+					}
+				}
+			}
+			formattedDateTime = time + " on " + date;
+
+
+			if (tokens[1] == "by"){
+				// i.e "5pm by friday"
+				if (IsValidTime(tokens[0])){
+					time = StandardizeTime(tokens[0]);
+				}
+				else{
+					time = tokens[0];
+				}
+
+				if (IsValidDayDate(tokens[2])){
+					date = StandardizeDayDate(tokens[2]);
+				}
+				else{
+					date = tokens[2];
+				}
+
+>>>>>>> dd05c894fb5b2cc343a2f7c44376a503f5e8ff67
+			}
+			formattedDateTime = time + " by " + date;
+
+			break;
+		}
+
+		default: {
+			formattedDateTime = unformattedDateTime;
+			break;
+		}
 		}
 	}
 }
@@ -178,6 +275,7 @@ string DateTime::StandardizeTriple(vector<string> input){
 	output = time + " on " + date;
 	return output;
 }
+
 
 string DateTime::StandardizeDayDate(string input){
 	string output = input;
@@ -356,14 +454,16 @@ bool DateTime::IsValidDate(string input){
 
 bool DateTime::IsValidDay(string input){
 
-	bool isValid = false;
-	vector<string>::iterator iter;
-	for (iter = dateType.begin(); iter != dateType.end(); ++iter){
-		if (*iter == input){
-			isValid = true;
+	for (int i = 0; i < numberOfDateType; i++){
+		size_t found = input.find(dateType[i]);
+
+		if (found != string::npos){
+			return true;
 		}
 	}
-	return isValid;
+
+	return false;
+
 }
 
 bool DateTime::IsValidTime(string input){
@@ -585,11 +685,14 @@ string DateTime::ConvertTime(){
 }
 
 bool DateTime::CompareDateTime(string input1, string input2){
+
+
 	return true;
 }
 
 void DateTime::Initialize(){
 	if (!isInitialized){
+
 		dateType.push_back(DATETYPE_MONDAY1);
 		dateType.push_back(DATETYPE_MONDAY2);
 		dateType.push_back(DATETYPE_MONDAY3);
