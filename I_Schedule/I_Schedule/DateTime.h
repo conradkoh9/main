@@ -70,15 +70,18 @@ public:
 	string unformattedDateTime;
 	string formattedDateTime;
 	bool isValidFormat;
-	time_t time_in_second;
+	time_t time_in_seconds;
 
 	//Methods
 	string Standardized();
 	string GetInfo();
+	int GetSeconds();
+	bool IsEarlierThan(DateTime dt);
 private:
 	void SetDefaults();
 	void SetStandards();
-	
+	void SetSeconds();
+
 	string StandardizeSingle(string input);
 	string StandardizeTriple(vector<string> input);
 

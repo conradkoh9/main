@@ -533,5 +533,47 @@ namespace I_ScheduleLibraryTest{
 			Assert::AreEqual(expected[3], actual[3]);
 
 		}
+
+		TEST_METHOD(DATETIME_ISEARLIERTHAN){
+			string date1;
+			string date2;
+			DateTime dt1;
+			DateTime dt2;
+			
+			//testing the partition where only dates are inputs
+			date1 = "07/04/2014";
+			date2 = "08/04/2014";
+			dt1 = DateTime(date1);
+			dt2 = DateTime(date2);
+			Assert::IsTrue(dt1.IsEarlierThan(dt2));
+
+			//testing the partition where only times are inputs
+			date1 = "5pm";
+			date2 = "6pm";
+			dt1 = DateTime(date1);
+			dt2 = DateTime(date2);
+			Assert::IsTrue(dt1.IsEarlierThan(dt2));
+
+			//testing the partition where dates are equal but time is greater
+			date1 = "07/04/2014 at 5pm";
+			date2 = "07/04/2014 at 6pm";
+			dt1 = DateTime(date1);
+			dt2 = DateTime(date2);
+			Assert::IsTrue(dt1.IsEarlierThan(dt2));
+
+			//testing the function returning false when condition is not satisfied
+			date1 = "07/04/2014 at 6pm";
+			date2 = "07/04/2014 at 5pm";
+			dt1 = DateTime(date1);
+			dt2 = DateTime(date2);
+			Assert::IsFalse(dt1.IsEarlierThan(dt2));
+
+			//testing the partition where dates are different but time is equal
+			date1 = "07/04/2014 at 5pm";
+			date2 = "08/04/2014 at 5pm";
+			dt1 = DateTime(date1);
+			dt2 = DateTime(date2);
+			Assert::IsTrue(dt1.IsEarlierThan(dt2));
+		}
 	};
 }

@@ -68,6 +68,37 @@ string DateTime::GetInfo(){
 	return out.str();
 }
 
+
+
+bool DateTime::IsEarlierThan(DateTime dt){
+	bool isEarlier = false;
+	if (_year < dt._year){
+		isEarlier = true;
+	}
+	else{
+		if (_month < dt._month){
+			isEarlier = true;
+		}
+		else{
+			if (_day < dt._day){
+				isEarlier = true;
+			}
+			else{
+				if (_hours < dt._hours){
+					isEarlier = true;
+				}
+				else{
+					if (_mins < dt._mins){
+						isEarlier = true;
+					}
+				}
+			}
+		}
+	}
+
+	return isEarlier;
+}
+
 void DateTime::SetDefaults(){
 	time_t now = time(0);
 	struct tm timeinfo;
