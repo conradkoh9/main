@@ -70,6 +70,7 @@ public:
 	string unformattedDateTime;
 	string formattedDateTime;
 	bool isValidFormat;
+	time_t time_in_second;
 
 	//Methods
 	string Standardized();

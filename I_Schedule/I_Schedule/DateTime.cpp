@@ -47,6 +47,7 @@ DateTime::DateTime(){
 
 DateTime::DateTime(string input){
 	unformattedDateTime = input;
+	isValidFormat = true;
 	Initialize();
 }
 
@@ -83,6 +84,7 @@ string DateTime::Standardized(){
 					}
 					else{
 						formattedDateTime = unformattedDateTime;
+						isValidFormat = false;
 					}
 				}
 				break;
@@ -99,12 +101,14 @@ string DateTime::Standardized(){
 					}
 					else{
 						date = tokens[0];
+						isValidFormat = false;
 					}
 					if (IsValidTime(tokens[2])){
 						time = StandardizeTime(tokens[2]);
 					}
 					else{
 						time = tokens[2];
+						isValidFormat = false;
 					}
 					
 				}
@@ -116,12 +120,14 @@ string DateTime::Standardized(){
 						}
 						else{
 							date = tokens[2];
+							isValidFormat = false;
 						}
 						if (IsValidTime(tokens[0])){
 							time = StandardizeTime(tokens[0]);
 						}
 						else{
 							time = tokens[0];
+							isValidFormat = false;
 						}
 					}
 				}
@@ -131,6 +137,7 @@ string DateTime::Standardized(){
 
 			default: {
 				formattedDateTime = unformattedDateTime;
+				isValidFormat = false;
 				break;
 			}
 		}
