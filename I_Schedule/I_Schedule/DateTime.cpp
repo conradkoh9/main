@@ -54,44 +54,9 @@ DateTime::DateTime(string input){
 DateTime::~DateTime(){
 }
 
-<<<<<<< HEAD
-string DateTime::Standardized(){
-<<<<<<< HEAD
-	return formattedDateTime;
-}
-
-string DateTime::GetInfo(){
-	ostringstream out;
-	out << "Date: " << setw(2) << setfill('0') << _day << "/" << setw(2) << setfill('0') << _month << "/" << setw(2) << setfill('0') << _year << endl;
-	out << "Time: " << setw(2) << setfill('0') << _hours << ":" << setw(2) << setfill('0') << _mins;
-
-	return out.str();
-}
-
-void DateTime::SetDefaults(){
-	time_t now = time(0);
-	struct tm timeinfo;
-	localtime_s(&timeinfo, &now);
-	_day = timeinfo.tm_mday;
-	_month = timeinfo.tm_mon + 1;
-	_year = timeinfo.tm_year + 1900;
-	_hours = 0;
-	_mins = 0;
-	//_seconds = 0;
-}
-
-void DateTime::SetStandards(){
-	formattedDateTime = unformattedDateTime;
-=======
-	string dbg = unformattedDateTime;
-	string date;
-	string time;
->>>>>>> dd05c894fb5b2cc343a2f7c44376a503f5e8ff67
-=======
 
 string DateTime::Standardized(){
 	string dbg = unformattedDateTime;
->>>>>>> parent of e23b63e... bug fixes for dateTime, refactor code, added default dateTime settings
 	Smartstring input_s(unformattedDateTime);
 	vector<string> tokens = input_s.Tokenize(" ");
 	string date;
@@ -104,7 +69,6 @@ string DateTime::Standardized(){
 	}
 	else{
 		switch (size){
-<<<<<<< HEAD
 			case 0:{
 				return unformattedDateTime;
 				break;
@@ -124,34 +88,8 @@ string DateTime::Standardized(){
 					}
 				}
 				break;
-=======
-		case 0:{
-			return unformattedDateTime;
-			break;
-		}
-		case 1:{
-			//this case assumes only either date or time has been entered
-			if (IsValidDayDate(tokens[0])){
-				formattedDateTime = StandardizeDayDate(tokens[0]);
 			}
-			else{
-				if (IsValidTime(tokens[0])){
-					formattedDateTime = StandardizeTime(tokens[0]);
-				}
-				else{
-					formattedDateTime = unformattedDateTime;
-				}
->>>>>>> dd05c894fb5b2cc343a2f7c44376a503f5e8ff67
-			}
-			break;
-		}
 
-		case 3:{
-
-			string prefix;
-			string suffix;
-
-<<<<<<< HEAD
 			case 3:{
 				string prefix;
 				string suffix;
@@ -201,77 +139,12 @@ string DateTime::Standardized(){
 				formattedDateTime = unformattedDateTime;
 				isValidFormat = false;
 				break;
-=======
-			if (tokens[1] == "at"){
-				//at implies day prefix and time suffix. i.e. "thursday at 5pm" and not "5pm at thursday"
-				if (IsValidDayDate(tokens[0])){
-					date = StandardizeDayDate(tokens[0]);
-
-				}
-				else{
-					date = tokens[0];
-				}
-				if (IsValidTime(tokens[2])){
-					time = StandardizeTime(tokens[2]);
-				}
-				else{
-					time = tokens[2];
-				}
-
 			}
-			else{
-				if (tokens[1] == "on"){
-					//on implex time prefix and day suffix. i.e. "5pm on friday" and not "friday on 5pm"
-					if (IsValidDayDate(tokens[2])){
-						date = StandardizeDayDate(tokens[2]);
-					}
-					else{
-						date = tokens[2];
-					}
-					if (IsValidTime(tokens[0])){
-						time = StandardizeTime(tokens[0]);
-					}
-					else{
-						time = tokens[0];
-					}
-				}
-			}
-			formattedDateTime = time + " on " + date;
-
-
-			if (tokens[1] == "by"){
-				// i.e "5pm by friday"
-				if (IsValidTime(tokens[0])){
-					time = StandardizeTime(tokens[0]);
-				}
-				else{
-					time = tokens[0];
-				}
-
-				if (IsValidDayDate(tokens[2])){
-					date = StandardizeDayDate(tokens[2]);
-				}
-				else{
-					date = tokens[2];
-				}
-
->>>>>>> dd05c894fb5b2cc343a2f7c44376a503f5e8ff67
-			}
-			formattedDateTime = time + " by " + date;
-
-			break;
-		}
-
-		default: {
-			formattedDateTime = unformattedDateTime;
-			break;
-		}
 		}
 	}
 
 	return formattedDateTime;
 }
-
 
 string DateTime::StandardizeDayDate(string input){
 	string output = input;
@@ -426,16 +299,14 @@ bool DateTime::IsValidDate(string input){
 
 bool DateTime::IsValidDay(string input){
 
-	for (int i = 0; i < numberOfDateType; i++){
-		size_t found = input.find(dateType[i]);
-
-		if (found != string::npos){
-			return true;
+	bool isValid = false;
+	vector<string>::iterator iter;
+	for (iter = dateType.begin(); iter != dateType.end(); ++iter){
+		if (*iter == input){
+			isValid = true;
 		}
 	}
-
-	return false;
-
+	return isValid;
 }
 
 bool DateTime::IsValidTime(string input){
@@ -658,14 +529,11 @@ string DateTime::ConvertTime(){
 }
 
 bool DateTime::CompareDateTime(string input1, string input2){
-
-
 	return true;
 }
 
 void DateTime::Initialize(){
 	if (!isInitialized){
-
 		dateType.push_back(DATETYPE_MONDAY1);
 		dateType.push_back(DATETYPE_MONDAY2);
 		dateType.push_back(DATETYPE_MONDAY3);
