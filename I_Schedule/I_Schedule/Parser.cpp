@@ -24,6 +24,42 @@ Smartstring::COMMAND Parser::IdentifyCommand(string input){
 	
 }
 
+vector<string> Parser::IdentifyTaskFields(string input){
+	Smartstring word;
+	string info;
+	istringstream in(input);
+	Smartstring::FIELD field = Smartstring::FIELD::DESCRIPTION;
+	int vectorSize = word.numberOfKeywords; //this gets the number of keywords recognized in our system. 
+
+	//start initialize vector
+	string blank = "";
+	vector<string> output;
+	for (int j = 0; j < vectorSize; ++j){
+		output.push_back(blank);
+	}
+	//end initialize vector
+
+	while (in >> word){
+		if (word.IsKeyword()){
+			field = word.Field(); //identify the field to be entered if it is a keyword and makes it the currently active field
+			info = "";
+		}
+		else{
+			if (info == ""){
+				info = word.ToString(); //if statement ensures that no leading whitespace is added to task description
+			}
+			else{
+				info = info + " " + word.ToString();
+			}
+			output[field] = info;
+		}
+		output[Smartstring::FIELD::STATUS] = Task::_STATUS_INCOMPLETE; //sets the default status to incomplete when parsing user input
+	}
+	//NOTE THAT OUTPUT HAS EXCESS BLANKS
+	return output;
+}
+
+
 Smartstring::LIST Parser::IdentifyList(string input){
 	Smartstring list;
 	istringstream in(input);
