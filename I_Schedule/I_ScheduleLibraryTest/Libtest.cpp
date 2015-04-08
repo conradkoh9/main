@@ -419,6 +419,7 @@ namespace I_ScheduleLibraryTest{
 			Assert::AreEqual(size, 0);
 		}
 
+		//@author A0099303A
 		TEST_METHOD(DATETIME_USER_INPUTS){
 			string input;
 			string expected[10];
@@ -427,13 +428,13 @@ namespace I_ScheduleLibraryTest{
 			input = "Tuesday at 5pm";
 			DateTime dt(input);
 			actual[0] = dt.Standardized();
-			expected[0] = "05:00pm on 07/04/2015";
+			expected[0] = "05:00pm on 14/04/2015";
 			Assert::AreEqual(expected[0], actual[0]);
 
 			input = "5pm on Tuesday";
 			dt = DateTime(input);
 			actual[1] = dt.Standardized();
-			expected[1] = "05:00pm on 07/04/2015";
+			expected[1] = "05:00pm on 14/04/2015";
 			Assert::AreEqual(expected[1], actual[1]);
 
 			input = "Friday at 10pm";
@@ -467,6 +468,7 @@ namespace I_ScheduleLibraryTest{
 
 		}
 
+		//@author A0099303A
 		TEST_METHOD(DATETIME_STANDARD_INPUTS){
 			string input;
 			string expected[10];
@@ -502,6 +504,7 @@ namespace I_ScheduleLibraryTest{
 
 		}
 
+		//@author A0099303A
 		TEST_METHOD(DATETIME_INTERNAL_INFO){
 			string input;
 			string expected[10];
@@ -529,11 +532,12 @@ namespace I_ScheduleLibraryTest{
 			input = "8:09pm";
 			dt = DateTime(input);
 			actual[3] = dt.GetInfo();
-			expected[3] = "Date: 07/04/2015\nTime: 20:09";
+			expected[3] = "Date: 08/04/2015\nTime: 20:09";
 			Assert::AreEqual(expected[3], actual[3]);
 
 		}
 
+		//@author A0099303A
 		TEST_METHOD(DATETIME_ISEARLIERTHAN){
 			string date1;
 			string date2;
