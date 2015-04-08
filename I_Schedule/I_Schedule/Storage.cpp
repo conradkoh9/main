@@ -64,6 +64,7 @@ string Storage::Add(Task* task){
 
 //@author A0099303A
 string Storage::DeleteFromList(int position, Smartstring::LIST list){
+	lastList = taskList;
 	try{
 		Task* toDelete = GetTask(position, list);
 		Erase(toDelete);
@@ -97,6 +98,7 @@ string Storage::Delete(int position){
 
 //@author A0099303A
 string Storage::Edit(int position, Smartstring::LIST list, vector<string> newinfo){
+	lastList = taskList;
 	try{
 		Task* taskptr = GetTask(position, list);
 		taskptr->Edit(newinfo);
