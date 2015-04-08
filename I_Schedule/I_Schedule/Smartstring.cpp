@@ -24,23 +24,27 @@ const string Smartstring::COMMAND_UNDO = "undo";
 const string Smartstring::COMMAND_LOAD = "load";
 
 
-const string Smartstring::KEYWORD_ENDDATE_1 = "e:";
+const string Smartstring::KEYWORD_ENDDATE_1 = "date:";
 const string Smartstring::KEYWORD_ENDDATE_2 = "by:";
-const string Smartstring::KEYWORD_ENDDATE_3 = "date:";
+const string Smartstring::KEYWORD_ENDDATE_3 = "e:";
 const string Smartstring::KEYWORD_ENDDATE_4 = "end:";
-const string Smartstring::KEYWORD_ENDDATE_5 = "deadline:";
+const string Smartstring::KEYWORD_ENDDATE_5 = "t:";
 const string Smartstring::KEYWORD_ENDDATE_6 = "to:";
 const string Smartstring::KEYWORD_ENDDATE_7 = "till:";
 const string Smartstring::KEYWORD_ENDDATE_8 = "deadline:";
 const string Smartstring::KEYWORD_ENDDATE_9 = "d:";
 const string Smartstring::KEYWORD_ENDDATE_10 = "before:";
+const string Smartstring::KEYWORD_ENDDATE_11 = "deadline:";
+const string Smartstring::KEYWORD_ENDDATE_12 = "due:";
 const string Smartstring::KEYWORD_PRIORITY_1 = "priority:";
 const string Smartstring::KEYWORD_PRIORITY_2 = "p:";
-const string Smartstring::KEYWORD_STARTDATE_1 = "s:";
+const string Smartstring::KEYWORD_STARTDATE_1 = "f:";
 const string Smartstring::KEYWORD_STARTDATE_2 = "from:";
-const string Smartstring::KEYWORD_STARTDATE_3 = "date:";
+const string Smartstring::KEYWORD_STARTDATE_3 = "s:";
 const string Smartstring::KEYWORD_STARTDATE_4 = "start:";
 const string Smartstring::KEYWORD_STARTDATE_5 = "on:";
+const string Smartstring::KEYWORD_STARTDATE_6 = "at:";
+const string Smartstring::KEYWORD_STARTDATE_7 = "d:";
 const string Smartstring::KEYWORD_DESCRIPTION_1 = "description:";
 const string Smartstring::KEYWORD_TIMED_1 = "timed:";
 const string Smartstring::KEYWORD_DEADLINE_1 = "deadline:";
@@ -97,6 +101,8 @@ void Smartstring::Initialize(){
 		keywords.push_back(KEYWORD_ENDDATE_8);
 		keywords.push_back(KEYWORD_ENDDATE_9);
 		keywords.push_back(KEYWORD_ENDDATE_10);
+		keywords.push_back(KEYWORD_ENDDATE_11);
+		keywords.push_back(KEYWORD_ENDDATE_12);
 		keywords.push_back(KEYWORD_PRIORITY_1);
 		keywords.push_back(KEYWORD_PRIORITY_2);
 		keywords.push_back(KEYWORD_STARTDATE_1);
@@ -104,6 +110,8 @@ void Smartstring::Initialize(){
 		keywords.push_back(KEYWORD_STARTDATE_3);
 		keywords.push_back(KEYWORD_STARTDATE_4);
 		keywords.push_back(KEYWORD_STARTDATE_5);
+		keywords.push_back(KEYWORD_STARTDATE_6);
+		keywords.push_back(KEYWORD_STARTDATE_7);
 		keywords.push_back(KEYWORD_DESCRIPTION_1);
 		numberOfCommands = commands.size();
 		numberOfKeywords = keywords.size();
@@ -178,13 +186,13 @@ Smartstring::COMMAND Smartstring::Command(){
 }
 
 Smartstring::FIELD Smartstring::Field(){
-	if (description == KEYWORD_STARTDATE_1 || description == KEYWORD_STARTDATE_2|| description == KEYWORD_STARTDATE_3 || description == KEYWORD_STARTDATE_4 || description == KEYWORD_STARTDATE_5){
+	if (description == KEYWORD_STARTDATE_1 || description == KEYWORD_STARTDATE_2 || description == KEYWORD_STARTDATE_3 || description == KEYWORD_STARTDATE_4 || description == KEYWORD_STARTDATE_5 || description == KEYWORD_STARTDATE_6 || description == KEYWORD_STARTDATE_7){
 		return Smartstring::FIELD::STARTDATE;
 	}
 	if (description == KEYWORD_PRIORITY_1 || description == KEYWORD_PRIORITY_2){
 		return Smartstring::FIELD::PRIORITY;
 	}
-	if (description == KEYWORD_ENDDATE_1 || description == KEYWORD_ENDDATE_2 || description == KEYWORD_ENDDATE_3 || description == KEYWORD_ENDDATE_4 || description == KEYWORD_ENDDATE_5 || description == KEYWORD_ENDDATE_6 || description == KEYWORD_ENDDATE_7 || description == KEYWORD_ENDDATE_8 || description == KEYWORD_ENDDATE_9 || description == KEYWORD_ENDDATE_10){
+	if (description == KEYWORD_ENDDATE_1 || description == KEYWORD_ENDDATE_2 || description == KEYWORD_ENDDATE_3 || description == KEYWORD_ENDDATE_4 || description == KEYWORD_ENDDATE_5 || description == KEYWORD_ENDDATE_6 || description == KEYWORD_ENDDATE_7 || description == KEYWORD_ENDDATE_8 || description == KEYWORD_ENDDATE_9 || description == KEYWORD_ENDDATE_10 || description == KEYWORD_ENDDATE_11 || description == KEYWORD_ENDDATE_12){
 		return Smartstring::FIELD::ENDDATE;
 	}
 	if (description == KEYWORD_DESCRIPTION_1){
