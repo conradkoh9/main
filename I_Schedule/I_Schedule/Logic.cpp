@@ -150,7 +150,8 @@ string Logic::Delete(string taskInput){
 }
 
 string Logic::Display(){
-	mout << storage->ToString();
+	mout << storage->DayView();
+	/*mout << storage->ToString();*/
 	return _FEEDBACK_DISPLAY;
 }
 

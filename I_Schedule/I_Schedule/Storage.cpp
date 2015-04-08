@@ -31,6 +31,12 @@ const string Storage::_FEEDBACK_EDIT_SUCCESS = "Edit success.";
 //formatting variables
 const string Storage::_rtfboldtagstart = "\\b ";
 const string Storage::_rtfboldtagend = "\\b0 ";
+const string Storage::_rtffontsizeprefix = "\\fs24 ";
+const string Storage::_rtffontsizesuffix = "\\fs18 ";
+//const string Storage::_rtftab = "\\tab ";
+const string Storage::_rtftab = "    ";
+const string Storage::_rtfcolorblueprefix = "\\cf1 ";
+const string Storage::_rtfcolorbluesuffix = "\\cf0 ";
 
 //@author A0099303A
 //PUBLIC =================================================================================================
@@ -394,6 +400,7 @@ string Storage::GetTimedList(){
 
 
 
+//@author unknown
 //====================================================================
 //To be refactored
 //====================================================================
@@ -435,6 +442,39 @@ string Storage::ToString(vector<string> input){
 	vector<string>::iterator iter;
 	for (iter = input.begin(); iter != input.end(); iter++){
 		out << *iter << endl;
+	}
+	return out.str();
+}
+
+string Storage::DayView(){
+	Update();
+	ostringstream out;
+	int index = 0;
+	vector<Task*>::iterator iter;
+	string currentday;
+	DateTime* dt = new DateTime();
+	for (iter = taskList.begin(); iter != taskList.end(); ++iter){
+		if (currentday != (*iter)->GetStartDate()){
+			currentday = (*iter)->GetStartDate();
+			string representative = currentday;
+			if (currentday == dt->Today()){
+				representative = "Today";
+			}
+			if (currentday == dt->Tomorrow()){
+				representative = "Tomorrow";
+			}
+			string prefixes = _rtfcolorblueprefix + _rtfboldtagstart + _rtffontsizeprefix;
+			string suffixes = _rtffontsizesuffix + _rtfboldtagend + _rtfcolorbluesuffix;
+			string	formattedDay = prefixes + representative + suffixes;
+			out << formattedDay << endl;
+		}
+		++index;
+		if (iter + 1 != taskList.end()){
+			out <<_rtftab << _rtfboldtagstart << index << ": " << _rtfboldtagend << (*iter)->ToDatelessString() << endl;
+		}
+		else{
+			out <<_rtftab << _rtfboldtagstart << index << ": " << _rtfboldtagend << (*iter)->ToDatelessString();
+		}
 	}
 	return out.str();
 }
@@ -963,3 +1003,4 @@ Task* Storage::GetFloatingTask(int position){
 	assert(false && "GetFloatingTask failure");
 	return NULL;
 }
+

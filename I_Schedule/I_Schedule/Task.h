@@ -66,13 +66,20 @@ public:
 
 	string MarkComplete();
 
+	//ToString methods
 	string ToString();
+	string ToShortString(); //used for display
 	string ToFloatingString();
 	string ToDeadlineString();
 	string ToTimedString();
-	string ToShortString(); //used for display
 	string ToTXTString(); //used to write to txt files
 	string ToCSVString(); //used to write to csv files
+
+	//Dateless ToString methods
+	string ToDatelessString();
+	string ToDatelessFloatingString();
+	string ToDatelessDeadlineString();
+	string ToDatelessTimedString();
 
 	TASKTYPE GetType();
 	bool isContains(string input);

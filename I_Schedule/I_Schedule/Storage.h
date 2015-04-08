@@ -83,6 +83,10 @@ public:
 	string GetDeadlineList();
 	string GetTimedList();
 
+
+	//Formatted display methods
+	string DayView();
+
 	//To be refactored because it is not apparent what storage->ToString should give
 	string ToString();
 	string ToString(vector<Task*> V);
@@ -122,6 +126,11 @@ private:
 	//formatting variables
 	static const string _rtfboldtagstart;
 	static const string _rtfboldtagend;
+	static const string _rtffontsizeprefix;
+	static const string _rtffontsizesuffix;
+	static const string _rtftab;
+	static const string _rtfcolorblueprefix;
+	static const string _rtfcolorbluesuffix;
 
 	//File Details
 	const string _FILE_EXTENSION_CSV = ".csv";
@@ -175,6 +184,7 @@ private:
 	Task* GetTimedTask(int position);
 	Task* GetFloatingTask(int position);
 	Task* GetDeadlineTask(int position);
+
 
 	//exceptions
 	class InvalidIndex : public exception{

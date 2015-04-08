@@ -238,6 +238,51 @@ string Task::ToCSVString(){
 	return out.str();
 }
 
+string Task::ToDatelessString(){
+	string output = "";
+	TASKTYPE tasktype = GetType();
+	switch (tasktype){
+		case(TASKTYPE::DEADLINE) : {
+			output = ToDatelessDeadlineString();
+			break;
+		}
+		case(TASKTYPE::FLOATING) : {
+			output = ToDatelessFloatingString();
+			break;
+		}
+		case(TASKTYPE::TIMED) : {
+			output = ToDatelessTimedString();
+			break;
+		}
+		default:{
+			output = ToDatelessTimedString();
+			break;
+		}
+	}
+	return output;
+}
+
+string Task::ToDatelessDeadlineString(){
+	ostringstream out;
+	out << description;
+	return out.str();
+}
+
+string Task::ToDatelessFloatingString(){
+	ostringstream out;
+	out << description;
+	return out.str();
+}
+
+string Task::ToDatelessTimedString(){
+	ostringstream out;
+	out << "[" << enddate << "] ";
+	out << description;
+	return out.str();
+}
+
+
+
 ostream& operator<<(ostream& out, Task& task){
 	out << task.ToString();
 	return out;

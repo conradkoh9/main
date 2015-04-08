@@ -5,7 +5,8 @@ const string UI_Controller::rtf_deadline = "dout.display";
 const string UI_Controller::rtf_float = "fout.display";
 const string UI_Controller::rtf_main = "mout.display";
 
-const string UI_Controller::_rtfheader = "{\\rtf1\\ansi\\ansicpg1252\\deff0\\nouicompat{\\fonttbl{\\f0\\fnil\\fcharset0 Calibri;}}\n{\\*\\generator Riched20 6.3.9600}\\viewkind4\\uc1\n\\pard\\sa200\\sl276\\slmult1\\f0\\fs18\\lang9 ";
+const string UI_Controller::_rtfheadercolor = "{\\rtf1\\ansi\\ansicpg1252\\deff0\\nouicompat{\\fonttbl{\\f0\\fnil\\fcharset0 Calibri;}}{\\colortbl; \\red75\\green172\\blue198; }{\\*\\generator Riched20 6.3.9600}\\viewkind4\\uc1\\pard\\sa200\\sl276\\slmult1\\f0\\fs20\\lang9";
+const string UI_Controller::_rtfheaderbw = "{\\rtf1\\ansi\\ansicpg1252\\deff0\\nouicompat{\\fonttbl{\\f0\\fnil\\fcharset0 Calibri;}}\n{\\*\\generator Riched20 6.3.9600}\\viewkind4\\uc1\n\\pard\\sa200\\sl276\\slmult1\\f0\\fs18\\lang9 ";
 //note: fs18 = 2 * font size 9;
 const string UI_Controller::_rtffooter = "}";
 const string UI_Controller::_rtfnewline = "\\line ";
@@ -45,7 +46,7 @@ void UI_Controller::ToRTF(string filename, string input){
 	string dbg = input;
 	ofstream of;
 	of.open(filename.c_str(), ios::trunc);
-	of << _rtfheader;
+	of << _rtfheadercolor;
 
 	//start replace new line characters
 	static int startIdx = 0;

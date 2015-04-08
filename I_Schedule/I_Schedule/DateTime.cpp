@@ -614,6 +614,15 @@ string DateTime::Today(){
 	return output;
 }
 
+string DateTime::Tomorrow(){
+	time_t now = time(0);
+	time_t tomorrow = now + 24 * 60 * 60;
+	struct tm timeinfo;
+	localtime_s(&timeinfo, &tomorrow);
+	char output[80];
+	strftime(output, 80, "%d/%m/%Y", &timeinfo);
+	return output;
+}
 
 
 string DateTime::ConvertDateTime(string input){

@@ -122,6 +122,7 @@ private:
 public:
 	string Now();
 	string Today();
+	string Tomorrow();
 	string ConvertDate();
 	string ConvertDateTime(string);
 	string ConvertTime();
