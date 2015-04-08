@@ -24,6 +24,14 @@ Smartstring::COMMAND Parser::IdentifyCommand(string input){
 	
 }
 
+Smartstring::LIST Parser::IdentifyList(string input){
+	Smartstring list;
+	istringstream in(input);
+	if (in >> list){
+		return list.ListType();
+	}
+}
+
 string Parser::RemoveCommand(string input){
 	string buffer;
 	string remainder;

@@ -42,6 +42,10 @@ const string Smartstring::KEYWORD_STARTDATE_3 = "date:";
 const string Smartstring::KEYWORD_STARTDATE_4 = "start:";
 const string Smartstring::KEYWORD_STARTDATE_5 = "on:";
 const string Smartstring::KEYWORD_DESCRIPTION_1 = "description:";
+const string Smartstring::KEYWORD_TIMED_1 = "timed:";
+const string Smartstring::KEYWORD_DEADLINE_1 = "deadline:";
+const string Smartstring::KEYWORD_FLOAT_1 = "float:";
+
 
 const string Smartstring::FEEDBACK_ADD_SUCCESSULLY = "add the entry successfully";
 const string Smartstring::FEEDBACK_DELETE_SUCCESSFULLY = "delete the entry successfully";
@@ -189,6 +193,19 @@ Smartstring::FIELD Smartstring::Field(){
 	
 	assert(!IsKeyword()); //takes care of the case when we add cases to field but did not update static list keywords[];
 	return Smartstring::FIELD::INVALID_FLD;
+}
+
+Smartstring::LIST Smartstring::ListType(){
+	if (description == KEYWORD_TIMED_1){
+		return Smartstring::LIST::TIMED;
+	}
+	if (description == KEYWORD_DEADLINE_1){
+		return Smartstring::LIST::DEADLINE;
+	}
+	if (description == KEYWORD_FLOAT_1){
+		return Smartstring::LIST::FLOAT;
+	}
+	return Smartstring::LIST::DEFAULT;
 }
 
 

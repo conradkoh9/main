@@ -119,8 +119,18 @@ string Logic::Add(string taskInput){
 }
 
 string Logic::Delete(string taskInput){
-	int position = atoi(taskInput.c_str());
-	string feedback = storage->Delete(position);
+	Smartstring listname;
+	istringstream in(taskInput);
+	int position;
+	in >> listname;
+	in >> position;
+	//delete from list function
+	string feedback = storage->DeleteFromList(position, listname.ListType());
+
+
+	//original delete function
+	/*int position = atoi(taskInput.c_str());
+	string feedback = storage->Delete(position);*/
 	return feedback;
 }
 

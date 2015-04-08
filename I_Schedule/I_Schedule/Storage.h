@@ -47,6 +47,7 @@ public:
 	//METHODS
 	//FUNCTIONS
 	string Add(Task* task);
+	string DeleteFromList(int position, Smartstring::LIST list);
 	string Delete(int position);
 	string Complete(int position);
 	string Load();
@@ -141,6 +142,7 @@ private:
 	void ClearVectors();
 	void ClearUndoVector();
 	string Remove(int position);
+	string Erase(Task* tasktr);
 
 	//Save methods
 	string SaveSessionData();
@@ -165,5 +167,13 @@ private:
 	FILETYPE IdentifyFileType(string input);
 	bool FileEmpty(string input);
 
+	//Get Task* methods
+	Task* GetTimedTask(int position);
+	Task* GetFloatingTask(int position);
+	Task* GetDeadlineTask(int position);
+
+	class InvalidIndex : public exception{
+	} invalid_index;
 };
+
 

@@ -12,6 +12,7 @@ public:
 	string description;
 	enum COMMAND { ADD, CLEAR, DELETE, DISPLAY, EDIT, SAVE, SEARCH, COMPLETE, EMPTYSLOTS, LOAD, UNDO, INVALID_CMD };
 	enum FIELD { DESCRIPTION, STARTDATE, ENDDATE, PRIORITY, STATUS, INVALID_FLD };
+	enum LIST{ TIMED, DEADLINE, FLOAT, DEFAULT };
 
 	static bool classInitialized;
 	static int numberOfCommands;
@@ -51,6 +52,9 @@ public:
 	static const string KEYWORD_STARTDATE_4;
 	static const string KEYWORD_STARTDATE_5;
 	static const string KEYWORD_DESCRIPTION_1;
+	static const string KEYWORD_TIMED_1;
+	static const string KEYWORD_DEADLINE_1;
+	static const string KEYWORD_FLOAT_1;
 
 	static const string FEEDBACK_SEARCH_FAIL;
 	static const string FEEDBACK_ADD_SUCCESSULLY;
@@ -67,6 +71,7 @@ public:
 	void Initialize();
 	COMMAND Command();
 	FIELD Field();
+	LIST ListType();
 	bool IsCommand();
 	bool IsKeyword();
 

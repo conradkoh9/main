@@ -30,14 +30,14 @@ namespace I_ScheduleLibraryTest{
 			//testing the partition when n>1; boundary case n = 2; where n is the number of tasks added
 			Task* task2 = new Task();
 			task2->SetDescription("do homework 2");
-			task2->SetEndDate("tomorrow2");
-			task2->SetStartDate("today2");
+			task2->SetEndDate("07/06/2015");
+			task2->SetStartDate("05/06/2015");
 			task2->SetPriority("12");
 			task2->SetStatus("Complete");
 			storage->Add(task2);
 			//tasklist = storage->GetTaskList();
 
-			expected[1] = "Description: do homework 2\nStart: today2\nEnd: tomorrow2\nPriority: 12\nStatus: Complete";
+			expected[1] = "Description: do homework 2\nStart: 05/06/2015\nEnd: 07/06/2015\nPriority: 12\nStatus: Complete";
 			Assert::AreEqual(expected[1], storage->GetTask(1));
 			tasklist.clear();
 
@@ -154,8 +154,8 @@ namespace I_ScheduleLibraryTest{
 			int size = storage->Size();
 			Assert::IsTrue(size > 0);
 			string expected[2];
-			expected[0] = "Description: do homework\nStart: 03:00pm on 06/06/2015\nEnd: 04:00pm on 07/06/2015\nPriority: 1\nStatus: Complete";
-			expected[1] = "Description: do homework 2\nStart: 01:00pm on 01/02/2015\nEnd: 01:00pm on 05/02/2015\nPriority: 1234\nStatus: Incomplete";
+			expected[1] = "Description: do homework\nStart: 03:00pm on 06/06/2015\nEnd: 04:00pm on 07/06/2015\nPriority: 1\nStatus: Complete";
+			expected[0] = "Description: do homework 2\nStart: 01:00pm on 01/02/2015\nEnd: 01:00pm on 05/02/2015\nPriority: 1234\nStatus: Incomplete";
 
 			for (int i = 0; i < size; i++){
 				Assert::AreEqual(expected[i], storage->GetTask(i));
@@ -591,6 +591,30 @@ namespace I_ScheduleLibraryTest{
 			dt1 = DateTime(date1);
 			dt2 = DateTime(date2);
 			Assert::IsTrue(dt1.IsEarlierThan(dt2));
+		}
+
+		TEST_METHOD(DATETIME_ISVALIDFORMAT){
+			string date;
+			DateTime dt;
+
+			//testing the partition input is valid
+			date = "07/04/2014";
+			dt = DateTime(date);
+			Assert::IsTrue(dt.isValidFormat);
+
+			//testing the partition where input is not valid
+			date = "owkdowkdow";
+			dt = DateTime(date);
+			Assert::AreEqual(dt.Standardized(), date);
+			Assert::IsFalse(dt.isValidFormat);
+		}
+
+		TEST_METHOD(DATETIME_INVALIDINPUTS_UNCHANGED){
+			string date;
+			DateTime dt;
+			date = "owkdowkdowdkowdww";
+			dt = DateTime(date);
+			Assert::AreEqual(dt.Standardized(), date);
 		}
 	};
 }

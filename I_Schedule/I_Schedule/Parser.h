@@ -20,6 +20,7 @@ public:
 	
 	//suggestions for methods by Conrad
 	Smartstring::COMMAND IdentifyCommand(string input);
+	Smartstring::LIST IdentifyList(string input);
 	vector<string> IdentifyTaskFields(string input);
 	string RemoveCommand(string input);
 	string RemoveKeywords(string input);

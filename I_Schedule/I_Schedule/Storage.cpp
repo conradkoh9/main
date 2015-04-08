@@ -52,6 +52,40 @@ string Storage::Add(Task* task){
 	return feedback;
 }
 
+//@author A0099303A
+string Storage::DeleteFromList(int position, Smartstring::LIST list){
+	try{
+		Task* toDelete;
+		int dbg = position;
+		switch (list){
+		case Smartstring::LIST::TIMED:{
+			toDelete = GetTimedTask(position);
+			break;
+		}
+		case Smartstring::LIST::DEADLINE:{
+			toDelete = GetDeadlineTask(position);
+			break;
+		}
+		case Smartstring::LIST::FLOAT:{
+			toDelete = GetFloatingTask(position);
+			break;
+		}
+
+		default:{
+			return _FEEDBACK_DELETE_FAILURE;
+		}
+		}
+		Erase(toDelete);
+		Rewrite();
+		Update();
+		return _FEEDBACK_DELETE_SUCCESS;
+	}
+	catch (InvalidIndex){
+		return _FEEDBACK_INVALID_INDEX;
+	}
+}
+
+
 //@author A0119513L
 string Storage::Delete(int position){
 	string feedback = "";
@@ -509,7 +543,19 @@ string Storage::Remove(int position){
 	return _FEEDBACK_DELETE_SUCCESS;
 }
 
-
+//@author A0099303A
+string Storage::Erase(Task* taskptr){
+	vector<Task*>::iterator iter;
+	for (iter = taskList.begin(); iter != taskList.end();){
+		if (taskptr == (*iter)){
+			iter = taskList.erase(iter);
+		}
+		else{
+			++iter;
+		}
+	}
+	return _FEEDBACK_DELETE_SUCCESS;
+}
 //====================================================================
 //Save methods
 //====================================================================
@@ -849,4 +895,45 @@ bool Storage::FileEmpty(string filename){
 		ifs.close();
 		return false;
 	}
+}
+
+//====================================================================
+//Get Task* methods
+//====================================================================
+Task* Storage::GetTimedTask(int position){
+	int size = timedList.size();
+	if (position > size){
+		throw invalid_index;
+	}
+	else{
+		return timedList[position - 1];
+	}
+	assert(false && "GetTimedTask failure");
+	return NULL;
+}
+
+Task* Storage::GetDeadlineTask(int position){
+	int size = deadlineList.size();
+	if (position > size){
+		throw invalid_index;
+	}
+	else{
+		return deadlineList[position - 1];
+	}
+
+	assert(false && "GetDeadlineTask failure");
+	return NULL;
+}
+
+Task* Storage::GetFloatingTask(int position){
+	int size = floatingList.size();
+	if (position > size){
+		throw invalid_index;
+	}
+	else{
+		return floatingList[position - 1];
+	}
+
+	assert(false && "GetFloatingTask failure");
+	return NULL;
 }
