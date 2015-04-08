@@ -531,13 +531,13 @@ void Storage::ClearUndoVector(){
 string Storage::Remove(int position){
 	try{
 		int size_taskList = taskList.size();
-		if (position > size_taskList){
-			throw out_of_range("invalid index");
+		if (position > size_taskList || position < 1){
+			throw invalid_index;
 		}
 		taskList.erase(taskList.begin() + position - 1);
 	}
-	catch (out_of_range){
-		throw out_of_range("invalid index");
+	catch (InvalidIndex){
+		throw invalid_index;
 		return _FEEDBACK_DELETE_FAILURE;
 	}
 	return _FEEDBACK_DELETE_SUCCESS;
@@ -608,24 +608,17 @@ string Storage::WriteToCSV(){
 	ofstream of;
 	of.open(_filename.c_str(), ios::app);
 	vector<Task*>::iterator iter;
-	try{
-		int size = taskList.size();
-		for (iter = taskList.begin(); iter != taskList.end(); ++iter){
-			if (iter + 1 != taskList.end()){
-				out << (*iter)->ToCSVString() << endl;
-			}
-			else{
-				out << (*iter)->ToCSVString();
-			}
+	int size = taskList.size();
+	for (iter = taskList.begin(); iter != taskList.end(); ++iter){
+		if (iter + 1 != taskList.end()){
+			out << (*iter)->ToCSVString() << endl;
 		}
-		string str = out.str();
-		of << out.str();
+		else{
+			out << (*iter)->ToCSVString();
+		}
 	}
-	catch (out_of_range){
-		throw out_of_range(_FEEDBACK_WRITE_FAILURE);
-		return _FEEDBACK_WRITE_FAILURE;
-	}
-
+	string str = out.str();
+	of << out.str();
 	return _FEEDBACK_WRITE_SUCCESS;
 }
 
@@ -635,21 +628,15 @@ string Storage::WriteToTXT(){
 	ofstream of;
 	of.open(_filename.c_str(), ios::app);
 	vector<Task*>::iterator iter;
-	try{
-		for (iter = taskList.begin(); iter != taskList.end(); ++iter){
-			if (iter + 1 != taskList.end()){
-				out << (*iter)->ToTXTString() << endl;
-			}
-			else{
-				out << (*iter)->ToTXTString();
-			}
+	for (iter = taskList.begin(); iter != taskList.end(); ++iter){
+		if (iter + 1 != taskList.end()){
+			out << (*iter)->ToTXTString() << endl;
 		}
-		of << out.str();
+		else{
+			out << (*iter)->ToTXTString();
+		}
 	}
-	catch (out_of_range){
-		throw out_of_range(_FEEDBACK_WRITE_FAILURE);
-		return _FEEDBACK_WRITE_FAILURE;
-	}
+	of << out.str();
 
 	return _FEEDBACK_WRITE_SUCCESS;
 }
@@ -659,20 +646,13 @@ string Storage::WriteToArchive(){
 	ofstream of;
 	of.open(_archivefile.c_str(), ios::app);
 	vector<Task*>::iterator iter;
-	try{
-		int size = archiveList.size();
-		for (iter = archiveList.begin(); iter != archiveList.end(); ++iter){
-			out << (*iter)->ToCSVString() << endl;
-		}
-		archiveList.clear();
-		string str = out.str();
-		of << out.str();
+	int size = archiveList.size();
+	for (iter = archiveList.begin(); iter != archiveList.end(); ++iter){
+		out << (*iter)->ToCSVString() << endl;
 	}
-	catch (out_of_range){
-		throw out_of_range(_FEEDBACK_WRITE_FAILURE);
-		return _FEEDBACK_WRITE_FAILURE;
-	}
-
+	archiveList.clear();
+	string str = out.str();
+	of << out.str();
 	return _FEEDBACK_WRITE_SUCCESS;
 }
 //====================================================================
@@ -846,12 +826,12 @@ string Storage::MarkComplete(int position){
 	try{
 		int size_taskList = taskList.size();
 		if (position > size_taskList){
-			throw out_of_range("invalid index");
+			throw invalid_index;
 		}
 		taskList[position - 1]->MarkComplete();
 	}
-	catch (out_of_range){
-		throw out_of_range("invalid index");
+	catch (InvalidIndex){
+		throw invalid_index;
 		return _FEEDBACK_INVALID_INDEX;
 	}
 	return _FEEDBACK_UPDATE_SUCCESS;
@@ -900,9 +880,10 @@ bool Storage::FileEmpty(string filename){
 //====================================================================
 //Get Task* methods
 //====================================================================
+//@author A0099303A
 Task* Storage::GetTimedTask(int position){
 	int size = timedList.size();
-	if (position > size){
+	if (position > size || position < 1){
 		throw invalid_index;
 	}
 	else{
@@ -912,9 +893,10 @@ Task* Storage::GetTimedTask(int position){
 	return NULL;
 }
 
+//@author A0099303A
 Task* Storage::GetDeadlineTask(int position){
 	int size = deadlineList.size();
-	if (position > size){
+	if (position > size || position < 1){
 		throw invalid_index;
 	}
 	else{
@@ -925,9 +907,10 @@ Task* Storage::GetDeadlineTask(int position){
 	return NULL;
 }
 
+//@author A0099303A
 Task* Storage::GetFloatingTask(int position){
 	int size = floatingList.size();
-	if (position > size){
+	if (position > size || position < 1){
 		throw invalid_index;
 	}
 	else{

@@ -225,6 +225,7 @@ string Logic::Clear(){
 
 string Logic::Undo(){
 	string feedback = storage->Undo();
+	mout << storage->ToString();
 	return feedback;
 }
 
