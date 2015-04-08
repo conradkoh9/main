@@ -380,11 +380,11 @@ namespace I_ScheduleLibraryTest{
 			storage->Add(task2);
 
 			//case index error1
-			string expected = "INVALID INDEX";
-			Assert::AreEqual(expected, logic->Edit("-1 description: meet my clients"));
+			string expected = "Invalid index.";
+			Assert::AreEqual(expected, logic->Edit("timed: -1 description: meet my clients"));
 
 			//case index error2
-			Assert::AreEqual(expected, logic->Edit("4 description: meet my clients"));
+			Assert::AreEqual(expected, logic->Edit("timed: 4 description: meet my clients"));
 
 			//case edit the description
 			//string feedback;
@@ -400,6 +400,7 @@ namespace I_ScheduleLibraryTest{
 
 		//@author A0099303A
 		TEST_METHOD(SMARTSTRING_TOKENIZE){
+			//testing the partition inpult length > 0
 			string input = "\"hello\",\"how\",\"are\",\"you\",\"doing\",\"today\"";
 			Smartstring str(input);
 			vector<string> result = str.Tokenize(",\"");
@@ -412,6 +413,7 @@ namespace I_ScheduleLibraryTest{
 			Assert::AreEqual("doing", result[4].c_str());
 			Assert::AreEqual("today", result[5].c_str());
 
+			//testing partition input length 0
 			input = "";
 			str = Smartstring(input);
 			result = str.Tokenize(" ");
