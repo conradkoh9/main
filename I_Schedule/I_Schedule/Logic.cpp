@@ -118,6 +118,21 @@ string Logic::Add(string taskInput){
 	return feedback;
 }
 
+string Logic::Complete(string input){
+	Smartstring listname;
+	istringstream in(input);
+	int position;
+	in >> listname;
+	in >> position;
+
+	//Complete function
+	string feedback = storage->Complete(position, listname.ListType());
+	mout << storage->ToString();
+
+	return feedback;
+}
+
+
 string Logic::Delete(string taskInput){
 	Smartstring listname;
 	istringstream in(taskInput);
@@ -126,7 +141,7 @@ string Logic::Delete(string taskInput){
 	in >> position;
 	//delete from list function
 	string feedback = storage->DeleteFromList(position, listname.ListType());
-
+	mout << storage->ToString();
 
 	//original delete function
 	/*int position = atoi(taskInput.c_str());
@@ -140,52 +155,23 @@ string Logic::Display(){
 }
 
 string Logic::Edit(string taskInput){
-	activeTaskList.clear();
-	Task* taskptr;
-	string indexstr;
-	//select 
-	istringstream in(taskInput);
-	in >> indexstr;
-	int index = atoi(indexstr.c_str());
-	if (index <= storage->taskList.size() && index > 0){
-		index = index - 1; //converting from user index to vector index
-		taskptr = storage->taskList[index];
-	}
-	else{
-		return _FEEDBACK_ERROR_INVALID_INDEX;
-	}
-	//end select
 
-	//analyze string as vect and replace
-	//assumption: the IdentifyTaskFields has same ordering as *taskptr
+	Smartstring listname;
+	Smartstring info;
+	Smartstring::FIELD field;
 	string remainder;
+	int position;
+
+	istringstream in(taskInput);
+	in >> listname;
+	in >> position;
 	getline(in, remainder);
-	vector<string> modified = parser->IdentifyTaskFields(remainder);
-	for (int i = 0; i < modified.size(); ++i){
-		if (modified[i] != ""){
-			switch (i){
-			case Smartstring::FIELD::DESCRIPTION:{
-				taskptr->SetDescription(modified[i]);
-				break;
-			}
-			case Smartstring::FIELD::STARTDATE:{
-				taskptr->SetStartDate(modified[i]);
-				break;
-			}
-			case Smartstring::FIELD::ENDDATE:{
-				taskptr->SetEndDate(modified[i]);
-				break;
-			}
-			case Smartstring::FIELD::PRIORITY:{
-				taskptr->SetPriority(modified[i]);
-				break;
-			}
-			}
-		}
-	}
-	//end analyze string as vect and replace
-	mout << taskptr->ToString();
-	return _FEEDBACK_EDIT;
+	vector<string> newinfo = parser->IdentifyTaskFields(remainder);
+	
+	string feedback = storage->Edit(position, listname.ListType(), newinfo);
+	//Edit function
+	mout << storage->ToString();
+	return feedback;
 }
 string Logic::Search(string taskInput){
 	mout << storage->Search(taskInput);
@@ -204,12 +190,6 @@ string Logic::Save(string input){
 
 string Logic::EmptySlots(string input){
 	string feedback = storage->SearchEmptySlots(input);
-	return feedback;
-}
-
-string Logic::Complete(string input){
-	int position = atoi(input.c_str());
-	string feedback = storage->Complete(position);
 	return feedback;
 }
 

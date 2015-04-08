@@ -46,6 +46,7 @@ public:
 	static const string _STATUS_COMPLETE;
 	static const string _STATUS_INCOMPLETE;
 
+	string Edit(vector<string> newinfo);
 
 	string SetDescription(string input);
 	string SetStartDate(string input);

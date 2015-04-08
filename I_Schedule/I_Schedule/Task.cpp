@@ -56,6 +56,32 @@ Task::~Task()
 {
 }
 
+string Task::Edit(vector<string> newinfo){
+	for (int i = 0; i < newinfo.size(); ++i){
+		if (newinfo[i] != ""){
+			switch (i){
+				case Smartstring::FIELD::DESCRIPTION:{
+					SetDescription(newinfo[i]);
+					break;
+				}
+				case Smartstring::FIELD::STARTDATE:{
+					SetStartDate(newinfo[i]);
+					break;
+				}
+				case Smartstring::FIELD::ENDDATE:{
+					SetEndDate(newinfo[i]);
+					break;
+				}
+				case Smartstring::FIELD::PRIORITY:{
+					SetPriority(newinfo[i]);
+					break;
+				}
+			}
+		}
+	}
+	return ToString();
+}
+
 string Task::SetDescription(string input){
 	description = input;
 	return _FEEDBACK_DESCRIPTION_SET;

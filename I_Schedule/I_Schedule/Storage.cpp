@@ -24,7 +24,9 @@ const string Storage::_FEEDBACK_SESSION_SAVE_SUCCESS = "Session saved";
 const string Storage::_FEEDBACK_SESSION_SAVE_FAILURE = "Session failed to save.";
 const string Storage::_FEEDBACK_RESET = "Reset";
 const string Storage::_FEEDBACK_INVALID_INDEX = "Invalid index.";
+const string Storage::_FEEDBACK_INVALID_LIST = "Invalid list entered";
 const string Storage::_FEEDBACK_UPDATE_SUCCESS = "Update success.";
+const string Storage::_FEEDBACK_EDIT_SUCCESS = "Edit success.";
 //formatting variables
 const string Storage::_rtfboldtagstart = "\\b ";
 const string Storage::_rtfboldtagend = "\\b0 ";
@@ -55,26 +57,7 @@ string Storage::Add(Task* task){
 //@author A0099303A
 string Storage::DeleteFromList(int position, Smartstring::LIST list){
 	try{
-		Task* toDelete;
-		int dbg = position;
-		switch (list){
-		case Smartstring::LIST::TIMED:{
-			toDelete = GetTimedTask(position);
-			break;
-		}
-		case Smartstring::LIST::DEADLINE:{
-			toDelete = GetDeadlineTask(position);
-			break;
-		}
-		case Smartstring::LIST::FLOAT:{
-			toDelete = GetFloatingTask(position);
-			break;
-		}
-
-		default:{
-			return _FEEDBACK_DELETE_FAILURE;
-		}
-		}
+		Task* toDelete = GetTask(position, list);
 		Erase(toDelete);
 		Rewrite();
 		Update();
@@ -82,6 +65,9 @@ string Storage::DeleteFromList(int position, Smartstring::LIST list){
 	}
 	catch (InvalidIndex){
 		return _FEEDBACK_INVALID_INDEX;
+	}
+	catch (InvalidList){
+		return _FEEDBACK_INVALID_LIST;
 	}
 }
 
@@ -102,13 +88,48 @@ string Storage::Delete(int position){
 }
 
 //@author A0099303A
-string Storage::Complete(int position){
+string Storage::Edit(int position, Smartstring::LIST list, vector<string> newinfo){
+	try{
+		Task* taskptr = GetTask(position, list);
+		taskptr->Edit(newinfo);
+		string feedback = _FEEDBACK_EDIT_SUCCESS;
+		return feedback;
+	}
+
+	catch (InvalidIndex){
+		return _FEEDBACK_INVALID_INDEX;
+	}
+	catch (InvalidList){
+		return _FEEDBACK_INVALID_LIST;
+	}
+}
+
+//@author A0099303A
+string Storage::Complete(int position, Smartstring::LIST list){
+
 	string feedback = "";
 	lastList = taskList;
-	feedback = MarkComplete(position);
-	Archive(position);
-	Rewrite();
-	Update();
+
+	try{
+		Task* toComplete = GetTask(position, list);
+		MarkComplete(toComplete);
+		Archive(toComplete);
+		Rewrite();
+		Update();
+		return _FEEDBACK_GENERIC_SUCCESS;
+	}
+	catch (InvalidIndex){
+		return _FEEDBACK_INVALID_INDEX;
+	}
+	catch (InvalidList){
+		return _FEEDBACK_INVALID_LIST;
+	}
+
+
+	//feedback = MarkComplete(position);
+	//Archive(position);
+	//Rewrite();
+	//Update();
 	return feedback;
 }
 
@@ -655,6 +676,7 @@ string Storage::WriteToArchive(){
 	of << out.str();
 	return _FEEDBACK_WRITE_SUCCESS;
 }
+
 //====================================================================
 //Load methods
 //====================================================================
@@ -822,25 +844,21 @@ string Storage::LoadTXTContent(){
 //Mark methods
 //====================================================================
 //@author A0099303A
-string Storage::MarkComplete(int position){
-	try{
-		int size_taskList = taskList.size();
-		if (position > size_taskList){
-			throw invalid_index;
+string Storage::MarkComplete(Task* taskptr){
+
+	vector<Task*>::iterator iter;
+	for (iter = taskList.begin(); iter != taskList.end(); ++iter){
+		if (taskptr == (*iter)){
+			(*iter)->MarkComplete();
 		}
-		taskList[position - 1]->MarkComplete();
-	}
-	catch (InvalidIndex){
-		throw invalid_index;
-		return _FEEDBACK_INVALID_INDEX;
 	}
 	return _FEEDBACK_UPDATE_SUCCESS;
 }
 
-void Storage::Archive(int position){
-		int size_taskList = taskList.size();
-		archiveList.push_back(taskList[position - 1]);
-		taskList.erase(taskList.begin() + position - 1);
+void Storage::Archive(Task* taskptr){
+	archiveList.push_back(taskptr);
+	Erase(taskptr);
+	return;
 }
 
 //====================================================================
@@ -880,6 +898,29 @@ bool Storage::FileEmpty(string filename){
 //====================================================================
 //Get Task* methods
 //====================================================================
+//@author A0099303A
+Task* Storage::GetTask(int position, Smartstring::LIST list){
+	Task* taskptr;
+	switch (list){
+		case Smartstring::LIST::TIMED:{
+			taskptr = GetTimedTask(position);
+			break;
+		}
+		case Smartstring::LIST::DEADLINE:{
+			taskptr = GetDeadlineTask(position);
+			break;
+		}
+		case Smartstring::LIST::FLOAT:{
+			taskptr = GetFloatingTask(position);
+			break;
+		}
+
+		default:{
+			throw invalid_list;
+		}
+	}
+	return taskptr;
+}
 //@author A0099303A
 Task* Storage::GetTimedTask(int position){
 	int size = timedList.size();

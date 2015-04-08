@@ -49,7 +49,8 @@ public:
 	string Add(Task* task);
 	string DeleteFromList(int position, Smartstring::LIST list);
 	string Delete(int position);
-	string Complete(int position);
+	string Edit(int position, Smartstring::LIST list, vector<string> newinfo);
+	string Complete(int position, Smartstring::LIST list);
 	string Load();
 	string Load(string filename);
 
@@ -113,7 +114,9 @@ private:
 	static const string _FEEDBACK_SESSION_SAVE_FAILURE;
 	static const string _FEEDBACK_RESET;
 	static const string _FEEDBACK_INVALID_INDEX;
+	static const string _FEEDBACK_INVALID_LIST;
 	static const string _FEEDBACK_UPDATE_SUCCESS;
+	static const string _FEEDBACK_EDIT_SUCCESS;
 
 	//formatting variables
 	static const string _rtfboldtagstart;
@@ -142,7 +145,7 @@ private:
 	void ClearVectors();
 	void ClearUndoVector();
 	string Remove(int position);
-	string Erase(Task* tasktr);
+	string Erase(Task* taskptr);
 
 	//Save methods
 	string SaveSessionData();
@@ -159,21 +162,27 @@ private:
 	string LoadTXTContent(); //loads _filecontent vector into taskList vector assuming TXT format
 
 	//Complete methods
-	string MarkComplete(int position);
-	void Archive(int position);
-	void SaveToArchive();
+	string MarkComplete(Task* taskptr);
+	void Archive(Task* taskptr);
 
 	//File analysis methods
 	FILETYPE IdentifyFileType(string input);
 	bool FileEmpty(string input);
 
 	//Get Task* methods
+	Task* GetTask(int position, Smartstring::LIST list);
 	Task* GetTimedTask(int position);
 	Task* GetFloatingTask(int position);
 	Task* GetDeadlineTask(int position);
 
+	//exceptions
 	class InvalidIndex : public exception{
 	} invalid_index;
+
+	class InvalidList : public exception{
+
+	} invalid_list;
+
 };
 
 

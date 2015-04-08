@@ -18,11 +18,11 @@ public:
 	bool exit = false;
 	Parser* parser;
 	Storage* storage;
-	vector<Task*> activeTaskList;
 	//methods
 	string Run(string input);
 	string Execute(string input);
 	string Add(string taskInput);
+	string Complete(string input);
 	string Delete(string taskInput);
 	string Display();
 	string Edit(string taskInput);
@@ -31,7 +31,6 @@ public:
 	string EmptySlots(string input);
 	string Invalid();
 	string Save(string input);
-	string Complete(string input);
 	string Clear();
 	string Undo();
 	string Load(string input);

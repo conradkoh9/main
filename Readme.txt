@@ -1,5 +1,5 @@
 //=============================================================================
-[08/04] Delete Command Update
+[08/04] Delete, Complete, Edit, Command Update
 //=============================================================================
 
 To delete from default view instead of internal vector
@@ -11,6 +11,9 @@ Now:
 1. delete float: 1
 2. delete timed: 1
 3. delete deadline: 1
+3. Edit float: 1 homework
+4. Edit float: 2 homework 2 s: 07/04/2015
+5. Complete deadline: 1
 
 //=============================================================================
 [03/04] Displaying bold text in UI
