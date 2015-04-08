@@ -59,6 +59,9 @@ Task::~Task()
 string Task::Edit(vector<string> newinfo){
 	for (int i = 0; i < newinfo.size(); ++i){
 		if (newinfo[i] != ""){
+			if (newinfo[i] == "-"){
+				newinfo[i] = "";
+			}
 			switch (i){
 				case Smartstring::FIELD::DESCRIPTION:{
 					SetDescription(newinfo[i]);

@@ -91,6 +91,7 @@ public:
 private:
 
 	//Feedback Variables
+	static const string _FEEDBACK_ADD_SUCCESS;
 	static const string _FEEDBACK_GENERIC_SUCCESS;
 	static const string _FEEDBACK_GENERIC_FAILURE;
 	static const string _FEEDBACK_LOAD_SUCCESS;

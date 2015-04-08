@@ -1,28 +1,29 @@
 #include "Storage.h"
 
 //Constant variable declaration
-const string Storage::_FEEDBACK_GENERIC_SUCCESS = "STORAGE SUCCESS";
-const string Storage::_FEEDBACK_GENERIC_FAILURE = "STORAGE FAILED";
-const string Storage::_FEEDBACK_LOAD_SUCCESS = "LOAD SUCCESS";
-const string Storage::_FEEDBACK_LOAD_FAILURE = "LOAD FAILED";
-const string Storage::_FEEDBACK_WRITE_SUCCESS = "WRITE SUCCESS";
-const string Storage::_FEEDBACK_WRITE_FAILURE = "WRITE FAILED";
-const string Storage::_FEEDBACK_CLEAR_SUCCESS = "CLEAR SUCCESS";
-const string Storage::_FEEDBACK_CLEAR_FAILURE = "CLEAR FAILED";
-const string Storage::_FEEDBACK_DELETE_SUCCESS = "DELETE SUCCESS";
-const string Storage::_FEEDBACK_DELETE_FAILURE = "DELETE FAILED";
-const string Storage::_FEEDBACK_UNDO_SUCCESS = "UNDO SUCCESS";
-const string Storage::_FEEDBACK_UNDO_FAILURE = "UNDO FAILED";
+const string Storage::_FEEDBACK_ADD_SUCCESS = "Successfull added.";
+const string Storage::_FEEDBACK_GENERIC_SUCCESS = "Update succeeded.";
+const string Storage::_FEEDBACK_GENERIC_FAILURE = "Update failed.";
+const string Storage::_FEEDBACK_LOAD_SUCCESS = "Load succeeded.";
+const string Storage::_FEEDBACK_LOAD_FAILURE = "Load failed.";
+const string Storage::_FEEDBACK_WRITE_SUCCESS = "Write succeeded.";
+const string Storage::_FEEDBACK_WRITE_FAILURE = "Write failed.";
+const string Storage::_FEEDBACK_CLEAR_SUCCESS = "Successfully cleared.";
+const string Storage::_FEEDBACK_CLEAR_FAILURE = "Failed to clear.";
+const string Storage::_FEEDBACK_DELETE_SUCCESS = "Successfully deleted.";
+const string Storage::_FEEDBACK_DELETE_FAILURE = "Failed to delete.";
+const string Storage::_FEEDBACK_UNDO_SUCCESS = "Undo succeeded.";
+const string Storage::_FEEDBACK_UNDO_FAILURE = "Undo failed.";
 const string Storage::_FEEDBACK_SEARCH_FAILURE = "No results found.";
-const string Storage::_FEEDBACK_FILE_EMPTY = "FILE EMPTY";
-const string Storage::_FEEDBACK_FILE_NOT_EMPTY = "FILE NOT EMPTY";
-const string Storage::_FEEDBACK_INVALID_FILE_FORMAT = "Invalid file format entered";
+const string Storage::_FEEDBACK_FILE_EMPTY = "Specified file empty.";
+const string Storage::_FEEDBACK_FILE_NOT_EMPTY = "Specified file is not empty.";
+const string Storage::_FEEDBACK_INVALID_FILE_FORMAT = "Invalid file format entered.";
 const string Storage::_EMPTY_STRING= "";
-const string Storage::_FEEDBACK_SESSION_LOAD_FAILURE = "Session failed to load. Starting default session";
+const string Storage::_FEEDBACK_SESSION_LOAD_FAILURE = "Session failed to load. Starting default session.";
 const string Storage::_FEEDBACK_SESSION_LOAD_SUCCESS = "Session loaded.";
-const string Storage::_FEEDBACK_SESSION_SAVE_SUCCESS = "Session saved";
+const string Storage::_FEEDBACK_SESSION_SAVE_SUCCESS = "Session saved.";
 const string Storage::_FEEDBACK_SESSION_SAVE_FAILURE = "Session failed to save.";
-const string Storage::_FEEDBACK_RESET = "Reset";
+const string Storage::_FEEDBACK_RESET = "Storage reset.";
 const string Storage::_FEEDBACK_INVALID_INDEX = "Invalid index.";
 const string Storage::_FEEDBACK_INVALID_LIST = "Invalid list entered";
 const string Storage::_FEEDBACK_UPDATE_SUCCESS = "Update success.";
@@ -50,7 +51,8 @@ string Storage::Add(Task* task){
 	lastList = taskList;
 	taskList.push_back(task);
 	Update();
-	string feedback = Rewrite();
+	Rewrite();
+	string feedback = _FEEDBACK_ADD_SUCCESS;
 	return feedback;
 }
 

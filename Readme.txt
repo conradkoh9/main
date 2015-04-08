@@ -1,7 +1,7 @@
 //=============================================================================
 [08/04] Delete, Complete, Edit, Command Update
 //=============================================================================
-
+[1]
 To delete from default view instead of internal vector
 Old:
 1. display
@@ -14,6 +14,14 @@ Now:
 3. Edit float: 1 homework
 4. Edit float: 2 homework 2 s: 07/04/2015
 5. Complete deadline: 1
+
+[2]
+
+Allow user to remove a field with - as the description
+Old: impossible to remove a field
+
+New: edit timed: 1 s: - (removes the start date from task)
+
 
 //=============================================================================
 [03/04] Displaying bold text in UI
