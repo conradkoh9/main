@@ -47,8 +47,8 @@ Storage::~Storage(){
 string Storage::Add(Task* task){
 	lastList = taskList;
 	taskList.push_back(task);
-	string feedback = Rewrite();
 	Update();
+	string feedback = Rewrite();
 	return feedback;
 }
 
@@ -98,7 +98,6 @@ string Storage::Load(string filename){
 	if (filetype != FILETYPE::INVALID){
 		string feedback;
 		_filename = filename;
-		filename;
 		ClearVectors();
 		ClearUndoVector();
 		feedback = LoadRawFileContent();
@@ -161,6 +160,7 @@ string Storage::Clear(){
 	return _FEEDBACK_CLEAR_SUCCESS;
 }
 
+//@author yizhi
 string Storage::Undo(){
 	if (!lastList.empty()){
 		taskList = lastList;
@@ -341,6 +341,7 @@ string Storage::GetTimedList(){
 //To be refactored
 //====================================================================
 string Storage::ToString(){
+	Update();
 	ostringstream out;
 	int index = 0;
 	vector<Task*>::iterator iter;
@@ -427,8 +428,23 @@ void Storage::initializeLists(){
 
 void Storage::sortTaskListsByTime(){
 	int size_taskList = taskList.size();
+	for (int i = 0; i < size_taskList; i++){
+		for (int j = i; j < size_taskList; ++j){
+			string sdStart1 = taskList[i]->GetStartDate();
+			string sdStart2 = taskList[j]->GetStartDate();
+			DateTime dt1(sdStart1);
+			DateTime dt2(sdStart2);
+			if (dt2.IsEarlierThan(dt1)){
+				Task* temp = taskList[i];
+				taskList[i] = taskList[j];
+				taskList[j] = temp;
+			}
+		}
 
-	for (int i = 1; i < size_taskList; i++){
+	}
+
+
+	/*for (int i = 1; i < size_taskList; i++){
 		for (int j = 1; j < size_taskList - i;++j){
 			string sdStart1 = taskList[j - 1]->GetStartDate();
 			string sdStart2 = taskList[j]->GetStartDate();
@@ -440,7 +456,7 @@ void Storage::sortTaskListsByTime(){
 				taskList[j] = temp;
 			}
 		}
-	}
+	}*/
 
 }
 

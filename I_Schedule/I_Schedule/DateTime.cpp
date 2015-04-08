@@ -28,6 +28,9 @@ const string DateTime::DATETYPE_SUNDAY1 = "Sunday";
 const string DateTime::DATETYPE_SUNDAY2 = "Sun";
 const string DateTime::DATETYPE_SUNDAY3 = "sunday";
 const string DateTime::DATETYPE_SUNDAY4 = "sun";
+const string DateTime::DATETYPE_TODAY1 = "today";
+const string DateTime::DATETYPE_TOMORROW1 = "tomorrow";
+const string DateTime::DATETYPE_TOMORROW2 = "tmr";
 const string DateTime::TIMETYPE_AM = "am";
 const string DateTime::TIMETYPE_PM = "pm";
 
@@ -466,7 +469,12 @@ DateTime::DAY DateTime::GetDayEnum(string input){
 	if (input == DATETYPE_SATURDAY1 || input == DATETYPE_SATURDAY2 || input == DATETYPE_SATURDAY3 || input == DATETYPE_SATURDAY4){
 		return DAY::SATURDAY;
 	}
-
+	if (input == DATETYPE_TODAY1){
+		return GetToday();
+	}
+	if (input == DATETYPE_TOMORROW1 || input == DATETYPE_TOMORROW2){
+		return GetTomorrow();
+	}
 	return DAY::INVALID;
 }
 
@@ -515,6 +523,73 @@ time_t DateTime::OffsetByDay(time_t timeReference, time_t offset_in_days){
 	return output;
 }
 
+DateTime::DAY DateTime::GetToday(){
+	time_t now = time(0);
+	struct tm timeinfo;
+	localtime_s(&timeinfo, &now);
+	int day = timeinfo.tm_wday;
+	switch (day){
+		case DAY::SUNDAY:{
+			return DAY::SUNDAY;
+		}
+		case DAY::MONDAY:{
+			return DAY::MONDAY;
+		}
+		case DAY::TUESDAY:{
+			return DAY::TUESDAY;
+		}
+		case DAY::WEDNESDAY:{
+			return DAY::WEDNESDAY;
+		}
+		case DAY::THURSDAY:{
+			return DAY::THURSDAY;
+		}
+		case DAY::FRIDAY:{
+			return DAY::FRIDAY;
+		}
+		case DAY::SATURDAY:{
+			return DAY::SATURDAY;
+		}
+		default:{
+			return DAY::INVALID;
+		}
+	}
+	assert(false && "in DateTime::GetToday function");
+}
+
+DateTime::DAY DateTime::GetTomorrow(){
+	time_t now = time(0);
+	struct tm timeinfo;
+	localtime_s(&timeinfo, &now);
+	int day = timeinfo.tm_wday;
+	switch (day){
+		case DAY::SUNDAY:{
+			return DAY::MONDAY;
+		}
+		case DAY::MONDAY:{
+			return DAY::TUESDAY;
+		}
+		case DAY::TUESDAY:{
+			return DAY::WEDNESDAY;
+		}
+		case DAY::WEDNESDAY:{
+			return DAY::THURSDAY;
+		}
+		case DAY::THURSDAY:{
+			return DAY::FRIDAY;
+		}
+		case DAY::FRIDAY:{
+			return DAY::SATURDAY;
+		}
+		case DAY::SATURDAY:{
+			return DAY::SUNDAY;
+		}
+		default:{
+			return DAY::INVALID;
+		}
+	}
+	assert(false && "in DateTime::GetTomorrow function");
+}
 //==========================================================
 //End section Methods suggested by Conrad
 //==========================================================
@@ -813,6 +888,9 @@ void DateTime::Initialize(){
 		dateType.push_back(DATETYPE_SUNDAY2);
 		dateType.push_back(DATETYPE_SUNDAY3);
 		dateType.push_back(DATETYPE_SUNDAY4);
+		dateType.push_back(DATETYPE_TODAY1);
+		dateType.push_back(DATETYPE_TOMORROW1);
+		dateType.push_back(DATETYPE_TOMORROW2);
 		timeType.push_back(TIMETYPE_AM);
 		timeType.push_back(TIMETYPE_PM);
 

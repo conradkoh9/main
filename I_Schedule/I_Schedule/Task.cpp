@@ -30,6 +30,8 @@ Task::Task()
 }
 
 Task::Task(vector<string> input){
+	string d1 = input[Smartstring::FIELD::STARTDATE];
+	string d2 = input[Smartstring::FIELD::ENDDATE];
 	standardStartdt = new DateTime(input[Smartstring::FIELD::STARTDATE]);
 	standardEnddt = new DateTime(input[Smartstring::FIELD::ENDDATE]);
 	standardStart = standardStartdt->Standardized();
@@ -101,6 +103,7 @@ string Task::GetDescription(){
 }
 
 string Task::GetStartDate(){
+	string d1 = startdate;
 	return startdate;
 }
 

@@ -422,47 +422,60 @@ namespace I_ScheduleLibraryTest{
 		//@author A0099303A
 		TEST_METHOD(DATETIME_USER_INPUTS){
 			string input;
-			string expected[10];
-			string actual[10];
+			string expected;
+			string actual;
 			//testing the partition where no day reset is crossed
 			input = "Tuesday at 5pm";
 			DateTime dt(input);
-			actual[0] = dt.Standardized();
-			expected[0] = "05:00pm on 14/04/2015";
-			Assert::AreEqual(expected[0], actual[0]);
+			actual = dt.Standardized();
+			expected = "05:00pm on 14/04/2015";
+			Assert::AreEqual(expected, actual);
 
 			input = "5pm on Tuesday";
 			dt = DateTime(input);
-			actual[1] = dt.Standardized();
-			expected[1] = "05:00pm on 14/04/2015";
-			Assert::AreEqual(expected[1], actual[1]);
+			actual = dt.Standardized();
+			expected = "05:00pm on 14/04/2015";
+			Assert::AreEqual(expected, actual);
 
 			input = "Friday at 10pm";
 			dt = DateTime(input);
-			actual[2] = dt.Standardized();
-			expected[2] = "10:00pm on 10/04/2015";
-			Assert::AreEqual(expected[2], actual[2]);
+			actual = dt.Standardized();
+			expected = "10:00pm on 10/04/2015";
+			Assert::AreEqual(expected, actual);
 
 			//testing the partition where a day reset is crossed e.g today is wednesday, appointment on monday
 			input = "Monday at 6pm";
 			dt = DateTime(input);
-			actual[3] = dt.Standardized();
-			expected[3] = "06:00pm on 13/04/2015";
-			Assert::AreEqual(expected[3], actual[3]);
+			actual = dt.Standardized();
+			expected = "06:00pm on 13/04/2015";
+			Assert::AreEqual(expected, actual);
 
 			//testing that Standardized() does not change empty strings
 			input = "";
 			dt = DateTime(input);
-			actual[4] = dt.Standardized();
-			expected[4] = "";
-			Assert::AreEqual(expected[4], actual[4]);
+			actual = dt.Standardized();
+			expected = "";
+			Assert::AreEqual(expected, actual);
 
 			//test the partition where only a time is set
 			input = "5pm";
 			dt = DateTime(input);
-			actual[5] = dt.Standardized();
-			expected[5] = "05:00pm";
-			Assert::AreEqual(expected[5], actual[5]);
+			actual = dt.Standardized();
+			expected = "05:00pm";
+			Assert::AreEqual(expected, actual);
+
+			//testing today and tomorrow keywords
+			input = "today";
+			dt = DateTime(input);
+			actual = dt.Standardized();
+			expected = "08/04/2015";
+			Assert::AreEqual(expected, actual);
+
+			input = "tomorrow";
+			dt = DateTime(input);
+			actual = dt.Standardized();
+			expected = "09/04/2015";
+			Assert::AreEqual(expected, actual);
 
 			//important lacking test: testing when month is crossed
 

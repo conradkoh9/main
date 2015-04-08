@@ -49,6 +49,9 @@ private:
 	static const string DATETYPE_SUNDAY2;
 	static const string DATETYPE_SUNDAY3;
 	static const string DATETYPE_SUNDAY4;
+	static const string DATETYPE_TODAY1;
+	static const string DATETYPE_TOMORROW1;
+	static const string DATETYPE_TOMORROW2;
 
 	static const string TIMETYPE_AM;
 	static const string TIMETYPE_PM;
@@ -105,6 +108,8 @@ private:
 	string GetStandardTime(time_t time);
 	time_t OffsetByDay(time_t startday, time_t offset_in_days); //given a startday and number of days to offset by, converts to a time_t value
 
+	DAY GetToday();
+	DAY GetTomorrow();
 
 	//==========================================================
 	//End section Methods suggested by Conrad

@@ -1,6 +1,6 @@
 Description: do homework
-Start: today
-End: tomorrow
+Start: 08/04/2015
+End: 09/04/2015
 Priority: 1
 Status: Incomplete
 Description: do homework 2
