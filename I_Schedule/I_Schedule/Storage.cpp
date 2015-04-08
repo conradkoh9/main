@@ -399,7 +399,7 @@ string Storage::GetFloatingList(){
 }
 
 string Storage::GetDeadlineList(){
-	string dbg = deadlineList.front()->ToShortString();
+	//string dbg = deadlineList.front()->Task::ToShortString();
 	return ToString(deadlineList);
 }
 
@@ -506,13 +506,15 @@ void Storage::Update(){
 //Filter Methods
 //====================================================================
 
+//@author A0119491B
 void Storage::FilterTask(){
 	ClearFilteredLists();
-	sortTaskListsByTime();
 	initializeLists();
+	sortTask();
+	rearrangeTaskList();
 	return;
 }
-
+//@author A0119491B
 void Storage::initializeLists(){
 	int size_taskList = taskList.size();
 
@@ -531,38 +533,49 @@ void Storage::initializeLists(){
 		}
 	}
 }
+//@author A0119491B
+void Storage::sortTask(){
+	sortListsByTime(timedList);
+	sortListsByTime(deadlineList);
+}
+//@author A0119491B
+void Storage::sortListsByTime(vector <Task*> &V){
+	int size_V = V.size();
+	string datetime1, datetime2;
+	for (int i = 0; i < size_V; i++){
+		for (int j = i; j < size_V; ++j){
+			datetime1 = V[i]->GetStartDate();
+			datetime2 = V[j]->GetStartDate();
 
-void Storage::sortTaskListsByTime(){
-	int size_taskList = taskList.size();
-	for (int i = 0; i < size_taskList; i++){
-		for (int j = i; j < size_taskList; ++j){
-			string sdStart1 = taskList[i]->GetStartDate();
-			string sdStart2 = taskList[j]->GetStartDate();
-			DateTime dt1(sdStart1);
-			DateTime dt2(sdStart2);
+			if (datetime1 == "" && datetime2 == ""){
+				datetime1 = V[i]->GetEndDate();
+				datetime2 = V[j]->GetEndDate();
+			}
+
+			DateTime dt1(datetime1);
+			DateTime dt2(datetime2);
 			if (dt2.IsEarlierThan(dt1)){
-				Task* temp = taskList[i];
-				taskList[i] = taskList[j];
-				taskList[j] = temp;
+				Task* temp = V[i];
+				V[i] = V[j];
+				V[j] = temp;
 			}
 		}
-
 	}
-
-
-	/*for (int i = 1; i < size_taskList; i++){
-		for (int j = 1; j < size_taskList - i;++j){
-			string sdStart1 = taskList[j - 1]->GetStartDate();
-			string sdStart2 = taskList[j]->GetStartDate();
-			DateTime dt1(sdStart1);
-			DateTime dt2(sdStart2);
-			if (dt2.IsEarlierThan(dt1)){
-				Task* temp = taskList[j-1];
-				taskList[j-1] = taskList[j];
-				taskList[j] = temp;
-			}
-		}
-	}*/
+}
+//@author A0119491B
+void Storage::rearrangeTaskList(){
+	taskList.clear();
+	vector<Task*>::iterator iter;
+	for (iter = timedList.begin(); iter != timedList.end(); iter++){
+		taskList.push_back(*iter);
+	}
+	for (iter = deadlineList.begin(); iter != deadlineList.end(); iter++){
+		taskList.push_back(*iter);
+	}
+	for (iter = floatingList.begin(); iter != floatingList.end(); iter++)
+	{
+		taskList.push_back(*iter);
+	}
 
 }
 

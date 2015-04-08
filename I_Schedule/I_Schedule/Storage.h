@@ -146,8 +146,10 @@ private:
 
 	//filter methods
 	void FilterTask();
-	void sortTaskListsByTime();
+	void sortListsByTime(vector<Task*> &V);
 	void initializeLists();
+	void sortTask();
+	void rearrangeTaskList();
 
 	//clear methods
 	void ClearFile();
