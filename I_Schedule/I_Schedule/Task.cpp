@@ -18,6 +18,7 @@ const string Task::_FEEDBACK_STANDARD_END_DATE_SET = "STAMDARD FORMAT OF END DAT
 const string Task::_STATUS_COMPLETE = "Complete";
 const string Task::_STATUS_INCOMPLETE = "Incomplete";
 
+const int Task::numberOfFields = Smartstring::NUMBER_OF_FIELDS;
 
 Task::Task()
 {
@@ -26,31 +27,40 @@ Task::Task()
 	priority = "";
 	enddate = "";
 	status = _STATUS_INCOMPLETE;
-	numberOfFields = Smartstring::NUMBER_OF_FIELDS;
 }
 
 Task::Task(vector<string> input){
-	string d1 = input[Smartstring::FIELD::STARTDATE];
-	string d2 = input[Smartstring::FIELD::ENDDATE];
+
 	standardStartdt = new DateTime(input[Smartstring::FIELD::STARTDATE]);
 	standardEnddt = new DateTime(input[Smartstring::FIELD::ENDDATE]);
 	standardStart = standardStartdt->Standardized();
 	standardEnd = standardEnddt->Standardized();
 
-
 	description = input[Smartstring::FIELD::DESCRIPTION];
-	//enddate = input[Smartstring::FIELD::ENDDATE];
-	//startdate = input[Smartstring::FIELD::STARTDATE];
-	priority = input[Smartstring::FIELD::PRIORITY];
 	startdate = standardStart;
 	enddate = standardEnd;
+	priority = input[Smartstring::FIELD::PRIORITY];
 	status = input[Smartstring::FIELD::STATUS];
 	if (status == ""){
 		status = _STATUS_INCOMPLETE;
 	}
-	numberOfFields = Smartstring::NUMBER_OF_FIELDS;
 }
 
+Task::Task(Task* task){
+	startdate = "";
+	description = "";
+	priority = "";
+	enddate = "";
+	status = _STATUS_INCOMPLETE;
+
+	if (!task == NULL){
+		description = task->GetDescription();
+		startdate = task->GetStartDate();
+		enddate = task->GetEndDate();
+		priority = task->GetPriority();
+		status = task->GetStatus();
+	}
+}
 
 Task::~Task()
 {

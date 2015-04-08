@@ -101,7 +101,13 @@ string Storage::Edit(int position, Smartstring::LIST list, vector<string> newinf
 	lastList = taskList;
 	try{
 		Task* taskptr = GetTask(position, list);
-		taskptr->Edit(newinfo);
+		Task* newTask = new Task(taskptr);
+	//	(*newTask) = (*taskptr);
+		newTask->Edit(newinfo);
+		ReplaceTask(taskptr, newTask);
+		Rewrite();
+		Update();
+
 		string feedback = _FEEDBACK_EDIT_SUCCESS;
 		return feedback;
 	}
@@ -393,6 +399,7 @@ string Storage::GetFloatingList(){
 }
 
 string Storage::GetDeadlineList(){
+	string dbg = deadlineList.front()->ToShortString();
 	return ToString(deadlineList);
 }
 
@@ -1006,3 +1013,13 @@ Task* Storage::GetFloatingTask(int position){
 	return NULL;
 }
 
+void Storage::ReplaceTask(Task* taskptr, Task* replacer){
+	vector<Task*>::iterator iter;
+	for (iter = taskList.begin(); iter != taskList.end(); ++iter){
+		if ((*iter) == taskptr){
+			(*iter) = replacer;
+		}
+	}
+
+	return;
+}

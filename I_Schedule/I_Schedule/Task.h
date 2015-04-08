@@ -23,8 +23,8 @@ private:
 public:
 	Task();
 	Task(vector<string> input);
+	Task(Task* task);
 	~Task();
-	int numberOfFields;
 
 	enum TASKTYPE{ FLOATING, DEADLINE, TIMED };
 
@@ -45,6 +45,8 @@ public:
 
 	static const string _STATUS_COMPLETE;
 	static const string _STATUS_INCOMPLETE;
+
+	static const int numberOfFields;
 
 	string Edit(vector<string> newinfo);
 

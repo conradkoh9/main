@@ -185,6 +185,9 @@ private:
 	Task* GetFloatingTask(int position);
 	Task* GetDeadlineTask(int position);
 
+	//Replace methods
+	void ReplaceTask(Task* existing, Task* replacer);
+
 
 	//exceptions
 	class InvalidIndex : public exception{
