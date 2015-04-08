@@ -296,7 +296,7 @@ string DateTime::StandardizeDay(string input){
 string DateTime::StandardizeTime(string input){
 	string output;
 	string result = input;
-	string period;
+	string period = "am";
 	int found;
 	int hour;
 	int mins;
