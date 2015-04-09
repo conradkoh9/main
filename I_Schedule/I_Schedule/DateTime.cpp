@@ -215,7 +215,7 @@ string DateTime::StandardizeTriple(vector<string> input){
 			}
 		}
 	}
-	output = time + " " + date;
+	output = time + "on " + date;
 	return output;
 }
 
@@ -361,6 +361,18 @@ string DateTime::StandardizeTime(string input){
 	hourout << setw(2) << setfill('0') << hour;
 
 	output = hourout.str() + ":" + minout.str() + period;
+	return output;
+}
+
+string DateTime::TwentyFourHourFormat(){
+	string output;
+	ostringstream min;
+	ostringstream hour;
+
+	min << setw(2) << setfill('0') << _mins;
+	hour << setw(2) << setfill('0') << _hours;
+
+	output = hour.str() + ":" + min.str();
 	return output;
 }
 
