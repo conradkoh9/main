@@ -65,7 +65,9 @@ string DateTime::Standardized(){
 
 string DateTime::GetInfo(){
 	ostringstream out;
-	out << "Date: " << setw(2) << setfill('0') << _day << "/" << setw(2) << setfill('0') << _month << "/" << setw(2) << setfill('0') << _year << endl;
+	out << "Date: " << setw(2) << setfill('0') << _day << "/" << setw(2) << setfill('0')
+		<< _month << "/" << setw(2) << setfill('0') << _year << endl;
+
 	out << "Time: " << setw(2) << setfill('0') << _hours << ":" << setw(2) << setfill('0') << _mins;
 
 	return out.str();

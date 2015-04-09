@@ -1,5 +1,5 @@
 #include "Parser.h"
-
+#include "assert.h"
 
 Parser::Parser()
 {
@@ -26,9 +26,10 @@ Smartstring::COMMAND Parser::IdentifyCommand(string input){
 
 vector<string> Parser::IdentifyTaskFields(string input){
 	Smartstring keyword;
+	Smartstring::FIELD field = Smartstring::FIELD::DESCRIPTION;
 	string info;
 	istringstream in(input);
-	Smartstring::FIELD field = Smartstring::FIELD::DESCRIPTION;
+	
 	int vectorSize = keyword.numberOfKeywords; //this gets the number of keywords recognized in our system. 
 
 	//start initialize vector
@@ -70,9 +71,9 @@ Smartstring::LIST Parser::IdentifyList(string input){
 
 //@author A0094213M
 string Parser::RemoveCommand(string input){
-	string command;
-	string remainder = ""; 
+	string command; 
 	string userInput;
+	string remainder = "";
 	istringstream in(input);
 
 	if (in >> command){
