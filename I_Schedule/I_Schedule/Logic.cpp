@@ -91,7 +91,7 @@ string Logic::Execute(string input){
 			feedback = Save(remainder);
 			break;
 		}
-		case (Smartstring::COMMAND::EMPTYSLOTS) : {
+		case (Smartstring::COMMAND::FREE) : {
 			feedback = EmptySlots(remainder);
 			break;
 		}

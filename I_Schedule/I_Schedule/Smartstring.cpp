@@ -20,7 +20,7 @@ const string Smartstring::COMMAND_EDIT = "edit";
 const string Smartstring::COMMAND_SAVE = "save";
 const string Smartstring::COMMAND_SEARCH = "search";
 const string Smartstring::COMMAND_COMPLETE = "complete";
-const string Smartstring::COMMAND_EMPTYSLOTS = "emptyslots";
+const string Smartstring::COMMAND_EMPTYSLOTS = "free";
 const string Smartstring::COMMAND_UNDO = "undo";
 const string Smartstring::COMMAND_LOAD = "load";
 
@@ -173,7 +173,7 @@ Smartstring::COMMAND Smartstring::Command(){
 		return Smartstring::COMMAND::COMPLETE;
 	}
 	if (description == COMMAND_EMPTYSLOTS){
-		return Smartstring::COMMAND::EMPTYSLOTS;
+		return Smartstring::COMMAND::FREE;
 	}
 	if (description == COMMAND_UNDO){
 		return Smartstring::COMMAND::UNDO;
