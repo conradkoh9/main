@@ -298,7 +298,7 @@ string Storage::SearchEmptySlots(string input){
 		DateTime* dt = new DateTime(input);
 		string stdtm = dt->Standardized();
 		if (dt->isValidFormat){
-			InitializeDayTask(input);
+			InitializeDayTask(stdtm);
 			SetDayCalendar();
 			return GetEmptySlots();
 		}
