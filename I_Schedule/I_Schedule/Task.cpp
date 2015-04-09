@@ -388,7 +388,7 @@ size_t Task::LevenshteinDistance(const std::string &s1, const std::string &s2){
 	return result;
 }
 
-
+//author A0119513L
 bool Task::isFloating(){
 	bool floating = false;
 	if (enddate == "" && startdate == "")
@@ -396,6 +396,7 @@ bool Task::isFloating(){
 	return floating;
 }
 
+//author A0119513L	
 bool Task::isDeadline(){
 	bool deadline = false;
 	if (enddate != "" && startdate == "")
@@ -403,6 +404,7 @@ bool Task::isDeadline(){
 	return deadline;
 }
 
+//@author A0119513L
 bool Task::isTimed(){
 	bool timed = false;
 	if (enddate != "" && startdate != "")
