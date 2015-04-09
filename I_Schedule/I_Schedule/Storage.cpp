@@ -246,11 +246,11 @@ string Storage::Undo(){
 }
 
 
-//@author Ziqi
-//please replace the tag above with your matriculation number
+
 //====================================================================
 //Power Search
 //====================================================================
+//@author a0119491B
 string Storage::Search(string input){
 	vector<Task*> PowerSearch_Result = PowerSearch(input);
 	vector<Task*> NearSearch_Result = NearSearch(input);
@@ -266,6 +266,7 @@ string Storage::Search(string input){
 	}
 }
 
+//@author A0119491B
 vector<Task*> Storage::PowerSearch(string input){
 	vector<Task*>::iterator iter;
 	vector<Task*> searchResult;
@@ -278,6 +279,7 @@ vector<Task*> Storage::PowerSearch(string input){
 	return searchResult;
 }
 
+//@author A0119491B
 vector<Task*> Storage::NearSearch(string input){
 	vector<Task*>::iterator iter;
 	vector<Task*> searchResult;
@@ -290,63 +292,71 @@ vector<Task*> Storage::NearSearch(string input){
 	return searchResult;
 }
 
+//@author A0119491B
 string Storage::SearchEmptySlots(string input){
-	if (dateTime->isDateType(input)){
-		string date = dateTime->ConvertDateTime(input);
-		
-		InitializeDayTask(date);
+	/*if (dateTime->isDateType(input)){
+		string date = dateTime->ConvertDateTime(input);*/
+	DateTime* dt = new DateTime(input);
+	string stdtm = dt->Standardized();
+	if (dt->isValidFormat){
+		InitializeDayTask(input);
 		SetDayCalendar();
 		return GetEmptySlots();
-	}else{
-		return _FEEDBACK_SEARCH_FAILURE;
 	}
+	/*}
+	else{
+		*return _FEEDBACK_SEARCH_FAILURE;
+	}*/
 }
-
+//@author A0119491B
 void Storage::InitializeDayTask(string date){
 	for (int i = 0; i < taskList.size(); i++){
-		string dateTime = taskList[i]->GetStandardStartDateTime();
+		string dateTime = taskList[i]->GetStartDate();
 		size_t position = 0;
-		position = dateTime.find_first_of(" ");
+		position = dateTime.find_first_of(":"); // 17:00pm 07/04/2015 Only this format can be recognized
 		if (position != string::npos){
 			daytask.push_back(taskList[i]);
-		}	
+		}
 	}
 }
 
+//@author A0119491B
 void Storage::SetDayCalendar(){
 	InitializeDayCalendar();
 	SetSleepingTime();
 	SetOccupiedSlots();
 }
 
+//@author A0119491B
 void Storage::InitializeDayCalendar(){
-	for (int i = 0; i < 48; i++){
+	int timeIntervals = 48;
+	for (int i = 0; i < timeIntervals; i++){
 		daycalendar[i] = "empty";
 	}
 }
 
+//@author A0119491B
 void Storage::SetSleepingTime(){
 	int sleeping_time = 14; //from 00:00am to 7:00am 
-	for (int i = 0; i < 14; i++){
+	for (int i = 0; i < sleeping_time; i++){
 		daycalendar[i] = "sleeping";
 	}
-	daycalendar[48] = "sleeping"; //from 23:00pm to 00:00am
-	daycalendar[47] = "sleeping";
+	daycalendar[47] = "sleeping"; //from 23:00pm to 00:00am
+	daycalendar[46] = "sleeping";
 }
 
+//@author A0119491B
 void Storage::SetOccupiedSlots(){
 	for (int i = 0; i < daytask.size(); i++){
-		string startDateTime = daytask[i]->GetStandardStartDateTime();
-		string endDateTime = daytask[i]->GetStandardEndDateTime();
-		size_t StartPos = 0, sPos = 0, ePos = 0;
-		sPos = startDateTime.find_first_of(":");
-		ePos = endDateTime.find_first_of(":");
+		string startDateTime = daytask[i]->GetStartDate();
+		string endDateTime = daytask[i]->GetEndDate();
+		size_t StartPos = 0, sPos = 2, ePos = 2;
 		string startTime, endTime;
 		int start_time, end_time;
-		startTime = startDateTime.substr(StartPos, sPos);
+		startTime = startDateTime.substr(StartPos, sPos); //17:00pm 07/04/2015    This is to get integer 17
 		endTime = endDateTime.substr(StartPos, ePos);
-		start_time = stoi(startTime.c_str());
-		end_time = stoi(endTime.c_str());
+		start_time = atoi(startTime.c_str());
+		end_time = atoi(endTime.c_str());
 
 		int indexStart = 2 * start_time;
 		int indexEnd = 2 * end_time;
@@ -357,19 +367,22 @@ void Storage::SetOccupiedSlots(){
 	}
 }
 
-
+//@auhtor A0119491B
 string Storage::GetEmptySlots(){
 	for (int i = 0; i < 48; i++){
 		if (daycalendar[i] == "empty"){
 			if (i % 2 == 0){
 				int hour = i / 2;
 				ostringstream oss;
-				oss << hour << ":" << "00"<<" "<<"to"<<" "<<hour<<":"<<30<<endl;
+				oss << setw(2) << setfill('0') << hour << ":" << "00" << " " << "to" << " " << setw(2) << setfill('0') << hour << ":" << "30";
+				string dbg = oss.str();
 				emptyslots.push_back(oss.str());
-			}else{
-				int hour = i / 2 - 1;
+			}
+			else{
+				int hour = i / 2;
 				ostringstream oss;
-				oss << hour << ":" << "30" << " " << "to" << " "<<hour+1<<":"<<00<<endl;
+				oss << setw(2) << setfill('0') << hour << ":" << "30" << " " << "to" << " " << setw(2) << setfill('0') << hour + 1 << ":" << "00";
+				string dbg = oss.str();
 				emptyslots.push_back(oss.str());
 			}
 		}

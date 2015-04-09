@@ -190,7 +190,8 @@ string Logic::Save(string input){
 }
 
 string Logic::EmptySlots(string input){
-	string feedback = storage->SearchEmptySlots(input);
+	string feedback = "empty slots";
+	mout << storage->SearchEmptySlots(input);
 	return feedback;
 }
 
