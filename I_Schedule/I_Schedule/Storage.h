@@ -199,6 +199,9 @@ private:
 
 	} invalid_list;
 
+	class InvalidInput : public exception{
+	} invalid_input;
+
 };
 
 

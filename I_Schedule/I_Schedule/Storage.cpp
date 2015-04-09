@@ -294,19 +294,21 @@ vector<Task*> Storage::NearSearch(string input){
 
 //@author A0119491B
 string Storage::SearchEmptySlots(string input){
-	/*if (dateTime->isDateType(input)){
-		string date = dateTime->ConvertDateTime(input);*/
-	DateTime* dt = new DateTime(input);
-	string stdtm = dt->Standardized();
-	if (dt->isValidFormat){
-		InitializeDayTask(input);
-		SetDayCalendar();
-		return GetEmptySlots();
+	try{
+		DateTime* dt = new DateTime(input);
+		string stdtm = dt->Standardized();
+		if (dt->isValidFormat){
+			InitializeDayTask(input);
+			SetDayCalendar();
+			return GetEmptySlots();
+		}
+		else{
+			throw invalid_input;
+		}
 	}
-	/*}
-	else{
-		*return _FEEDBACK_SEARCH_FAILURE;
-	}*/
+	catch (InvalidInput){
+		return _FEEDBACK_SEARCH_FAILURE;
+	}
 }
 //@author A0119491B
 void Storage::InitializeDayTask(string date){
