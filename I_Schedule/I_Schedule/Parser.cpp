@@ -91,17 +91,17 @@ string Parser::RemoveCommand(string input){
 string Parser::RemoveKeywords(string input){
 	istringstream in(input);
 
-	Smartstring current;
-	string output;
-	while (in >> current){
-		if (!current.IsKeyword()){
-			output = current.ToString() + " ";
+	Smartstring userInput;
+	string remainder;
+	while (in >> userInput){
+		if (!userInput.IsKeyword()){
+			remainder = userInput.ToString() + " ";
 		}
 	}
-	int endIdx = output.length() - 1;
-	output.substr(0, endIdx - 1); // remove white space at the end
+	int endIdx = remainder.length() - 1;
+	remainder = remainder.substr(0, endIdx - 1); // remove white space at the end
 
-	return output;
+	return remainder;
 }
 
 
