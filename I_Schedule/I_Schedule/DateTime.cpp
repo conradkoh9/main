@@ -1,3 +1,4 @@
+//@author A0094213M
 #include "DateTime.h"
 
 const string DateTime::DATETYPE_MONDAY1 = "Monday";

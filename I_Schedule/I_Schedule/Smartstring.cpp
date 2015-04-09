@@ -1,3 +1,4 @@
+//@author A0094213M
 #include "Smartstring.h"
 #include <iostream>
 //note: static fields always need to be redeclared in cpp file
