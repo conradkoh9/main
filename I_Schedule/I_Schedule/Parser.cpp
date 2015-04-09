@@ -105,14 +105,15 @@ string Parser::RemoveKeywords(string input){
 }
 
 
-
+//@author A0094213M
 vector<string> Parser::Tokenize(string input){
 	istringstream in(input);
-	vector<string> tokens;
-	string buffer;
-	while (in >> buffer){
-		tokens.push_back(buffer);
+	vector<string> infos;
+	string token;
+
+	while (in >> token){
+		infos.push_back(token);
 	}
 
-	return tokens;
+	return infos;
 }
