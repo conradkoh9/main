@@ -68,26 +68,25 @@ Smartstring::LIST Parser::IdentifyList(string input){
 	}
 }
 
+//@author A0094213M
 string Parser::RemoveCommand(string input){
-	string buffer;
-	string remainder;
+	string command;
+	string remainder = ""; 
+	string userInput;
 	istringstream in(input);
-	if (in >> buffer){
-		if (getline(in, remainder)){
-			int endIdx = remainder.length() - 1;
-			remainder = remainder.substr(1, endIdx); //remove white space
-		}
-		else{
-			remainder = ""; //manage unwanted values for remainder if getline or in fails
+
+	if (in >> command){
+		if (getline(in, userInput)){
+			int endIdx = userInput.length() - 1;
+			remainder = userInput.substr(1, endIdx); //remove white space
 		}
 	}
-	else{
-		remainder = ""; //manage unwanted values for remainder if getline or in fails
-	}
+	
 	return remainder;
 	
 }
 
+//@author A0094213M
 string Parser::RemoveKeywords(string input){
 	istringstream in(input);
 
