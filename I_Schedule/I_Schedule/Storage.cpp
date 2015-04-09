@@ -371,7 +371,82 @@ void Storage::SetOccupiedSlots(){
 
 //@auhtor A0119491B
 string Storage::GetEmptySlots(){
-	for (int i = 0; i < 48; i++){
+	int starthr = 0, endhr = 0, i = 0, time_intervals = 48;
+	int sthour = 0, endhour = 0;
+	while (i < time_intervals)
+	{
+		if (daycalendar[i] == "empty")
+		{
+			endhr++;
+		}
+		else if (daycalendar[i] == "busy" )
+		{
+			if ((starthr%2==0) && (endhr%2 == 0) && (starthr!=endhr))
+			{
+				ostringstream oss;
+				sthour = starthr / 2;
+				endhour = endhr / 2;
+				oss << setw(2) << setfill('0') << sthour << ":" << "00" << " " << "to" << " " << setw(2) << setfill('0') << endhour << ":" << "00";
+				string dbg = oss.str();
+				emptyslots.push_back(oss.str());
+			}
+			else if ((starthr % 2 == 0) && (endhr % 2 != 0) && (starthr != endhr))
+			{
+				ostringstream oss;
+				sthour = starthr / 2;
+				endhour = endhr / 2;
+				oss << setw(2) << setfill('0') << sthour << ":" << "00" << " " << "to" << " " << setw(2) << setfill('0') << endhour << ":" << "30";
+				string dbg = oss.str();
+				emptyslots.push_back(oss.str());
+			}
+			else if ((starthr%2 != 0) && (endhr%2 == 0) && (starthr != endhr)){
+				ostringstream oss;
+				sthour = starthr / 2;
+				endhour = endhr / 2;
+				oss << setw(2) << setfill('0') << sthour << ":" << "30" << " " << "to" << " " << setw(2) << setfill('0') << endhour << ":" << "00";
+				string dbg = oss.str();
+				emptyslots.push_back(oss.str());
+			}
+			else if ((starthr%2 != 0) && (endhr%2 != 0) && (starthr != endhr))
+			{
+				ostringstream oss;
+				sthour = starthr / 2;
+				endhour = endhr / 2;
+				oss << setw(2) << setfill('0') << sthour << ":" << "30" << " " << "to" << " " << setw(2) << setfill('0') << endhour << ":" << "30";
+				string dbg = oss.str();
+				emptyslots.push_back(oss.str());
+			}
+			else{}
+			
+			starthr= i;
+			endhr = starthr;
+		}
+		else{}
+
+		i++;
+	}
+	
+	/*for (int i = 0; i < 48; i++){
+		starthr = endhr;
+		while (daycalendar[i] == "empty"){
+			endhr++;
+		}
+
+		if (starthr % 2 == 0 ){
+			int hour = i / 2;
+			ostringstream oss;
+			oss << setw(2) << setfill('0') << hour << ":" << "00" << " " << "to" << " " << setw(2) << setfill('0') << hour << ":" << "30";
+			string dbg = oss.str();
+			emptyslots.push_back(oss.str());
+		}else{
+			int hour = i / 2;
+			ostringstream oss;
+			oss << setw(2) << setfill('0') << hour << ":" << "30" << " " << "to" << " " << setw(2) << setfill('0') << hour + 1 << ":" << "00";
+			string dbg = oss.str();
+			emptyslots.push_back(oss.str());
+		}
+
+
 		if (daycalendar[i] == "empty"){
 			if (i % 2 == 0){
 				int hour = i / 2;
@@ -388,7 +463,7 @@ string Storage::GetEmptySlots(){
 				emptyslots.push_back(oss.str());
 			}
 		}
-	}
+	}*/
 	return ToString(emptyslots);
 }
 
