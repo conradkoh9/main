@@ -14,9 +14,9 @@ using namespace logging;
 class Storage
 {
 private:
-	enum FILETYPE { CSV, TXT, INVALID };
+	enum FILETYPE { TXT, INVALID };
 	string _filename;
-	const string _archivefile = "archive.csv";
+	const string _archivefile = "archive.txt";
 	//DATA STORAGE VARIABLES
 	vector<string> _filecontent;
 public:
@@ -134,9 +134,7 @@ private:
 	static const string _rtfcolorbluesuffix;
 
 	//File Details
-	const string _FILE_EXTENSION_CSV = ".csv";
 	const string _FILE_EXTENSION_TXT = ".txt";
-	const string _DELIMITERS_CSV = "\"";
 	const string _FILENAME_DEFAULT = "default.txt";
 	const string _FILENAME_SESSION_DATA = "data.sys";
 
@@ -165,16 +163,14 @@ private:
 
 	//Save methods
 	string SaveSessionData();
-	string WriteToFile(); //chooses whether to write using WriteToCSV method or WriteToTXT method
-	string WriteToCSV(); //writes tasks to CSV readable format
+	string WriteToFile(); 
 	string WriteToTXT(); //writes tasks to TXT readable format
 	string WriteToArchive(); //writes archive vector to archive
 
 	//Load methods
 	string LoadSessionData();
 	string LoadRawFileContent(); //reads from a file and stores all the content into _filecontent vector
-	string LoadTaskList(); //chooses whether LoadCSVContent is called or LoadTXTContent is called, or that the current file has an invalid format
-	string LoadCSVContent(); //loads _filecontent vector into taskList vector assuming CSV format
+	string LoadTaskList(); //Loads Tasklist from FileContent vector
 	string LoadTXTContent(); //loads _filecontent vector into taskList vector assuming TXT format
 
 	//Complete methods

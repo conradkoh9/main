@@ -215,25 +215,6 @@ string Storage::Load(string filename){
 		feedback = _FEEDBACK_LOAD_FAILURE;
 	}
 	return feedback;
-/*
-
-	FILETYPE filetype = IdentifyFileType(filename);
-	if (filetype != FILETYPE::INVALID){
-		string feedback;
-		_filename = filename;
-		ClearVectors();
-		ClearUndoVector();
-		feedback = LoadRawFileContent();
-		feedback = LoadTaskList();
-		Update();
-		logfile << _FEEDBACK_LOAD_SUCCESS << " " << filename;
-		return feedback;
-	}
-	else{
-		logfile << _FEEDBACK_FILETYPE_INVALID;
-		return _FEEDBACK_FILETYPE_INVALID;
-	}
-*/
 }
 
 
@@ -814,10 +795,6 @@ string Storage::WriteToFile(){
 	FILETYPE filetype = IdentifyFileType(_filename);
 	string feedback;
 	switch (filetype){
-	case (FILETYPE::CSV) : {
-		feedback = WriteToCSV();
-		break;
-	}
 	case(FILETYPE::TXT) : {
 		feedback = WriteToTXT();
 		break;
@@ -829,26 +806,6 @@ string Storage::WriteToFile(){
 	}
 	return feedback;
 
-}
-
-//@author A0099303A
-string Storage::WriteToCSV(){
-	ostringstream out;
-	ofstream of;
-	of.open(_filename.c_str(), ios::app);
-	vector<Task*>::iterator iter;
-	int size = taskList.size();
-	for (iter = taskList.begin(); iter != taskList.end(); ++iter){
-		if (iter + 1 != taskList.end()){
-			out << (*iter)->ToCSVString() << endl;
-		}
-		else{
-			out << (*iter)->ToCSVString();
-		}
-	}
-	string str = out.str();
-	of << out.str();
-	return _FEEDBACK_WRITE_SUCCESS;
 }
 
 //@author A0099303A
@@ -877,7 +834,7 @@ string Storage::WriteToArchive(){
 	vector<Task*>::iterator iter;
 	int size = archiveList.size();
 	for (iter = archiveList.begin(); iter != archiveList.end(); ++iter){
-		out << (*iter)->ToCSVString() << endl;
+		out << (*iter)->ToTXTString() << endl;
 	}
 	archiveList.clear();
 	string str = out.str();
@@ -935,10 +892,6 @@ string Storage::LoadTaskList(){
 	FILETYPE filetype = IdentifyFileType(_filename);
 	string feedback;
 	switch (filetype){
-	case (FILETYPE::CSV) : {
-		feedback = LoadCSVContent();
-		break;
-	}
 	case(FILETYPE::TXT) : {
 		feedback = LoadTXTContent();
 		break;
@@ -950,38 +903,6 @@ string Storage::LoadTaskList(){
 	}
 	return feedback;
 	
-}
-
-//@author A0099303A
-string Storage::LoadCSVContent(){
-	Smartstring str;
-	const int startfield = Smartstring::FIELD::DESCRIPTION;
-	int currentfield = startfield;
-	int fieldcount = Smartstring::NUMBER_OF_FIELDS;
-	vector<string>::iterator iter;
-	Task* taskptr = new Task();
-	try{
-		int msize = _filecontent.size();
-		for (iter = _filecontent.begin(); iter != _filecontent.end(); ++iter){
-			str = (*iter);
-			vector<string> output = str.ContainedTokenize(_DELIMITERS_CSV);
-			vector<string>::iterator iter2;
-
-			string test = output.front();
-			if (output.size() != Smartstring::NUMBER_OF_FIELDS){
-				throw corrupted_data;
-				return _FEEDBACK_DATA_CORRUPTED;
-			}
-			taskptr = new Task(output);
-			taskList.push_back(taskptr);
-		}
-	}
-
-	catch (out_of_range){
-		return _FEEDBACK_LOAD_FAILURE;
-	}
-	return _FEEDBACK_LOAD_SUCCESS;
-	return _FEEDBACK_LOAD_FAILURE;
 }
 
 //@author A0099303A
@@ -1077,15 +998,7 @@ Storage::FILETYPE Storage::IdentifyFileType(string input){
 	else{
 		return FILETYPE::INVALID;
 	}
-	//else{
-	//	if (input.find(_FILE_EXTENSION_CSV) != string::npos){
-	//		return FILETYPE::INVALID;
-	//		return FILETYPE::CSV;
-	//	}
-	//	else{
-	//		return FILETYPE::INVALID;
-	//	}
-	//}
+
 }
 
 //@author A0099303A
