@@ -23,9 +23,10 @@ Logic::Logic()
 	storage = new Storage();
 	status << _MESSAGE_WELCOME + " " + storage->status.str();
 	string test = storage->GetFloatingList();
-	fout << storage->GetFloatingList();
-	dout << storage->GetDeadlineList();
 	tout << storage->GetTimedList();
+	dout << storage->GetDeadlineList();
+	fout << storage->GetFloatingList();
+
 	mout << storage->ToString();
 	logfile << "Logic created";
 }
@@ -34,9 +35,11 @@ Logic::Logic(string input){
 	parser = new Parser();
 	storage = new Storage(input);
 	status << _MESSAGE_WELCOME;
-	fout << storage->GetFloatingList();
-	dout << storage->GetDeadlineList();
 	tout << storage->GetTimedList();
+	dout << storage->GetDeadlineList();
+	fout << storage->GetFloatingList();
+
+
 	mout << storage->ToString();
 	logfile << "Logic created";
 }
@@ -48,9 +51,10 @@ Logic::~Logic()
 string Logic::Run(string input){
 	string feedback = Execute(input);
 	status << feedback;
+	tout << storage->GetTimedList();
+	dout << storage->GetDeadlineList();
 	fout << storage->GetFloatingList(); 
-	dout << storage->GetDeadlineList(); 
-	tout << storage->GetTimedList(); 
+
 	return feedback;
 }
 
@@ -135,18 +139,17 @@ string Logic::Complete(string input){
 
 
 string Logic::Delete(string taskInput){
-	Smartstring listname;
-	istringstream in(taskInput);
-	int position;
-	in >> listname;
-	in >> position;
-	//delete from list function
-	string feedback = storage->DeleteFromList(position, listname.ListType());
-	mout << storage->ToString();
+	//Smartstring listname;
+	//istringstream in(taskInput);
+	//int position;
+	//in >> listname;
+	//in >> position;
+	////delete from list function
+	//string feedback = storage->DeleteFromList(position, listname.ListType());
+	//mout << storage->ToString();
 
-	//original delete function
-	/*int position = atoi(taskInput.c_str());
-	string feedback = storage->Delete(position);*/
+	int position = atoi(taskInput.c_str());
+	string feedback = storage->Delete(position);
 	return feedback;
 }
 

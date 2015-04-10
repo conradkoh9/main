@@ -115,11 +115,11 @@ namespace I_ScheduleLibraryTest{
 			result = storage->Search(input[Smartstring::FIELD::DESCRIPTION]);
 			Assert::AreEqual(expected[1], result);
 
-			//Testing Close Search
-			input[Smartstring::FIELD::DESCRIPTION] = "howork";
-			RESULT = storage->NearSearch(input[Smartstring::FIELD::DESCRIPTION]);
-			result = storage->ToString(RESULT);
-			Assert::AreEqual(expected[0], result);
+			////Testing Close Search
+			//input[Smartstring::FIELD::DESCRIPTION] = "howork";
+			//RESULT = storage->NearSearch(input[Smartstring::FIELD::DESCRIPTION]);
+			//result = storage->ToString(RESULT);
+			//Assert::AreEqual(expected[0], result);
 
 		}
 

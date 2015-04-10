@@ -88,6 +88,8 @@ string Storage::DeleteFromList(int position, Smartstring::LIST list){
 
 //@author A0119513L
 string Storage::Delete(int position){
+
+	//Smartstring::LIST list = IdentifyListFromIndex(position);
 	string feedback = "";
 	try{
 		lastList = taskList;
@@ -312,7 +314,7 @@ string Storage::Search(string input){
 	if (PowerSearch_Result.empty()){
 		return _FEEDBACK_SEARCH_FAILURE;
 	}else{
-		return ToString(PowerSearch_Result);
+		return ToString(PowerSearch_Result, 0);
 	}
 }
 
@@ -521,20 +523,23 @@ string Storage::GetFileName(){
 	return _filename;
 }
 
-string Storage::GetFloatingList(){
-	string output = ToString(floatingList);
-	int size = floatingList.size();
-	return ToString(floatingList);
+
+string Storage::GetTimedList(){
+	int startIndex = 1;
+	return ToString(timedList, startIndex);
 }
 
 string Storage::GetDeadlineList(){
-	//string dbg = deadlineList.front()->Task::ToShortString();
-	return ToString(deadlineList);
+	int startIndex = timedList.size() + 1;
+		return ToString(deadlineList, startIndex);
 }
 
-string Storage::GetTimedList(){
-	return ToString(timedList);
+string Storage::GetFloatingList(){
+	int startIndex = timedList.size() + deadlineList.size() + 1;
+	return ToString(floatingList, startIndex);
 }
+
+
 
 
 
@@ -559,18 +564,17 @@ string Storage::ToString(){
 	return out.str();
 }
 
-string Storage::ToString(vector<Task*> V){
+string Storage::ToString(vector<Task*> V, int index){
 	ostringstream out;
-	int index = 0;
 	vector<Task*>::iterator iter;
 	for (iter = V.begin(); iter != V.end(); ++iter){
-		++index;
 		if (iter + 1 != V.end()){
 			out << _rtfboldtagstart << index << ": " << _rtfboldtagend << (*iter)->ToShortString() << endl;
 		}
 		else{
 			out << _rtfboldtagstart << index << ": " << _rtfboldtagend << (*iter)->ToShortString();
 		}
+		index++;
 	}
 	return out.str();
 }
@@ -1176,4 +1180,25 @@ void Storage::ReplaceTask(Task* taskptr, Task* replacer){
 	}
 
 	return;
+}
+
+//====================================================================
+//Identification of List methods
+//====================================================================
+
+//@author A0099303A
+Smartstring::LIST Storage::IdentifyListFromIndex(int index){
+
+	Smartstring::LIST list;
+	if (index < deadlineList.size()){
+		return Smartstring::LIST::TIMED;
+	}
+	else{
+		if (index > deadlineList.size()){
+			return Smartstring::LIST::FLOAT;
+		}
+		else{
+			return Smartstring::LIST::DEADLINE;
+		}
+	}
 }

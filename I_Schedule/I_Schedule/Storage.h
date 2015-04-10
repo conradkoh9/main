@@ -17,7 +17,6 @@ private:
 	enum FILETYPE { CSV, TXT, INVALID };
 	string _filename;
 	const string _archivefile = "archive.csv";
-
 	//DATA STORAGE VARIABLES
 	vector<string> _filecontent;
 public:
@@ -48,6 +47,7 @@ public:
 	//FUNCTIONS
 	string Add(Task* task);
 	string DeleteFromList(int position, Smartstring::LIST list);
+	string Delete2(int position);
 	string Delete(int position);
 	string Edit(int position, Smartstring::LIST list, vector<string> newinfo);
 	string Complete(int position, Smartstring::LIST list);
@@ -78,17 +78,16 @@ public:
 	string GetTask(int index);
 	string GetFileName();
 
+	string GetTimedList();
 	string GetFloatingList();
 	string GetDeadlineList();
-	string GetTimedList();
-
 
 	//Formatted display methods
 	string DayView();
 
 	//To be refactored because it is not apparent what storage->ToString should give
 	string ToString();
-	string ToString(vector<Task*> V);
+	string ToString(vector<Task*> V, int firstIdx);
 	string ToString(vector<string> v);
 
 private:
@@ -195,6 +194,8 @@ private:
 	//Replace methods
 	void ReplaceTask(Task* existing, Task* replacer);
 
+	//Indentification of list methods
+	Smartstring::LIST IdentifyListFromIndex(int index);
 
 	//exceptions
 	class InvalidIndex : public exception{
