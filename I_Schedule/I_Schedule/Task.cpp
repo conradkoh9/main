@@ -15,6 +15,11 @@ const string Task::_FEEDBACK_STATUS_SET = "STATUS SET";
 const string Task::_FEEDBACK_DEFAULTDATE_SET = "DEFAULT END DATE SET";
 const string Task::_FEEDBACK_STANDARD_START_DATE_SET = "STANDARD FORMAT OF START DATE SET";
 const string Task::_FEEDBACK_STANDARD_END_DATE_SET = "STAMDARD FORMAT OF END DATE SET";
+const string Task::_FEEDBACK_SDATE_SET = "START DATE SET";
+const string Task::_FEEDBACK_EDATE_SET = "END DATE SET";
+const string Task::_FEEDBACK_STIME_SET = "START TIME SET";
+const string Task::_FEEDBACK_ETIME_SET = "END TIME SET";
+
 
 const string Task::_STATUS_COMPLETE = "Complete";
 const string Task::_STATUS_INCOMPLETE = "Incomplete";
@@ -27,6 +32,10 @@ Task::Task()
 	description = "";
 	priority = "";
 	enddate = "";
+	sdate = "";
+	edate = "";
+	stime = "";
+	etime = "";
 	status = _STATUS_INCOMPLETE;
 }
 
@@ -52,6 +61,10 @@ Task::Task(Task* task){
 	description = "";
 	priority = "";
 	enddate = "";
+	sdate = "";
+	edate = "";
+	stime = "";
+	etime = "";
 	status = _STATUS_INCOMPLETE;
 
 	if (!task == NULL){
@@ -60,6 +73,10 @@ Task::Task(Task* task){
 		enddate = task->GetEndDate();
 		priority = task->GetPriority();
 		status = task->GetStatus();
+		sdate = task->GetSDate();
+		edate = task->GetEDate();
+		stime = task->GetSTime();
+		etime = task->GetETime();
 	}
 }
 
@@ -125,6 +142,51 @@ string Task::SetStatus(string input){
 	return _FEEDBACK_STATUS_SET;
 }
 
+string Task::SetSDate(){
+	int sPos;
+	sPos = startdate.find_first_of("/");
+	if (sPos != string::npos){
+		sPos = sPos - 2;
+		sdate = startdate.substr(sPos);
+		return _FEEDBACK_SDATE_SET;
+	}
+	return "";
+}
+
+string Task::SetEDate(){
+	int sPos;
+	sPos = enddate.find_first_of("/");
+	if (sPos != string::npos){
+		sPos = sPos - 2;
+		edate = enddate.substr(sPos);
+		return _FEEDBACK_EDATE_SET;
+	}
+	return "";
+}
+
+string Task::SetSTime(){
+	int sPos;
+	sPos = stime.find_first_of(":");
+	if (sPos != string::npos){
+		sPos = sPos - 2;
+		stime = stime.substr(sPos);
+		return _FEEDBACK_STIME_SET;
+	}
+	return "";
+}
+
+string Task::SetETime(){
+	int sPos;
+	sPos = etime.find_first_of(":");
+	if (sPos != string::npos){
+		sPos = sPos - 2;
+		etime = etime.substr(sPos);
+		return _FEEDBACK_ETIME_SET;
+	}
+	return "";
+	return "";
+}
+
 string Task::SetDefaultEnddate(){
 	if (standardStart != "" && standardEnd == "")
 	{
@@ -153,6 +215,22 @@ string Task::GetPriority(){
 
 string Task::GetStatus(){
 	return status;
+}
+
+string Task::GetSDate(){
+	return sdate;
+}
+
+string Task::GetEDate(){
+	return edate;
+}
+
+string Task::GetSTime(){
+	return stime;
+}
+
+string Task::GetETime(){
+	return etime;
 }
 
 

@@ -16,6 +16,10 @@ private:
 	string priority;
 	string standardStart;
 	string standardEnd;
+	string sdate;
+	string edate;
+	string stime;
+	string etime;
 	string status;
 	DateTime* standardStartdt;
 	DateTime* standardEnddt;
@@ -43,6 +47,10 @@ public:
 	static const string _FEEDBACK_DEFAULTDATE_SET;
 	static const string _FEEDBACK_STANDARD_START_DATE_SET;
 	static const string _FEEDBACK_STANDARD_END_DATE_SET;
+	static const string _FEEDBACK_SDATE_SET;
+	static const string _FEEDBACK_EDATE_SET;
+	static const string _FEEDBACK_STIME_SET;
+	static const string _FEEDBACK_ETIME_SET;
 
 	static const string _STATUS_COMPLETE;
 	static const string _STATUS_INCOMPLETE;
@@ -56,6 +64,10 @@ public:
 	string SetEndDate(string input);
 	string SetPriority(string input);
 	string SetStatus(string input);
+	string SetSDate();
+	string SetEDate();
+	string SetSTime();
+	string SetETime();
 	string SetDefaultEnddate();
 
 	string GetDescription();
@@ -63,7 +75,10 @@ public:
 	string GetEndDate();
 	string GetPriority();
 	string GetStatus();
-
+	string GetSDate();
+	string GetEDate();
+	string GetSTime();
+	string GetETime();
 
 	string MarkComplete();
 
