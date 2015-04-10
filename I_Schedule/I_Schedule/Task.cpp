@@ -400,11 +400,14 @@ bool Task::isContains(string input){
 //@author A0119491B
 bool Task::isContainInDate(string input){
 	DateTime* dt = new DateTime(input);
+	int pos_start, pos_end; 
 	if (dt->isValidFormat){
 		string datetime = dt->Standardized();
-		if (datetime == startdate || datetime == enddate){
-			return true;
-		}
+		pos_start = startdate.find(datetime);
+		pos_end = enddate.find(datetime);
+			if (pos_start != string::npos || pos_end != string::npos){
+				return true;
+			}
 	}
 	return false;
 }
@@ -428,14 +431,17 @@ bool Task::isContainDescription(string input){
 	Smartstring* smartstring_in = new Smartstring(input);
 	Smartstring* smartstring_des = new Smartstring(description);
 	bool found;
+	int pos;
+	
 	token_input = smartstring_in->Tokenize(" ");
 	token_description = smartstring_des->Tokenize(" ");
 	for (int i = 0; i < token_input.size(); i++){   //tokenize the input. search the token one by one to see if these words all in the description
 		found = false;
 		for (int j = 0; j < token_description.size(); j++){ //tokenize the description. compare each token of description with each token of the input
-			if (token_input[i] == token_description[j] || isNearMatch(token_input[i], token_description[j])){
-				found = true;
-			}
+				pos = token_description[j].find(token_input[i]);
+				if (pos != string::npos || isNearMatch(token_input[i], token_description[j])){
+					found = true;
+				}
 		}
 
 		if (!found){  //after comparison, the token of input is not contained in description. then return false
