@@ -638,9 +638,31 @@ namespace I_ScheduleLibraryTest{
 			isCommand_Actual = test2.IsCommand();
 
 			Assert::AreEqual(isCommand_Expected, isCommand_Actual);
-
-
-
 		}
+
+
+		TEST_METHOD(SMARTSTRING_ISKEYWORD){
+			bool isKeyword_Expected;
+			bool isKeyword_Actual;
+
+			//test for true case
+			Smartstring test1("due:");
+			isKeyword_Expected = true;
+			isKeyword_Actual = test1.IsKeyword();
+
+			Assert::AreEqual(isKeyword_Expected, isKeyword_Actual);
+
+			//test for false case
+			Smartstring test2("due");
+			isKeyword_Expected = false;
+			isKeyword_Actual = test2.IsKeyword();
+
+			Assert::AreEqual(isKeyword_Expected, isKeyword_Actual);
+
+		
+		
+		
+		}
+
 	};
 }
