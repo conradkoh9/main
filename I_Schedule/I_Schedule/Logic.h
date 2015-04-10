@@ -33,6 +33,7 @@ public:
 	string Save(string input);
 	string Clear();
 	string Undo();
+	string Archived(string input);
 	string Load(string input);
 
 	//display streams

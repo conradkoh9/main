@@ -85,7 +85,8 @@ public:
 	//Formatted display methods
 	string DayView();
 
-	//To be refactored because it is not apparent what storage->ToString should give
+	//ToString methods
+	string ArchiveToString();
 	string ToString();
 	string ToString(vector<Task*> V, int firstIdx);
 	string ToString(vector<string> v);

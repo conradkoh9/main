@@ -11,7 +11,7 @@ private:
 	
 public:
 	string description;
-	enum COMMAND { ADD, CLEAR, DELETE, DISPLAY, EDIT, SAVE, SEARCH, COMPLETE, FREE, LOAD, UNDO, INVALID_CMD };
+	enum COMMAND { ADD, CLEAR, DELETE, DISPLAY, EDIT, SAVE, SEARCH, COMPLETE, FREE, LOAD, UNDO, ARCHIVED, INVALID_CMD };
 	enum FIELD { DESCRIPTION, STARTDATE, ENDDATE, PRIORITY, STATUS, INVALID_FLD };
 	enum LIST{ TIMED, DEADLINE, FLOAT, DEFAULT };
 
@@ -32,6 +32,7 @@ public:
 	static const string COMMAND_EMPTYSLOTS;
 	static const string COMMAND_UNDO;
 	static const string COMMAND_LOAD;
+	static const string COMMAND_ARCHIVED;
 	static const int NUMBER_OF_FIELDS;
 
 

@@ -23,6 +23,7 @@ const string Smartstring::COMMAND_COMPLETE = "complete";
 const string Smartstring::COMMAND_EMPTYSLOTS = "free";
 const string Smartstring::COMMAND_UNDO = "undo";
 const string Smartstring::COMMAND_LOAD = "load";
+const string Smartstring::COMMAND_ARCHIVED = "archived";
 
 
 const string Smartstring::KEYWORD_ENDDATE_1 = "date:";
@@ -91,6 +92,7 @@ void Smartstring::Initialize(){
 		commands.push_back(COMMAND_COMPLETE);
 		commands.push_back(COMMAND_UNDO);
 		commands.push_back(COMMAND_LOAD);
+		commands.push_back(COMMAND_ARCHIVED);
 
 		keywords.push_back(KEYWORD_ENDDATE_1);
 		keywords.push_back(KEYWORD_ENDDATE_2);
@@ -180,6 +182,9 @@ Smartstring::COMMAND Smartstring::Command(){
 	}
 	if (description == COMMAND_LOAD){
 		return Smartstring::COMMAND::LOAD;
+	}
+	if (description == COMMAND_ARCHIVED){
+		return Smartstring::COMMAND::ARCHIVED;
 	}
 
 	assert(!IsCommand()); //takes care of the case when we add cases to field but did not update static list commands[];

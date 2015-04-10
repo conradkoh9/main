@@ -526,8 +526,25 @@ string Storage::GetFloatingList(){
 
 //@author unknown
 //====================================================================
-//To be refactored
+//ToString methods
 //====================================================================
+string Storage::ArchiveToString(){
+	Update();
+	ostringstream out;
+	int index = 0;
+	vector<Task*>::iterator iter;
+	for (iter = archiveList.begin(); iter != archiveList.end(); ++iter){
+		++index;
+		if (iter + 1 != taskList.end()){
+			out << _rtfboldtagstart << index << ": " << _rtfboldtagend << (*iter)->ToShortString() << endl;
+		}
+		else{
+			out << _rtfboldtagstart << index << ": " << _rtfboldtagend << (*iter)->ToShortString();
+		}
+	}
+	return out.str();
+}
+
 string Storage::ToString(){
 	Update();
 	ostringstream out;

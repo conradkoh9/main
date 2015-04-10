@@ -107,6 +107,10 @@ string Logic::Execute(string input){
 			feedback = Load(remainder);
 			break;
 		}
+		case (Smartstring::COMMAND::ARCHIVED) : {
+			feedback = Archived(remainder);
+			break;
+		}
 		case(Smartstring::COMMAND::INVALID_CMD) : {
 			feedback = Invalid();
 			break;
@@ -213,5 +217,11 @@ string Logic::Undo(){
 
 string Logic::Load(string input){
 	string feedback = storage->Load(input);
+	return feedback;
+}
+
+string Logic::Archived(string input){
+	string feedback = "Viewing archived";
+	mout << storage->ArchiveToString();
 	return feedback;
 }
