@@ -133,6 +133,7 @@ public:
 	bool CompareDateTime(string, string);
 	bool isDateType(string);
 	bool isTimeType(string);
+	string GetDefaultDuration();  //Ziqi needs it
 
 private:
 	int _day;
