@@ -28,6 +28,10 @@ const string Storage::_FEEDBACK_INVALID_INDEX = "Invalid index.";
 const string Storage::_FEEDBACK_INVALID_LIST = "Invalid list entered";
 const string Storage::_FEEDBACK_UPDATE_SUCCESS = "Update success.";
 const string Storage::_FEEDBACK_EDIT_SUCCESS = "Edit success.";
+const string Storage::_FEEDBACK_DATA_CORRUPTED = "Data corrupted.";
+const string Storage::_FEEDBACK_FILETYPE_INVALID = "Invalid filetype.";
+const string Storage::_FEEDBACK_DEFAULT_SESSION_STARTED = "Default session started.";
+const string Storage::_FEEDBACK_STARTUP = "Using ";
 //formatting variables
 const string Storage::_rtfboldtagstart = "\\b ";
 const string Storage::_rtfboldtagend = "\\b0 ";
@@ -41,12 +45,13 @@ const string Storage::_rtfcolorbluesuffix = "\\cf0 ";
 //@author A0099303A
 //PUBLIC =================================================================================================
 Storage::Storage(){
-	status << Load();
+	Load();
+	status << _FEEDBACK_STARTUP << _filename;
 }
 
 Storage::Storage(string input){
 	_filename = input;
-	Update();
+	SaveSessionData();
 }
 
 Storage::~Storage(){
@@ -151,20 +156,65 @@ string Storage::Complete(int position, Smartstring::LIST list){
 
 //@author A0099303A
 string Storage::Load(){
-	logfile << "load called.";
-	string feedback;
 	logfile << LoadSessionData(); //change active file
-	ClearVectors();
-	feedback = LoadRawFileContent();
-	logfile << feedback;
-	logfile << LoadTaskList();
-	Update();
-	logfile << "end of load.";
+	FILETYPE filetype = IdentifyFileType(_filename);
+	string feedback;
+	try{
+		if (filetype != FILETYPE::INVALID){
+			logfile << "load called.";
+			ClearVectors();
+			ClearUndoVector();
+			logfile << LoadRawFileContent();
+			feedback = LoadTaskList();
+			logfile << feedback;
+			Update();
+			logfile << "end of load.";
+
+		}
+		else{
+			logfile << _FEEDBACK_FILETYPE_INVALID;
+			throw load_failure;
+		}
+	}
+	
+	catch (LoadFailure){
+		logfile << DefaultSession();
+		feedback = _FEEDBACK_LOAD_FAILURE;
+	}
 	return feedback;
+
 }
 
 //@author A0099303A
 string Storage::Load(string filename){
+
+	FILETYPE filetype = IdentifyFileType(filename);
+	string feedback;
+	try{
+		if (filetype != FILETYPE::INVALID){
+			_filename = filename;
+			logfile << "load called.";
+			ClearVectors();
+			ClearUndoVector();
+			logfile << LoadRawFileContent();
+			feedback = LoadTaskList();
+			logfile << feedback;
+			Update();
+			logfile << "end of load.";
+
+		}
+		else{
+			logfile << _FEEDBACK_FILETYPE_INVALID;
+		}
+	}
+
+	catch (LoadFailure){
+		logfile << DefaultSession();
+		feedback = _FEEDBACK_LOAD_FAILURE;
+	}
+	return feedback;
+/*
+
 	FILETYPE filetype = IdentifyFileType(filename);
 	if (filetype != FILETYPE::INVALID){
 		string feedback;
@@ -172,16 +222,16 @@ string Storage::Load(string filename){
 		ClearVectors();
 		ClearUndoVector();
 		feedback = LoadRawFileContent();
-		LoadTaskList();
+		feedback = LoadTaskList();
 		Update();
 		logfile << _FEEDBACK_LOAD_SUCCESS << " " << filename;
 		return feedback;
 	}
 	else{
-		logfile << _FEEDBACK_FILE_NOT_EMPTY;
-		return _FEEDBACK_FILE_NOT_EMPTY;
+		logfile << _FEEDBACK_FILETYPE_INVALID;
+		return _FEEDBACK_FILETYPE_INVALID;
 	}
-
+*/
 }
 
 
@@ -196,14 +246,20 @@ string Storage::Save(){
 //@author A0099303A
 string Storage::SaveAs(string newFileName){
 	FILETYPE filetype = IdentifyFileType(newFileName);
-	if (FileEmpty(newFileName) && filetype!= FILETYPE::INVALID){
-		_filename = newFileName;
-		string feedback = Rewrite();
-		feedback = SaveSessionData();
-		return feedback;
+	if (filetype!= FILETYPE::INVALID){
+		if (FileEmpty(newFileName)){
+			_filename = newFileName;
+			string feedback = Rewrite();
+			feedback = SaveSessionData();
+			return feedback;
+		}
+		else{
+			return _FEEDBACK_FILE_NOT_EMPTY;
+		}
+		
 	}
 	else{
-		return _FEEDBACK_FILE_NOT_EMPTY;
+		return _FEEDBACK_FILETYPE_INVALID;
 	}
 }
 
@@ -581,6 +637,17 @@ string Storage::DayView(){
 
 //PRIVATE==========================================================================================
 //====================================================================
+//Session Methods
+//====================================================================
+//@author A0099303A
+string Storage::DefaultSession(){
+	_filename = _FILENAME_DEFAULT;
+	Update();
+	return _FEEDBACK_DEFAULT_SESSION_STARTED;
+}
+
+
+//====================================================================
 //Update Methods
 //====================================================================
 //@author A0099303A
@@ -915,8 +982,8 @@ string Storage::LoadCSVContent(){
 
 			string test = output.front();
 			if (output.size() != Smartstring::NUMBER_OF_FIELDS){
-				assert(false && "In Storage LoadCSVContent load failed, size does not match definition");
-				return _FEEDBACK_LOAD_FAILURE;
+				throw corrupted_data;
+				return _FEEDBACK_DATA_CORRUPTED;
 			}
 			taskptr = new Task(output);
 			taskList.push_back(taskptr);
@@ -1017,17 +1084,21 @@ void Storage::Archive(Task* taskptr){
 //====================================================================
 //@author A0099303A
 Storage::FILETYPE Storage::IdentifyFileType(string input){
-	if (input.find(_FILE_EXTENSION_CSV) != string::npos){
-		return FILETYPE::CSV;
+	if (input.find(_FILE_EXTENSION_TXT) != string::npos){
+		return FILETYPE::TXT;
 	}
 	else{
-		if (input.find(_FILE_EXTENSION_TXT) != string::npos){
-			return FILETYPE::TXT;
-		}
-		else{
-			return FILETYPE::INVALID;
-		}
+		return FILETYPE::INVALID;
 	}
+	//else{
+	//	if (input.find(_FILE_EXTENSION_CSV) != string::npos){
+	//		return FILETYPE::INVALID;
+	//		return FILETYPE::CSV;
+	//	}
+	//	else{
+	//		return FILETYPE::INVALID;
+	//	}
+	//}
 }
 
 //@author A0099303A

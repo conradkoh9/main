@@ -15,7 +15,7 @@ namespace logging{
 		string feedback = "";
 		ofstream out;
 		DateTime timeinfo;
-		out.open(_filename.c_str(), ios::app);
+		out.open(_logfilename.c_str(), ios::app);
 		out << "[" << timeinfo.Today() << "] " << "[" << timeinfo.Now() << "]: " << input << endl;
 		out.close();
 		return feedback;

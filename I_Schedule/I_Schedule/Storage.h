@@ -122,7 +122,10 @@ private:
 	static const string _FEEDBACK_INVALID_LIST;
 	static const string _FEEDBACK_UPDATE_SUCCESS;
 	static const string _FEEDBACK_EDIT_SUCCESS;
-
+	static const string _FEEDBACK_DATA_CORRUPTED;
+	static const string _FEEDBACK_FILETYPE_INVALID;
+	static const string _FEEDBACK_DEFAULT_SESSION_STARTED;
+	static const string _FEEDBACK_STARTUP;
 	//formatting variables
 	static const string _rtfboldtagstart;
 	static const string _rtfboldtagend;
@@ -136,11 +139,14 @@ private:
 	const string _FILE_EXTENSION_CSV = ".csv";
 	const string _FILE_EXTENSION_TXT = ".txt";
 	const string _DELIMITERS_CSV = "\"";
-	const string _FILENAME_DEFAULT = "default.csv";
+	const string _FILENAME_DEFAULT = "default.txt";
 	const string _FILENAME_SESSION_DATA = "data.sys";
 
 
 	//METHODS
+	//Session methods
+	string DefaultSession();
+
 	//Update methods
 	void Update(); //Updates all the vectors with the new information
 
@@ -201,6 +207,15 @@ private:
 
 	class InvalidInput : public exception{
 	} invalid_input;
+
+	class LoadFailure : public exception{
+	} load_failure;
+
+	class FirstRun : public LoadFailure{
+	} first_run;
+
+	class CorruptedData : public LoadFailure{
+	} corrupted_data;
 
 };
 
