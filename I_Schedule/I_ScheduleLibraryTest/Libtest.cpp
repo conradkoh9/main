@@ -619,16 +619,27 @@ namespace I_ScheduleLibraryTest{
 			Assert::AreEqual(dt.Standardized(), date);
 		}
 
-
-		TEST_METHOD(SMARTSTRING){
-			Smartstring test("add");
+		//@author A0094213M
+		TEST_METHOD(SMARTSTRING_ISCOMMAND){
+			//test for true case
+			Smartstring test1("add");
 			bool isCommand_Expected;
 			bool isCommand_Actual;
 
 			isCommand_Expected = true;
-			isCommand_Actual = test.IsCommand();
+			isCommand_Actual = test1.IsCommand();
 
 			Assert::AreEqual(isCommand_Expected, isCommand_Actual);
+
+			// test for false case
+			Smartstring test2("dhiwihwie");
+
+			isCommand_Expected = false;
+			isCommand_Actual = test2.IsCommand();
+
+			Assert::AreEqual(isCommand_Expected, isCommand_Actual);
+
+
 
 		}
 	};
