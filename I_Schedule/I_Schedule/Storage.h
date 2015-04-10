@@ -135,7 +135,7 @@ private:
 	//File Details
 	const string _FILE_EXTENSION_CSV = ".csv";
 	const string _FILE_EXTENSION_TXT = ".txt";
-	const string _DELIMITERS_CSV = ",";
+	const string _DELIMITERS_CSV = "\"";
 	const string _FILENAME_DEFAULT = "default.csv";
 	const string _FILENAME_SESSION_DATA = "data.sys";
 

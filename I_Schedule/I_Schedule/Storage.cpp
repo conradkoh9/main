@@ -910,12 +910,9 @@ string Storage::LoadCSVContent(){
 		int msize = _filecontent.size();
 		for (iter = _filecontent.begin(); iter != _filecontent.end(); ++iter){
 			str = (*iter);
-			vector<string> output = str.Tokenize(_DELIMITERS_CSV);
+			vector<string> output = str.ContainedTokenize(_DELIMITERS_CSV);
 			vector<string>::iterator iter2;
-			for (iter2 = output.begin(); iter2 != output.end(); ++iter2){
-				int end = (*iter2).length() - 2;
-				*iter2 = (*iter2).substr(1, end);
-			}
+
 			string test = output.front();
 			if (output.size() != Smartstring::NUMBER_OF_FIELDS){
 				assert(false && "In Storage LoadCSVContent load failed, size does not match definition");

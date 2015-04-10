@@ -168,10 +168,11 @@ namespace I_ScheduleLibraryTest{
 
 			//Testing the Load() and Rewrite() functions in storage
 			//testing the partition when n > 1; boundary case n = 1; where n is the number of entries to be loaded and rewritten
+			//testing the partition when k > 0; boundary case k = 1; where k is the number of commas in user input
 			Storage* storage = new Storage("UNIT_TEST_CSV_ADD_LOAD_REWRITE.csv");
 			storage->Clear();
 			Task* task = new Task();
-			task->SetDescription("do homework");
+			task->SetDescription("do homework,");
 			task->SetEndDate("08/04/2015");
 			task->SetStartDate("07/04/2015");
 			task->SetPriority("1");
@@ -194,7 +195,7 @@ namespace I_ScheduleLibraryTest{
 			int size = storage->Size();
 			Assert::IsTrue(size > 0);
 			string expected[2];
-			expected[0] = "Description: do homework\nStart: 07/04/2015\nEnd: 08/04/2015\nPriority: 1\nStatus: Complete";
+			expected[0] = "Description: do homework,\nStart: 07/04/2015\nEnd: 08/04/2015\nPriority: 1\nStatus: Complete";
 			expected[1] = "Description: do homework 2\nStart: 09/04/2015\nEnd: 10/04/2015\nPriority: 123\nStatus: Incomplete";
 
 			for (int i = 0; i < size; i++){
