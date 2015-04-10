@@ -34,16 +34,16 @@ namespace I_ScheduleGUI {
 			DISPLAY_TASK_FLOAT->LoadFile(gcnew String(controller->rtf_float.c_str()));
 			DISPLAY_MAIN->LoadFile(gcnew String(controller->rtf_main.c_str()));
 
-			//this section scrolls to the bottom of textboxes on load
-			DISPLAY_TASK_TIMED->SelectionStart = DISPLAY_TASK_TIMED->TextLength;
-			DISPLAY_TASK_TIMED->ScrollToCaret();
-			DISPLAY_TASK_FLOAT->SelectionStart = DISPLAY_TASK_FLOAT->TextLength;
-			DISPLAY_TASK_FLOAT->ScrollToCaret();
-			DISPLAY_MAIN->SelectionStart = DISPLAY_MAIN->TextLength;
-			DISPLAY_MAIN->ScrollToCaret();
-			DISPLAY_TASK_DEADLINE->SelectionStart = DISPLAY_TASK_DEADLINE->TextLength;
-			DISPLAY_TASK_DEADLINE->ScrollToCaret();
-			//end section
+			////this section scrolls to the bottom of textboxes on load
+			//DISPLAY_TASK_TIMED->SelectionStart = DISPLAY_TASK_TIMED->TextLength;
+			//DISPLAY_TASK_TIMED->ScrollToCaret();
+			//DISPLAY_TASK_FLOAT->SelectionStart = DISPLAY_TASK_FLOAT->TextLength;
+			//DISPLAY_TASK_FLOAT->ScrollToCaret();
+			//DISPLAY_MAIN->SelectionStart = DISPLAY_MAIN->TextLength;
+			//DISPLAY_MAIN->ScrollToCaret();
+			//DISPLAY_TASK_DEADLINE->SelectionStart = DISPLAY_TASK_DEADLINE->TextLength;
+			//DISPLAY_TASK_DEADLINE->ScrollToCaret();
+			////end section
 		}
 
 	protected:
