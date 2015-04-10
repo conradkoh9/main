@@ -149,10 +149,10 @@ private:
 
 	//filter methods
 	void FilterTask();
-	void sortListsByTime(vector<Task*> &V);
-	void initializeLists();
-	void sortTask();
-	void rearrangeTaskList();
+	void SortListsByTime(vector<Task*> &V);
+	void InitializeLists();
+	void SortAllLists();
+	void SortTaskList();
 
 	//clear methods
 	void ClearFile();

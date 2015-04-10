@@ -164,47 +164,6 @@ namespace I_ScheduleLibraryTest{
 		}
 
 		//@author A0099303A
-		TEST_METHOD(STORAGE_CSV_ADD_LOAD_REWRITE){
-
-			//Testing the Load() and Rewrite() functions in storage
-			//testing the partition when n > 1; boundary case n = 1; where n is the number of entries to be loaded and rewritten
-			//testing the partition when k > 0; boundary case k = 1; where k is the number of commas in user input
-			Storage* storage = new Storage("UNIT_TEST_CSV_ADD_LOAD_REWRITE.csv");
-			storage->Clear();
-			Task* task = new Task();
-			task->SetDescription("do homework,");
-			task->SetEndDate("08/04/2015");
-			task->SetStartDate("07/04/2015");
-			task->SetPriority("1");
-			task->SetStatus("Complete");
-			storage->Add(task);
-
-			task = new Task();
-			task->SetDescription("do homework 2");
-			task->SetEndDate("10/04/2015");
-			task->SetStartDate("09/04/2015");
-			task->SetPriority("123");
-			storage->Add(task);
-
-			storage->Save();
-
-			delete storage;
-			storage = new Storage();
-
-
-			int size = storage->Size();
-			Assert::IsTrue(size > 0);
-			string expected[2];
-			expected[0] = "Description: do homework,\nStart: 07/04/2015\nEnd: 08/04/2015\nPriority: 1\nStatus: Complete";
-			expected[1] = "Description: do homework 2\nStart: 09/04/2015\nEnd: 10/04/2015\nPriority: 123\nStatus: Incomplete";
-
-			for (int i = 0; i < size; i++){
-				Assert::AreEqual(expected[i], storage->GetTask(i));
-			}
-
-		}
-
-		//@author A0099303A
 		TEST_METHOD(PARSER_IdentifyTaskFields){
 			Parser* parser = new Parser();
 			//Case: fields with varied length
@@ -427,30 +386,35 @@ namespace I_ScheduleLibraryTest{
 			string input;
 			string expected;
 			string actual;
+			DateTime dt2;
 			//testing the partition where no day reset is crossed
 			input = "Tuesday at 5pm";
 			DateTime dt(input);
 			actual = dt.Standardized();
-			expected = "05:00pm on 14/04/2015";
+			dt2 = DateTime("Tuesday");
+			expected = "05:00pm on " + dt2.Standardized();
 			Assert::AreEqual(expected, actual);
 
 			input = "5pm on Tuesday";
 			dt = DateTime(input);
 			actual = dt.Standardized();
-			expected = "05:00pm on 14/04/2015";
+			dt2 = DateTime("Tuesday");
+			expected = "05:00pm on " + dt2.Standardized();
 			Assert::AreEqual(expected, actual);
 
 			input = "Friday at 10pm";
 			dt = DateTime(input);
 			actual = dt.Standardized();
-			expected = "10:00pm on 10/04/2015";
+			dt2 = DateTime("Friday");
+			expected = "10:00pm on " + dt2.Standardized();
 			Assert::AreEqual(expected, actual);
 
 			//testing the partition where a day reset is crossed e.g today is wednesday, appointment on monday
 			input = "Monday at 6pm";
 			dt = DateTime(input);
 			actual = dt.Standardized();
-			expected = "06:00pm on 13/04/2015";
+			dt2 = DateTime("Monday");
+			expected = "06:00pm on " + dt2.Standardized();
 			Assert::AreEqual(expected, actual);
 
 			//testing that Standardized() does not change empty strings

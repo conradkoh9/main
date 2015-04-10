@@ -603,13 +603,12 @@ void Storage::Update(){
 //@author A0119491B
 void Storage::FilterTask(){
 	ClearFilteredLists();
-	initializeLists();
-	sortTask();
-	rearrangeTaskList();
+	InitializeLists();
+	SortAllLists();
 	return;
 }
 //@author A0119491B
-void Storage::initializeLists(){
+void Storage::InitializeLists(){
 	int size_taskList = taskList.size();
 
 	for (int i = 0; i < size_taskList; i++){
@@ -628,12 +627,13 @@ void Storage::initializeLists(){
 	}
 }
 //@author A0119491B
-void Storage::sortTask(){
-	sortListsByTime(timedList);
-	sortListsByTime(deadlineList);
+void Storage::SortAllLists(){
+	SortListsByTime(timedList);
+	SortListsByTime(deadlineList);
+	SortTaskList();
 }
 //@author A0119491B
-void Storage::sortListsByTime(vector <Task*> &V){
+void Storage::SortListsByTime(vector <Task*> &V){
 	int size_V = V.size();
 	string datetime1, datetime2;
 	for (int i = 0; i < size_V; i++){
@@ -657,7 +657,7 @@ void Storage::sortListsByTime(vector <Task*> &V){
 	}
 }
 //@author A0119491B
-void Storage::rearrangeTaskList(){
+void Storage::SortTaskList(){
 	taskList.clear();
 	vector<Task*>::iterator iter;
 	for (iter = timedList.begin(); iter != timedList.end(); iter++){
