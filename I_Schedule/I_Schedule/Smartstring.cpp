@@ -238,6 +238,29 @@ vector<string> Smartstring::Tokenize(string delimiters){
 	return tokens;
 }
 
+vector<string> Smartstring::ContainedTokenize(string delimiters){
+	int found = 0;
+	string input = description;
+	int startFrame = 0;
+	int endFrame = 0;
+	int startIdx = 0;
+	int endIdx = 0;
+	vector<string> tokens;
+	while (startFrame != string::npos && endFrame != string::npos){
+		startFrame = input.find_first_of(delimiters.c_str(), startIdx);
+		if (startFrame != string::npos){
+			endFrame = input.find_first_of(delimiters.c_str(), startFrame + 1);
+			if (endFrame != string::npos){
+				int length = endFrame - startFrame - 1;
+				string result = input.substr(startFrame + 1, length);
+				tokens.push_back(result);
+			}
+		}
+		startIdx = endFrame + 1;
+	}
+	return tokens;
+}
+
 
 //operator overloading
 ostream& operator<<(ostream& os, Smartstring& ss){

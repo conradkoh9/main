@@ -466,18 +466,19 @@ namespace I_ScheduleLibraryTest{
 			expected = "05:00pm";
 			Assert::AreEqual(expected, actual);
 
-			//testing today and tomorrow keywords
-			input = "today";
-			dt = DateTime(input);
-			actual = dt.Standardized();
-			expected = "08/04/2015";
-			Assert::AreEqual(expected, actual);
+			//To test the today and tomorrow keywords, modify the expected date as you desire
+			////testing today and tomorrow keywords
+			//input = "today";
+			//dt = DateTime(input);
+			//actual = dt.Standardized();
+			//expected = "08/04/2015";
+			//Assert::AreEqual(expected, actual);
 
-			input = "tomorrow";
-			dt = DateTime(input);
-			actual = dt.Standardized();
-			expected = "09/04/2015";
-			Assert::AreEqual(expected, actual);
+			//input = "tomorrow";
+			//dt = DateTime(input);
+			//actual = dt.Standardized();
+			//expected = "09/04/2015";
+			//Assert::AreEqual(expected, actual);
 
 			//important lacking test: testing when month is crossed
 
@@ -544,10 +545,12 @@ namespace I_ScheduleLibraryTest{
 			expected[2] = "Date: 13/04/2014\nTime: 07:30";
 			Assert::AreEqual(expected[2], actual[2]);
 
+			//This test tests the assumption that the date is assumed to be the current day if no day is specified
 			input = "8:09pm";
 			dt = DateTime(input);
+			string currentdate = dt.Today();
 			actual[3] = dt.GetInfo();
-			expected[3] = "Date: 08/04/2015\nTime: 20:09";
+			expected[3] = "Date: " + currentdate + "\nTime: 20:09";
 			Assert::AreEqual(expected[3], actual[3]);
 
 		}

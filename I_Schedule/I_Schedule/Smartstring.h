@@ -82,6 +82,7 @@ public:
 
 	string ToString();
 	vector<string> Tokenize(string delimiters);
+	vector<string> ContainedTokenize(string delimiters);
 
 	//operators
 	friend istream& operator>>(istream& is, Smartstring& ss);
