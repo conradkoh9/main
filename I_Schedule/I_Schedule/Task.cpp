@@ -12,6 +12,7 @@ const string Task::_FEEDBACK_STARTDATE_SET = "START DATE SET";
 const string Task::_FEEDBACK_ENDDATE_SET = "END DATE SET";
 const string Task::_FEEDBACK_PRIORITY_SET = "PRIORITY SET";
 const string Task::_FEEDBACK_STATUS_SET = "STATUS SET";
+const string Task::_FEEDBACK_DEFAULTDATE_SET = "DEFAULT END DATE SET";
 const string Task::_FEEDBACK_STANDARD_START_DATE_SET = "STANDARD FORMAT OF START DATE SET";
 const string Task::_FEEDBACK_STANDARD_END_DATE_SET = "STAMDARD FORMAT OF END DATE SET";
 
@@ -124,18 +125,14 @@ string Task::SetStatus(string input){
 	return _FEEDBACK_STATUS_SET;
 }
 
-string Task::SetStandardStartDate(){
-	string FormatToBeConverted = startdate;
-	standardStart=standardStartdt->ConvertDateTime(FormatToBeConverted);
-	return _FEEDBACK_STANDARD_START_DATE_SET;
+string Task::SetDefaultEnddate(){
+	if (standardStart != "" && standardEnd == "")
+	{
+		standardEnd = standardStartdt-> GetDefaultDuration();
+	}
+	return _FEEDBACK_DEFAULTDATE_SET;
 }
 
-
-string Task::SetStandardEndDate(){
-	string FormatToBeConverted = startdate;
-	standardEnd=standardEnddt->ConvertDateTime(FormatToBeConverted);
-	return _FEEDBACK_STANDARD_END_DATE_SET;
-}
 
 string Task::GetDescription(){
 	return description;
@@ -158,13 +155,6 @@ string Task::GetStatus(){
 	return status;
 }
 
-string Task::GetStandardStartDateTime(){
-	return standardStart;
-}
-
-string Task::GetStandardEndDateTime(){
-	return standardEnd;
-}
 
 string Task::MarkComplete(){
 	status = _STATUS_COMPLETE;

@@ -40,6 +40,7 @@ public:
 	static const string _FEEDBACK_ENDDATE_SET;
 	static const string _FEEDBACK_PRIORITY_SET;
 	static const string _FEEDBACK_STATUS_SET;
+	static const string _FEEDBACK_DEFAULTDATE_SET;
 	static const string _FEEDBACK_STANDARD_START_DATE_SET;
 	static const string _FEEDBACK_STANDARD_END_DATE_SET;
 
@@ -55,16 +56,14 @@ public:
 	string SetEndDate(string input);
 	string SetPriority(string input);
 	string SetStatus(string input);
-	string SetStandardStartDate();
-	string SetStandardEndDate();
+	string SetDefaultEnddate();
 
 	string GetDescription();
 	string GetStartDate();
 	string GetEndDate();
 	string GetPriority();
 	string GetStatus();
-	string GetStandardStartDateTime();
-	string GetStandardEndDateTime();
+
 
 	string MarkComplete();
 

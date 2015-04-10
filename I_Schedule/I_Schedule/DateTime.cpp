@@ -881,6 +881,10 @@ bool DateTime::CompareTime(string time1, string time2){
 	return isGreater;
 }
 
+string DateTime::GetDefaultDuration(){
+	return "";
+}
+
 void DateTime::Initialize(){
 	if (!isInitialized){
 
