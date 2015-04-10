@@ -84,6 +84,9 @@ public:
 
 	TASKTYPE GetType();
 	bool isContains(string input);
+	bool isContainInDate(string input);
+	bool isContainPriority(string input);
+	bool isContainDescription(string input);
 	bool isNearMatch(string input);
 	size_t LevenshteinDistance(const std::string &s1, const std::string &s2);
 

@@ -302,27 +302,66 @@ Task::TASKTYPE Task::GetType(){
 
 bool Task::isContains(string input){
 	bool found = false;
-	int pos;
-	vector<string> taskVect;
-	//initialization 
-	for (int fields = 0; fields < numberOfFields; fields++){
-		taskVect.push_back("");
-	}
-	taskVect[Smartstring::FIELD::DESCRIPTION] = description;
-	taskVect[Smartstring::FIELD::STARTDATE] = startdate;
-	taskVect[Smartstring::FIELD::ENDDATE] = enddate;
-	taskVect[Smartstring::FIELD::PRIORITY] = priority;
 
-	//end initialization
-	for (int i = 0; i < numberOfFields; ++i){
-		if (!found){
-			pos = taskVect[i].find(input);
-			if (pos != string::npos){
+	//search start date and end date
+	found = isContainInDate(input);  // need a method to get date without time 
+	//search priority
+	if (!found){
+		found = isContainPriority(input);
+	}
+	//search description
+	if (!found){
+		found = isContainDescription(input);
+	}
+
+	return found;
+}
+
+bool Task::isContainInDate(string input){
+	DateTime* dt = new DateTime(input);
+	if (dt->isValidFormat){
+		string datetime = dt->Standardized();
+		if (datetime == startdate || datetime == enddate){
+			return true;
+		}
+	}
+	return false;
+}
+
+bool Task::isContainPriority(string input){
+	string keyword, prio;
+	istringstream in(input);
+	in >> keyword;
+	in >> prio;
+	if (keyword == "priority" && prio == priority){
+		return true;
+	}
+	return false;
+}
+
+bool Task::isContainDescription(string input){
+	vector<string> token_description;
+	vector<string> token_input;
+	Smartstring* smartstring_in = new Smartstring(input);
+	Smartstring* smartstring_des = new Smartstring(description);
+	bool found;
+	token_input = smartstring_in->Tokenize(" ");
+	token_description = smartstring_des->Tokenize(" ");
+	for (int i = 0; i < token_input.size(); i++){   //tokenize the input. search the token one by one to see if these words all in the description
+		found = false;
+		for (int j = 0; j < token_description.size(); j++){ //tokenize the description. compare each token of description with each token of the input
+			if (token_input[i] == token_description[j]){
 				found = true;
 			}
 		}
+
+		if (!found){  //after comparison, the token of input is not contained in description. then return false
+			return false;
+		}
 	}
-	return found;
+
+	return true;
+
 }
 //@auhtor A0119491B
 bool Task::isNearMatch(string input){
