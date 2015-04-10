@@ -288,6 +288,7 @@ ostream& operator<<(ostream& out, Task& task){
 	return out;
 }
 
+//@author A0119491B
 Task::TASKTYPE Task::GetType(){     
 	if (enddate == "" && startdate == ""){
 		return Task::TASKTYPE::FLOATING;
@@ -300,6 +301,7 @@ Task::TASKTYPE Task::GetType(){
 	}
 }
 
+//@author A0119491B
 bool Task::isContains(string input){
 	bool found = false;
 
@@ -317,6 +319,7 @@ bool Task::isContains(string input){
 	return found;
 }
 
+//@author A0119491B
 bool Task::isContainInDate(string input){
 	DateTime* dt = new DateTime(input);
 	if (dt->isValidFormat){
@@ -328,6 +331,7 @@ bool Task::isContainInDate(string input){
 	return false;
 }
 
+//@author A0119491B
 bool Task::isContainPriority(string input){
 	string keyword, prio;
 	istringstream in(input);
@@ -339,6 +343,7 @@ bool Task::isContainPriority(string input){
 	return false;
 }
 
+//@author A0119491B
 bool Task::isContainDescription(string input){
 	vector<string> token_description;
 	vector<string> token_input;
@@ -350,7 +355,7 @@ bool Task::isContainDescription(string input){
 	for (int i = 0; i < token_input.size(); i++){   //tokenize the input. search the token one by one to see if these words all in the description
 		found = false;
 		for (int j = 0; j < token_description.size(); j++){ //tokenize the description. compare each token of description with each token of the input
-			if (token_input[i] == token_description[j]){
+			if (token_input[i] == token_description[j] || isNearMatch(token_input[i], token_description[j])){
 				found = true;
 			}
 		}
@@ -363,15 +368,16 @@ bool Task::isContainDescription(string input){
 	return true;
 
 }
+
 //@auhtor A0119491B
-bool Task::isNearMatch(string input){
+bool Task::isNearMatch(string input, string des){
 	bool match = false;
 	size_t difference;
 	size_t tolarent_diff = 3;
 
 	for (int i = 0; i < numberOfFields; ++i){
 		if (!match){
-			difference = LevenshteinDistance(input, description);
+			difference = LevenshteinDistance(input, des);
 			if (difference <= tolarent_diff)
 				match = true;
 			}
@@ -379,6 +385,7 @@ bool Task::isNearMatch(string input){
 
 	return match;
 }
+
 //@author A0119491B
 size_t Task::LevenshteinDistance(const std::string &s1, const std::string &s2){
 	const size_t m(s1.size());

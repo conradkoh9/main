@@ -87,7 +87,7 @@ public:
 	bool isContainInDate(string input);
 	bool isContainPriority(string input);
 	bool isContainDescription(string input);
-	bool isNearMatch(string input);
+	bool isNearMatch(string input, string des);
 	size_t LevenshteinDistance(const std::string &s1, const std::string &s2);
 
 

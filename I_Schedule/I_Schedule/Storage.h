@@ -65,7 +65,6 @@ public:
 	//Power Search Method
 	string Search(string input);
 	vector<Task*> PowerSearch(string input);
-	vector<Task*> NearSearch(string input);
 	string SearchEmptySlots(string input);
 	void InitializeDayTask(string input);
 	void SetDayCalendar();

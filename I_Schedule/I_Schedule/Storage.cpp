@@ -309,15 +309,9 @@ string Storage::Undo(){
 //@author a0119491B
 string Storage::Search(string input){
 	vector<Task*> PowerSearch_Result = PowerSearch(input);
-	vector<Task*> NearSearch_Result = NearSearch(input);
-	if (PowerSearch_Result.empty() && NearSearch_Result.empty()){
+	if (PowerSearch_Result.empty()){
 		return _FEEDBACK_SEARCH_FAILURE;
-	}
-	else if (PowerSearch_Result.empty() && !NearSearch_Result.empty()){
-		return ToString(NearSearch_Result);
-	}
-	else
-	{
+	}else{
 		return ToString(PowerSearch_Result);
 	}
 }
@@ -335,18 +329,7 @@ vector<Task*> Storage::PowerSearch(string input){
 	return searchResult;
 }
 
-//@author A0119491B
-vector<Task*> Storage::NearSearch(string input){
-	vector<Task*>::iterator iter;
-	vector<Task*> searchResult;
-	for (iter = taskList.begin(); iter != taskList.end(); ++iter){
-		Task* currentTask = *iter;
-		if (currentTask->isNearMatch(input)){
-			searchResult.push_back(currentTask);
-		}
-	}
-	return searchResult;
-}
+
 
 //@author A0119491B
 string Storage::SearchEmptySlots(string input){
