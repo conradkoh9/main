@@ -175,7 +175,7 @@ string CompleteCommand::Execute(string input){
 	in >> position;
 
 	//Complete function
-	string feedback = storage->Complete(position, listname.ListType());
+	string feedback = storage->Complete(position);
 	mout << storage->ToString();
 
 	return feedback;

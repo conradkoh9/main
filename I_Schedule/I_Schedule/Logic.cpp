@@ -128,14 +128,12 @@ string Logic::Add(string taskInput){
 }
 
 string Logic::Complete(string input){
-	Smartstring listname;
 	istringstream in(input);
 	int position;
-	in >> listname;
 	in >> position;
 
 	//Complete function
-	string feedback = storage->Complete(position, listname.ListType());
+	string feedback = storage->Complete(position);
 	mout << storage->ToString();
 
 	return feedback;

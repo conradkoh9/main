@@ -19,6 +19,7 @@ private:
 	const string _archivefile = "archive.txt";
 	//DATA STORAGE VARIABLES
 	vector<string> _filecontent;
+	vector<string> _archivecontent;
 public:
 	//INFORMATION STREAMS
 	ostringstream status;
@@ -30,6 +31,7 @@ public:
 	vector<Task*> deadlineList;
 	vector<Task*> lastList;
 	vector<Task*> archiveList;
+	vector<Task*> lastArchiveList;
 
 	//
 	DateTime* dateTime;
@@ -47,10 +49,9 @@ public:
 	//FUNCTIONS
 	string Add(Task* task);
 	string DeleteFromList(int position, Smartstring::LIST list);
-	string Delete2(int position);
 	string Delete(int position);
 	string Edit(int position, Smartstring::LIST list, vector<string> newinfo);
-	string Complete(int position, Smartstring::LIST list);
+	string Complete(int position);
 	string Load();
 	string Load(string filename);
 
@@ -158,7 +159,7 @@ private:
 	void ClearFile();
 	void ClearFilteredLists();
 	void ClearVectors();
-	void ClearUndoVector();
+	void ClearUndoVectors();
 	string Remove(int position);
 	string Erase(Task* taskptr);
 
@@ -171,8 +172,11 @@ private:
 	//Load methods
 	string LoadSessionData();
 	string LoadRawFileContent(); //reads from a file and stores all the content into _filecontent vector
+	string LoadRawArchiveContent();
 	string LoadTaskList(); //Loads Tasklist from FileContent vector
+	string LoadArchiveList();
 	string LoadTXTContent(); //loads _filecontent vector into taskList vector assuming TXT format
+	string LoadTXTArchiveContent();
 
 	//Complete methods
 	string MarkComplete(Task* taskptr);
@@ -183,7 +187,8 @@ private:
 	bool FileEmpty(string input);
 
 	//Get Task* methods
-	Task* GetTask(int position, Smartstring::LIST list);
+	Task* GetTaskPtr(int position, Smartstring::LIST list);
+	Task* GetTaskPtr(int position);
 	Task* GetTimedTask(int position);
 	Task* GetFloatingTask(int position);
 	Task* GetDeadlineTask(int position);

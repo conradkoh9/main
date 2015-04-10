@@ -59,7 +59,9 @@ Storage::~Storage(){
 
 //@author A0099303A
 string Storage::Add(Task* task){
+	int s = archiveList.size();
 	lastList = taskList;
+	lastArchiveList = archiveList;
 	taskList.push_back(task);
 	Update();
 	Rewrite();
@@ -70,8 +72,9 @@ string Storage::Add(Task* task){
 //@author A0099303A
 string Storage::DeleteFromList(int position, Smartstring::LIST list){
 	lastList = taskList;
+	lastArchiveList = archiveList;
 	try{
-		Task* toDelete = GetTask(position, list);
+		Task* toDelete = GetTaskPtr(position, list);
 		Erase(toDelete);
 		Rewrite();
 		Update();
@@ -93,6 +96,7 @@ string Storage::Delete(int position){
 	string feedback = "";
 	try{
 		lastList = taskList;
+		lastArchiveList = archiveList;
 		feedback = Remove(position);
 		Rewrite();
 		Update();
@@ -106,8 +110,9 @@ string Storage::Delete(int position){
 //@author A0099303A
 string Storage::Edit(int position, Smartstring::LIST list, vector<string> newinfo){
 	lastList = taskList;
+	lastArchiveList = archiveList;
 	try{
-		Task* taskptr = GetTask(position, list);
+		Task* taskptr = GetTaskPtr(position, list);
 		Task* newTask = new Task(taskptr);
 	//	(*newTask) = (*taskptr);
 		newTask->Edit(newinfo);
@@ -128,8 +133,8 @@ string Storage::Edit(int position, Smartstring::LIST list, vector<string> newinf
 }
 
 //@author A0099303A
-string Storage::Complete(int position, Smartstring::LIST list){
-
+string Storage::Complete(int position){
+/*
 	string feedback = "";
 	lastList = taskList;
 
@@ -147,12 +152,20 @@ string Storage::Complete(int position, Smartstring::LIST list){
 	catch (InvalidList){
 		return _FEEDBACK_INVALID_LIST;
 	}
-
-
-	//feedback = MarkComplete(position);
-	//Archive(position);
-	//Rewrite();
-	//Update();
+*/
+	string feedback;
+	try{
+		lastList = taskList;
+		lastArchiveList = archiveList;
+		Task* toremove = GetTaskPtr(position);
+		feedback = MarkComplete(toremove);
+		Archive(toremove);
+		Rewrite();
+		Update();
+	}
+	catch (InvalidIndex){
+		return _FEEDBACK_INVALID_INDEX;
+	}
 	return feedback;
 }
 
@@ -165,9 +178,13 @@ string Storage::Load(){
 		if (filetype != FILETYPE::INVALID){
 			logfile << "load called.";
 			ClearVectors();
-			ClearUndoVector();
+			ClearUndoVectors();
 			logfile << LoadRawFileContent();
+			LoadRawArchiveContent();
+			int db = _archivecontent.size();
+			int a = 0;
 			feedback = LoadTaskList();
+			LoadArchiveList();
 			logfile << feedback;
 			Update();
 			logfile << "end of load.";
@@ -197,7 +214,7 @@ string Storage::Load(string filename){
 			_filename = filename;
 			logfile << "load called.";
 			ClearVectors();
-			ClearUndoVector();
+			ClearUndoVectors();
 			logfile << LoadRawFileContent();
 			feedback = LoadTaskList();
 			logfile << feedback;
@@ -264,6 +281,7 @@ string Storage::Reset(){
 //@author A0099303A
 string Storage::Clear(){
 	lastList = taskList;
+	lastArchiveList = archiveList;
 	ClearFile();
 	ClearVectors();
 	Update();
@@ -274,6 +292,7 @@ string Storage::Clear(){
 string Storage::Undo(){
 	if (!lastList.empty()){
 		taskList = lastList;
+		archiveList = lastArchiveList;
 		Rewrite();
 		Update();
 		return "success";
@@ -485,16 +504,23 @@ string Storage::ArchiveToString(){
 	ostringstream out;
 	int index = 0;
 	vector<Task*>::iterator iter;
-	for (iter = archiveList.begin(); iter != archiveList.end(); ++iter){
-		++index;
-		if (iter + 1 != taskList.end()){
-			out << _rtfboldtagstart << index << ": " << _rtfboldtagend << (*iter)->ToShortString() << endl;
+	if (archiveList.size() != 0){
+		for (iter = archiveList.begin(); iter != archiveList.end(); ++iter){
+			++index;
+			if (iter + 1 != archiveList.end()){
+				out << _rtfboldtagstart << index << ": " << _rtfboldtagend << (*iter)->ToShortString() << endl;
+			}
+			else{
+				out << _rtfboldtagstart << index << ": " << _rtfboldtagend << (*iter)->ToShortString();
+			}
 		}
-		else{
-			out << _rtfboldtagstart << index << ": " << _rtfboldtagend << (*iter)->ToShortString();
-		}
+		return out.str();
 	}
-	return out.str();
+	else{
+		return "";
+	}
+	
+
 }
 
 string Storage::ToString(){
@@ -697,12 +723,15 @@ void Storage::ClearVectors(){
 	floatingList.clear();
 	deadlineList.clear();
 	_filecontent.clear();
+	_archivecontent.clear();
+	archiveList.clear();
 	return;
 }
 
 //@author A0099303A
-void Storage::ClearUndoVector(){
+void Storage::ClearUndoVectors(){
 	lastList.clear();
+	lastArchiveList.clear();
 	return;
 }
 
@@ -768,7 +797,7 @@ string Storage::WriteToFile(){
 		feedback = WriteToTXT();
 		break;
 	}
-	case(FILETYPE::INVALID) : {
+	default : {
 		return _FEEDBACK_INVALID_FILE_FORMAT;
 		break;
 	}
@@ -799,14 +828,12 @@ string Storage::WriteToTXT(){
 string Storage::WriteToArchive(){
 	ostringstream out;
 	ofstream of;
-	of.open(_archivefile.c_str(), ios::app);
+	of.open(_archivefile.c_str(), ios::trunc);
 	vector<Task*>::iterator iter;
 	int size = archiveList.size();
 	for (iter = archiveList.begin(); iter != archiveList.end(); ++iter){
 		out << (*iter)->ToTXTString() << endl;
 	}
-	archiveList.clear();
-	string str = out.str();
 	of << out.str();
 	return _FEEDBACK_WRITE_SUCCESS;
 }
@@ -857,21 +884,65 @@ string Storage::LoadRawFileContent(){
 }
 
 //@author A0099303A
+string Storage::LoadRawArchiveContent(){
+	string line;
+	vector<string> all_lines;
+	ifstream in(_archivefile.c_str());
+	try{
+		if (in.is_open()){
+			while (getline(in, line)){
+				if (line == _EMPTY_STRING){
+					return _FEEDBACK_FILE_EMPTY;
+				}
+
+				all_lines.push_back(line);
+			}
+			_archivecontent = all_lines;
+			return _FEEDBACK_LOAD_SUCCESS;
+		}
+		int s = _archivecontent.size();
+		int a = 0;
+	}
+	catch (out_of_range){
+		return _FEEDBACK_LOAD_FAILURE;
+	}
+	return _FEEDBACK_LOAD_FAILURE;
+}
+
+//@author A0099303A
 string Storage::LoadTaskList(){
 	FILETYPE filetype = IdentifyFileType(_filename);
 	string feedback;
 	switch (filetype){
-	case(FILETYPE::TXT) : {
-		feedback = LoadTXTContent();
-		break;
-	}
-	case(FILETYPE::INVALID) : {
-		return _FEEDBACK_LOAD_FAILURE;
-		break;
-	}
+		case(FILETYPE::TXT) : {
+			feedback = LoadTXTContent();
+			break;
+		}
+		default : {
+			return _FEEDBACK_LOAD_FAILURE;
+			break;
+		}
 	}
 	return feedback;
 	
+}
+
+//@author A0099303A
+string Storage::LoadArchiveList(){
+	FILETYPE filetype = IdentifyFileType(_filename);
+		string feedback;
+			switch (filetype){
+			case(FILETYPE::TXT) : {
+				feedback = LoadTXTArchiveContent();
+				break;
+			}
+			default : {
+				return _FEEDBACK_LOAD_FAILURE;
+				break;
+		}
+	}
+	return feedback;
+
 }
 
 //@author A0099303A
@@ -935,6 +1006,69 @@ string Storage::LoadTXTContent(){
 	return _FEEDBACK_LOAD_SUCCESS;
 }
 
+//@author A0099303A
+string Storage::LoadTXTArchiveContent(){
+	Smartstring str;
+	const int startfield = Smartstring::FIELD::DESCRIPTION;
+	int currentfield = startfield;
+	int fieldcount = Smartstring::NUMBER_OF_FIELDS;
+	vector<string>::iterator iter;
+	Task* taskptr = new Task();
+	//remove field description from _filecontent
+	vector<string> taskContent;
+	for (iter = _archivecontent.begin(); iter != _archivecontent.end(); ++iter){
+		string line = (*iter);
+		istringstream is(line);
+		string buffer;
+		is >> buffer;
+		string output;
+		getline(is, output);
+		int length = line.length() - 1;
+		output = output.substr(1, length);
+		taskContent.push_back(output);
+	}
+
+	//end remove field description from _filecontent
+	try{
+		for (iter = taskContent.begin(); iter != taskContent.end(); ++iter){
+			if (currentfield == Smartstring::FIELD::DESCRIPTION){
+				taskptr = new Task();
+				archiveList.push_back(taskptr);
+			}
+			switch (currentfield){
+			case Smartstring::FIELD::DESCRIPTION:{
+				taskptr->SetDescription(*iter);
+				break;
+			}
+			case Smartstring::FIELD::STARTDATE:{
+				taskptr->SetStartDate(*iter);
+				break;
+			}
+			case Smartstring::FIELD::ENDDATE:{
+				taskptr->SetEndDate(*iter);
+				break;
+			}
+			case Smartstring::FIELD::PRIORITY:{
+				taskptr->SetPriority(*iter);
+				break;
+			}
+			case Smartstring::FIELD::STATUS:{
+				taskptr->SetStatus(*iter);
+			}
+
+			}
+			currentfield = (currentfield + 1) % fieldcount;
+		}
+	}
+
+	catch (out_of_range){
+		return _FEEDBACK_LOAD_FAILURE;
+	}
+	return _FEEDBACK_LOAD_SUCCESS;
+}
+
+
+
 //====================================================================
 //Mark methods
 //====================================================================
@@ -990,7 +1124,7 @@ bool Storage::FileEmpty(string filename){
 //Get Task* methods
 //====================================================================
 //@author A0099303A
-Task* Storage::GetTask(int position, Smartstring::LIST list){
+Task* Storage::GetTaskPtr(int position, Smartstring::LIST list){
 	Task* taskptr;
 	switch (list){
 		case Smartstring::LIST::TIMED:{
@@ -1011,6 +1145,15 @@ Task* Storage::GetTask(int position, Smartstring::LIST list){
 		}
 	}
 	return taskptr;
+}
+
+Task* Storage::GetTaskPtr(int position){
+	if (position <= taskList.size() && position > 0){
+		return taskList[position - 1];
+	}
+	else{
+		throw invalid_index;
+	}
 }
 //@author A0099303A
 Task* Storage::GetTimedTask(int position){
