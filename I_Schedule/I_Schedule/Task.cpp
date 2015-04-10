@@ -15,6 +15,11 @@ const string Task::_FEEDBACK_STATUS_SET = "STATUS SET";
 const string Task::_FEEDBACK_DEFAULTDATE_SET = "DEFAULT END DATE SET";
 const string Task::_FEEDBACK_STANDARD_START_DATE_SET = "STANDARD FORMAT OF START DATE SET";
 const string Task::_FEEDBACK_STANDARD_END_DATE_SET = "STAMDARD FORMAT OF END DATE SET";
+const string Task::_FEEDBACK_SDATE_SET = "START DATE SET";
+const string Task::_FEEDBACK_EDATE_SET = "END DATE SET";
+const string Task::_FEEDBACK_STIME_SET = "START TIME SET";
+const string Task::_FEEDBACK_ETIME_SET = "END TIME SET";
+
 
 const string Task::_STATUS_COMPLETE = "Complete";
 const string Task::_STATUS_INCOMPLETE = "Incomplete";
@@ -27,6 +32,10 @@ Task::Task()
 	description = "";
 	priority = "";
 	enddate = "";
+	sdate = "";
+	edate = "";
+	stime = "";
+	etime = "";
 	status = _STATUS_INCOMPLETE;
 }
 
@@ -52,6 +61,10 @@ Task::Task(Task* task){
 	description = "";
 	priority = "";
 	enddate = "";
+	sdate = "";
+	edate = "";
+	stime = "";
+	etime = "";
 	status = _STATUS_INCOMPLETE;
 
 	if (!task == NULL){
@@ -60,6 +73,10 @@ Task::Task(Task* task){
 		enddate = task->GetEndDate();
 		priority = task->GetPriority();
 		status = task->GetStatus();
+		sdate = task->GetSDate();
+		edate = task->GetEDate();
+		stime = task->GetSTime();
+		etime = task->GetETime();
 	}
 }
 
@@ -125,6 +142,51 @@ string Task::SetStatus(string input){
 	return _FEEDBACK_STATUS_SET;
 }
 
+string Task::SetSDate(){
+	int sPos;
+	sPos = startdate.find_first_of("/");
+	if (sPos != string::npos){
+		sPos = sPos - 2;
+		sdate = startdate.substr(sPos);
+		return _FEEDBACK_SDATE_SET;
+	}
+	return "";
+}
+
+string Task::SetEDate(){
+	int sPos;
+	sPos = enddate.find_first_of("/");
+	if (sPos != string::npos){
+		sPos = sPos - 2;
+		edate = enddate.substr(sPos);
+		return _FEEDBACK_EDATE_SET;
+	}
+	return "";
+}
+
+string Task::SetSTime(){
+	int sPos;
+	sPos = stime.find_first_of(":");
+	if (sPos != string::npos){
+		sPos = sPos - 2;
+		stime = stime.substr(sPos);
+		return _FEEDBACK_STIME_SET;
+	}
+	return "";
+}
+
+string Task::SetETime(){
+	int sPos;
+	sPos = etime.find_first_of(":");
+	if (sPos != string::npos){
+		sPos = sPos - 2;
+		etime = etime.substr(sPos);
+		return _FEEDBACK_ETIME_SET;
+	}
+	return "";
+	return "";
+}
+
 string Task::SetDefaultEnddate(){
 	if (standardStart != "" && standardEnd == "")
 	{
@@ -153,6 +215,22 @@ string Task::GetPriority(){
 
 string Task::GetStatus(){
 	return status;
+}
+
+string Task::GetSDate(){
+	return sdate;
+}
+
+string Task::GetEDate(){
+	return edate;
+}
+
+string Task::GetSTime(){
+	return stime;
+}
+
+string Task::GetETime(){
+	return etime;
 }
 
 
@@ -322,11 +400,14 @@ bool Task::isContains(string input){
 //@author A0119491B
 bool Task::isContainInDate(string input){
 	DateTime* dt = new DateTime(input);
+	int pos_start, pos_end; 
 	if (dt->isValidFormat){
 		string datetime = dt->Standardized();
-		if (datetime == startdate || datetime == enddate){
-			return true;
-		}
+		pos_start = startdate.find(datetime);
+		pos_end = enddate.find(datetime);
+			if (pos_start != string::npos || pos_end != string::npos){
+				return true;
+			}
 	}
 	return false;
 }
@@ -350,14 +431,17 @@ bool Task::isContainDescription(string input){
 	Smartstring* smartstring_in = new Smartstring(input);
 	Smartstring* smartstring_des = new Smartstring(description);
 	bool found;
+	int pos;
+	
 	token_input = smartstring_in->Tokenize(" ");
 	token_description = smartstring_des->Tokenize(" ");
 	for (int i = 0; i < token_input.size(); i++){   //tokenize the input. search the token one by one to see if these words all in the description
 		found = false;
 		for (int j = 0; j < token_description.size(); j++){ //tokenize the description. compare each token of description with each token of the input
-			if (token_input[i] == token_description[j] || isNearMatch(token_input[i], token_description[j])){
-				found = true;
-			}
+				pos = token_description[j].find(token_input[i]);
+				if (pos != string::npos || isNearMatch(token_input[i], token_description[j])){
+					found = true;
+				}
 		}
 
 		if (!found){  //after comparison, the token of input is not contained in description. then return false
