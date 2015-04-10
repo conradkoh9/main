@@ -618,5 +618,18 @@ namespace I_ScheduleLibraryTest{
 			dt = DateTime(date);
 			Assert::AreEqual(dt.Standardized(), date);
 		}
+
+
+		TEST_METHOD(SMARTSTRING){
+			Smartstring test("add");
+			bool isCommand_Expected;
+			bool isCommand_Actual;
+
+			isCommand_Expected = true;
+			isCommand_Actual = test.IsCommand();
+
+			Assert::AreEqual(isCommand_Expected, isCommand_Actual);
+
+		}
 	};
 }

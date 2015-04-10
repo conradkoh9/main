@@ -1,10 +1,10 @@
-Description: do homework 2
-Start: 01:00pm on 01/02/2015
-End: 01:00pm on 05/02/2015
-Priority: 1234
-Status: Incomplete
 Description: do homework
-Start: 03:00pm on 06/06/2015
-End: 04:00pm on 07/06/2015
+Start: 03:00pmon 06/06/2015
+End: 04:00pmon 07/06/2015
 Priority: 1
 Status: Complete
+Description: do homework 2
+Start: 01:00pmon 01/02/2015
+End: 01:00pmon 05/02/2015
+Priority: 1234
+Status: Incomplete
