@@ -314,7 +314,7 @@ string Storage::Search(string input){
 	if (PowerSearch_Result.empty()){
 		return _FEEDBACK_SEARCH_FAILURE;
 	}else{
-		return ToString(PowerSearch_Result, 0);
+		return ToString(PowerSearch_Result, 1);
 	}
 }
 
