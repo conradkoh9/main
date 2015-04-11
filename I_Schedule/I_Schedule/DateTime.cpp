@@ -259,7 +259,7 @@ string DateTime::StandardizeTriple(vector<string> input){
 			}
 		}
 	}
-	output = time + date;
+	output = time + " on " + date;
 	return output;
 }
 

@@ -50,7 +50,7 @@ Task::Task(vector<string> input){
 	startdate = standardStartdt->GetDate();
 	starttime = standardStartdt->GetTime();
 	enddate = standardEnddt->GetDate();
-	endtime = standardStartdt->GetTime();
+	endtime = standardEnddt->GetTime();
 	priority = input[Smartstring::FIELD::PRIORITY];
 	status = input[Smartstring::FIELD::STATUS];
 	if (status == ""){
