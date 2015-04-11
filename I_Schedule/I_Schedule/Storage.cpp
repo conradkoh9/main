@@ -373,7 +373,7 @@ string Storage::SearchEmptySlots(string input){
 //@author A0119491B
 void Storage::InitializeDayTask(string date){
 	for (int i = 0; i < taskList.size(); i++){
-		string dateTime = taskList[i]->GetStartDateTime();
+		string dateTime = taskList[i]->GetStartTime();
 		size_t position = 0;
 		position = dateTime.find_first_of(":"); // 17:00pm 07/04/2015 Only this format can be recognized
 		if (position != string::npos){
