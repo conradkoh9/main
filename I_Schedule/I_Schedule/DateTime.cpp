@@ -34,6 +34,21 @@ const string DateTime::DATETYPE_TOMORROW1 = "tomorrow";
 const string DateTime::DATETYPE_TOMORROW2 = "tmr";
 const string DateTime::TIMETYPE_AM = "am";
 const string DateTime::TIMETYPE_PM = "pm";
+const string DateTime::_MONTH_JANUARY = "January";
+const string DateTime::_MONTH_FEBRUARY = "February";
+const string DateTime::_MONTH_MARCH = "March";
+const string DateTime::_MONTH_APRIL = "April";
+const string DateTime::_MONTH_MAY = "May";
+const string DateTime::_MONTH_JUNE = "June";
+const string DateTime::_MONTH_JULY = "July";
+const string DateTime::_MONTH_AUGUST = "August";
+const string DateTime::_MONTH_SEPTEMBER = "September";
+const string DateTime::_MONTH_OCTOBER = "October";
+const string DateTime::_MONTH_NOVEMBER = "November";
+const string DateTime::_MONTH_DECEMBER = "December";
+
+
+
 
 bool DateTime::isInitialized = false;
 int DateTime::numberOfDateType;
@@ -74,7 +89,19 @@ string DateTime::GetInfo(){
 	return out.str();
 }
 
+string DateTime::GetDate(){
+	ostringstream out;
+	string month_s = ToStringMonth(_month);
+	out << _day << " " << month_s;
+	return out.str();
+	
+}
 
+string DateTime::GetTime(){
+	ostringstream out;
+	out << _hours << ":" << _mins;
+	return out.str();
+}
 
 bool DateTime::IsEarlierThan(DateTime dt){
 	bool isEarlier = false;
@@ -491,6 +518,65 @@ DateTime::DAY DateTime::GetDayEnum(string input){
 		return GetTomorrow();
 	}
 	return DAY::INVALID;
+}
+
+string DateTime::ToStringMonth(int input){
+	switch (input){
+		case 1:{
+			return _MONTH_JANUARY;
+			break;
+		}
+		case 2:{
+			return _MONTH_FEBRUARY;
+			break;
+		}
+		case 3:{
+			return _MONTH_MARCH;
+			break;
+		}
+		case 4:{
+			return _MONTH_APRIL;
+			break;
+		}
+		case 5:{
+			return _MONTH_MAY;
+			break;
+		}
+		case 6:{
+			return _MONTH_JUNE;
+			break;
+		}
+		case 7:{
+			return _MONTH_JULY;
+			break;
+		}
+		case 8:{
+			return _MONTH_AUGUST;
+			break;
+		}
+		case 9:{
+			return _MONTH_SEPTEMBER;
+			break;
+		}
+		case 10:{
+			return _MONTH_OCTOBER;
+			break;
+		}
+		case 11:{
+			return _MONTH_NOVEMBER;
+			break;
+		}
+		case 12:{
+			return _MONTH_DECEMBER;
+			break;
+		}
+
+		default:{
+			return _MONTH_JANUARY;
+		}
+
+
+	}
 }
 
 int DateTime::CalculateOffset(DAY startday, DAY endday){

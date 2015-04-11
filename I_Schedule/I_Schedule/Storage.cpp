@@ -355,7 +355,7 @@ string Storage::SearchEmptySlots(string input){
 //@author A0119491B
 void Storage::InitializeDayTask(string date){
 	for (int i = 0; i < taskList.size(); i++){
-		string dateTime = taskList[i]->GetStartDate();
+		string dateTime = taskList[i]->GetStartDateTime();
 		size_t position = 0;
 		position = dateTime.find_first_of(":"); // 17:00pm 07/04/2015 Only this format can be recognized
 		if (position != string::npos){
@@ -392,7 +392,7 @@ void Storage::SetSleepingTime(){
 //@author A0119491B
 void Storage::SetOccupiedSlots(){
 	for (int i = 0; i < daytask.size(); i++){
-		string startDateTime = daytask[i]->GetStartDate();
+		string startDateTime = daytask[i]->GetStartDateTime();
 		string endDateTime = daytask[i]->GetEndDate();
 		size_t StartPos = 0, sPos = 2, ePos = 2;
 		string startTime, endTime;
@@ -572,8 +572,8 @@ string Storage::DayView(){
 	string currentday;
 	DateTime* dt = new DateTime();
 	for (iter = taskList.begin(); iter != taskList.end(); ++iter){
-		if (currentday != (*iter)->GetStartDate()){
-			currentday = (*iter)->GetStartDate();
+		if (currentday != (*iter)->GetStartDateTime()){
+			currentday = (*iter)->GetStartDateTime();
 			string representative = currentday;
 			if (currentday == dt->Today()){
 				representative = "Today";
@@ -664,8 +664,8 @@ void Storage::SortListsByTime(vector <Task*> &V){
 	string datetime1, datetime2;
 	for (int i = 0; i < size_V; i++){
 		for (int j = i; j < size_V; ++j){
-			datetime1 = V[i]->GetStartDate();
-			datetime2 = V[j]->GetStartDate();
+			datetime1 = V[i]->GetStartDateTime();
+			datetime2 = V[j]->GetStartDateTime();
 
 			if (datetime1 == "" && datetime2 == ""){
 				datetime1 = V[i]->GetEndDate();
@@ -980,11 +980,11 @@ string Storage::LoadTXTContent(){
 				break;
 			}
 			case Smartstring::FIELD::STARTDATE:{
-				taskptr->SetStartDate(*iter);
+				taskptr->SetStartDateTime(*iter);
 				break;
 			}
 			case Smartstring::FIELD::ENDDATE:{
-				taskptr->SetEndDate(*iter);
+				taskptr->SetEndDateTime(*iter);
 				break;
 			}
 			case Smartstring::FIELD::PRIORITY:{
@@ -1041,11 +1041,11 @@ string Storage::LoadTXTArchiveContent(){
 				break;
 			}
 			case Smartstring::FIELD::STARTDATE:{
-				taskptr->SetStartDate(*iter);
+				taskptr->SetStartDateTime(*iter);
 				break;
 			}
 			case Smartstring::FIELD::ENDDATE:{
-				taskptr->SetEndDate(*iter);
+				taskptr->SetEndDateTime(*iter);
 				break;
 			}
 			case Smartstring::FIELD::PRIORITY:{

@@ -11,18 +11,26 @@ class Task
 {
 private:
 	string description;
+
+	DateTime* standardStartdt;
+	DateTime* standardEnddt;
+	string startDateTime;
+	string endDateTime;
 	string startdate;
+	string starttime;
 	string enddate;
+	string endtime;
+
 	string priority;
-	string standardStart;
-	string standardEnd;
+	string status;
+
+	//not clear what these are
 	string sdate;
 	string edate;
 	string stime;
 	string etime;
-	string status;
-	DateTime* standardStartdt;
-	DateTime* standardEnddt;
+
+
 
 public:
 	Task();
@@ -60,8 +68,8 @@ public:
 	string Edit(vector<string> newinfo);
 
 	string SetDescription(string input);
-	string SetStartDate(string input);
-	string SetEndDate(string input);
+	string SetStartDateTime(string input);
+	string SetEndDateTime(string input);
 	string SetPriority(string input);
 	string SetStatus(string input);
 	string SetSDate();
@@ -69,10 +77,15 @@ public:
 	string SetSTime();
 	string SetETime();
 	string SetDefaultEnddate();
+	void SetUpdate();
 
 	string GetDescription();
+	string GetStartDateTime();
 	string GetStartDate();
+	string GetStartTime();
+	string GetEndDateTime();
 	string GetEndDate();
+	string GetEndTime();
 	string GetPriority();
 	string GetStatus();
 	string GetSDate();
@@ -109,6 +122,7 @@ public:
 	bool isFloating();
 	bool isDeadline();
 	bool isTimed();
+
 
 	friend ostream& operator<<(ostream& out, Task& task);
 	friend istream& operator>>(istream& in, Task& task);

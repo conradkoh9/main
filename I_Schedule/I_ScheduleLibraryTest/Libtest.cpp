@@ -18,8 +18,8 @@ namespace I_ScheduleLibraryTest{
 			storage->Clear();
 			Task* task = new Task();
 			task->SetDescription("do homework");
-			task->SetEndDate("07/06/2015");
-			task->SetStartDate("05/06/2015");
+			task->SetEndDateTime("07/06/2015");
+			task->SetStartDateTime("05/06/2015");
 			task->SetPriority("1");
 			task->SetStatus("Incomplete");
 			storage->Add(task);
@@ -30,8 +30,8 @@ namespace I_ScheduleLibraryTest{
 			//testing the partition when n>1; boundary case n = 2; where n is the number of tasks added
 			Task* task2 = new Task();
 			task2->SetDescription("do homework 2");
-			task2->SetEndDate("07/06/2015");
-			task2->SetStartDate("05/06/2015");
+			task2->SetEndDateTime("07/06/2015");
+			task2->SetStartDateTime("05/06/2015");
 			task2->SetPriority("12");
 			task2->SetStatus("Complete");
 			storage->Add(task2);
@@ -50,8 +50,8 @@ namespace I_ScheduleLibraryTest{
 			storage->Clear();
 			Task* task = new Task();
 			task->SetDescription("do homework");
-			task->SetEndDate("16/04/2015");
-			task->SetStartDate("13/04/2015");
+			task->SetEndDateTime("16/04/2015");
+			task->SetStartDateTime("13/04/2015");
 			task->SetPriority("1");
 			task->SetStatus("Incomplete");
 			storage->Add(task);
@@ -78,8 +78,8 @@ namespace I_ScheduleLibraryTest{
 			//Setting a task to be seached
 			Task* task = new Task();
 			task->SetDescription("homework");
-			task->SetEndDate("08/04/2015");
-			task->SetStartDate("07/04/2015");
+			task->SetEndDateTime("08/04/2015");
+			task->SetStartDateTime("07/04/2015");
 			task->SetPriority("1");
 			task->SetStatus("Incomplete");
 			storage->Add(task);
@@ -132,16 +132,16 @@ namespace I_ScheduleLibraryTest{
 			storage->Clear();
 			Task* task = new Task();
 			task->SetDescription("do homework");
-			task->SetEndDate("07/06/2015 at 4pm");
-			task->SetStartDate("06/06/2015 at 3pm");
+			task->SetEndDateTime("07/06/2015 at 4pm");
+			task->SetStartDateTime("06/06/2015 at 3pm");
 			task->SetPriority("1");
 			task->SetStatus("Complete");
 			storage->Add(task);
 
 			task = new Task();
 			task->SetDescription("do homework 2");
-			task->SetEndDate("05/02/2015 at 1pm");
-			task->SetStartDate("01/02/2015 at 1pm");
+			task->SetEndDateTime("05/02/2015 at 1pm");
+			task->SetStartDateTime("01/02/2015 at 1pm");
 			task->SetPriority("1234");
 			task->SetStatus("Incomplete");
 			storage->Add(task);
@@ -252,8 +252,8 @@ namespace I_ScheduleLibraryTest{
 			//default constructor test
 			Task* task = new Task();
 			Assert::AreEqual("", task->GetDescription().c_str());
-			Assert::AreEqual("", task->GetStartDate().c_str());
-			Assert::AreEqual("", task->GetEndDate().c_str());
+			Assert::AreEqual("", task->GetStartDateTime().c_str());
+			Assert::AreEqual("", task->GetEndDateTime().c_str());
 			Assert::AreEqual("", task->GetPriority().c_str());
 
 			//vector constructor test
@@ -266,8 +266,8 @@ namespace I_ScheduleLibraryTest{
 
 			Task* vectTask = new Task(testinput);
 			Assert::AreEqual("do my homework", vectTask->GetDescription().c_str());
-			Assert::AreEqual("09/10/2015", vectTask->GetStartDate().c_str());
-			Assert::AreEqual("10/10/2015", vectTask->GetEndDate().c_str());
+			Assert::AreEqual("09/10/2015", vectTask->GetStartDateTime().c_str());
+			Assert::AreEqual("10/10/2015", vectTask->GetEndDateTime().c_str());
 			Assert::AreEqual("1", vectTask->GetPriority().c_str());
 			Assert::AreEqual("Incomplete", vectTask->GetStatus().c_str());
 
@@ -281,8 +281,8 @@ namespace I_ScheduleLibraryTest{
 			//default constructor test
 			Task* task = new Task();
 			Assert::AreEqual("", task->GetDescription().c_str());
-			Assert::AreEqual("", task->GetStartDate().c_str());
-			Assert::AreEqual("", task->GetEndDate().c_str());
+			Assert::AreEqual("", task->GetStartDateTime().c_str());
+			Assert::AreEqual("", task->GetEndDateTime().c_str());
 			Assert::AreEqual("", task->GetPriority().c_str());
 
 			//vector constructor test
@@ -296,8 +296,8 @@ namespace I_ScheduleLibraryTest{
 			Task* vectTask = new Task(testinput);
 
 			Assert::AreEqual("do my homework", vectTask->GetDescription().c_str());
-			Assert::AreEqual("05:00pm on 09/10/2015", vectTask->GetStartDate().c_str());
-			Assert::AreEqual("06:00pm on 10/10/2015", vectTask->GetEndDate().c_str());
+			Assert::AreEqual("05:00pm on 09/10/2015", vectTask->GetStartDateTime().c_str());
+			Assert::AreEqual("06:00pm on 10/10/2015", vectTask->GetEndDateTime().c_str());
 			Assert::AreEqual("1", vectTask->GetPriority().c_str());
 			Assert::AreEqual("Incomplete", vectTask->GetStatus().c_str());
 			
@@ -327,15 +327,15 @@ namespace I_ScheduleLibraryTest{
 			storage->Clear();
 			Task* task = new Task();
 			task->SetDescription("do homework");
-			task->SetEndDate("tomorrow");
-			task->SetStartDate("today");
+			task->SetEndDateTime("tomorrow");
+			task->SetStartDateTime("today");
 			task->SetPriority("1");
 			storage->Add(task);
 
 			Task* task2 = new Task();
 			task2->SetDescription("do homework 2");
-			task2->SetEndDate("tomorrow2");
-			task2->SetStartDate("today2");
+			task2->SetEndDateTime("tomorrow2");
+			task2->SetStartDateTime("today2");
 			task2->SetPriority("2");
 			storage->Add(task2);
 

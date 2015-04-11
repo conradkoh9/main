@@ -28,10 +28,10 @@ const int Task::numberOfFields = Smartstring::NUMBER_OF_FIELDS;
 
 Task::Task()
 {
-	startdate = "";
+	startDateTime = "";
 	description = "";
 	priority = "";
-	enddate = "";
+	endDateTime = "";
 	sdate = "";
 	edate = "";
 	stime = "";
@@ -43,24 +43,42 @@ Task::Task(vector<string> input){
 
 	standardStartdt = new DateTime(input[Smartstring::FIELD::STARTDATE]);
 	standardEnddt = new DateTime(input[Smartstring::FIELD::ENDDATE]);
-	standardStart = standardStartdt->Standardized();
-	standardEnd = standardEnddt->Standardized();
+	startDateTime = standardStartdt->Standardized();
+	endDateTime = standardEnddt->Standardized();
 
 	description = input[Smartstring::FIELD::DESCRIPTION];
-	startdate = standardStart;
-	enddate = standardEnd;
+	startdate = standardStartdt->GetDate();
+	starttime = standardStartdt->GetTime();
+	enddate = standardEnddt->GetDate();
+	endtime = standardStartdt->GetTime();
 	priority = input[Smartstring::FIELD::PRIORITY];
 	status = input[Smartstring::FIELD::STATUS];
 	if (status == ""){
 		status = _STATUS_INCOMPLETE;
 	}
+
+
+	/*
+	standardStartdt = new DateTime(input[Smartstring::FIELD::STARTDATE]);
+	standardEnddt = new DateTime(input[Smartstring::FIELD::ENDDATE]);
+	standardStart = standardStartdt->Standardized();
+	standardEnd = standardEnddt->Standardized();
+
+	description = input[Smartstring::FIELD::DESCRIPTION];
+	startdate = standardStart;
+	endDateTime = standardEnd;
+	priority = input[Smartstring::FIELD::PRIORITY];
+	status = input[Smartstring::FIELD::STATUS];
+	if (status == ""){
+		status = _STATUS_INCOMPLETE;
+	}*/
 }
 
 Task::Task(Task* task){
 	startdate = "";
 	description = "";
 	priority = "";
-	enddate = "";
+	endDateTime = "";
 	sdate = "";
 	edate = "";
 	stime = "";
@@ -70,7 +88,7 @@ Task::Task(Task* task){
 	if (!task == NULL){
 		description = task->GetDescription();
 		startdate = task->GetStartDate();
-		enddate = task->GetEndDate();
+		endDateTime = task->GetEndDate();
 		priority = task->GetPriority();
 		status = task->GetStatus();
 		sdate = task->GetSDate();
@@ -96,11 +114,11 @@ string Task::Edit(vector<string> newinfo){
 					break;
 				}
 				case Smartstring::FIELD::STARTDATE:{
-					SetStartDate(newinfo[i]);
+					SetStartDateTime(newinfo[i]);
 					break;
 				}
 				case Smartstring::FIELD::ENDDATE:{
-					SetEndDate(newinfo[i]);
+					SetEndDateTime(newinfo[i]);
 					break;
 				}
 				case Smartstring::FIELD::PRIORITY:{
@@ -118,17 +136,17 @@ string Task::SetDescription(string input){
 	return _FEEDBACK_DESCRIPTION_SET;
 }
 
-string Task::SetStartDate(string input){
-	DateTime dt(input);
-	startdate = dt.Standardized();
-	//startdate = input;
+string Task::SetStartDateTime(string input){
+	startDateTime = input;
+	SetUpdate();
+	startDateTime = standardStartdt->Standardized();
 	return _FEEDBACK_STARTDATE_SET;
 }
 
-string Task::SetEndDate(string input){
-	DateTime dt(input);
-	enddate = dt.Standardized();
-	//enddate = input;
+string Task::SetEndDateTime(string input){
+	endDateTime = input;
+	SetUpdate();
+	endDateTime = standardEnddt->Standardized();
 	return _FEEDBACK_ENDDATE_SET;
 }
 
@@ -144,10 +162,10 @@ string Task::SetStatus(string input){
 
 string Task::SetSDate(){
 	int sPos;
-	sPos = startdate.find_first_of("/");
+	sPos = startDateTime.find_first_of("/");
 	if (sPos != string::npos){
 		sPos = sPos - 2;
-		sdate = startdate.substr(sPos);
+		sdate = startDateTime.substr(sPos);
 		return _FEEDBACK_SDATE_SET;
 	}
 	return "";
@@ -155,10 +173,10 @@ string Task::SetSDate(){
 
 string Task::SetEDate(){
 	int sPos;
-	sPos = enddate.find_first_of("/");
+	sPos = endDateTime.find_first_of("/");
 	if (sPos != string::npos){
 		sPos = sPos - 2;
-		edate = enddate.substr(sPos);
+		edate = endDateTime.substr(sPos);
 		return _FEEDBACK_EDATE_SET;
 	}
 	return "";
@@ -188,16 +206,32 @@ string Task::SetETime(){
 }
 
 string Task::SetDefaultEnddate(){
-	if (standardStart != "" && standardEnd == "")
+	if (startDateTime != "" && endDateTime == "")
 	{
-		standardEnd = standardStartdt-> GetDefaultDuration();
+		endDateTime = standardStartdt-> GetDefaultDuration();
 	}
 	return _FEEDBACK_DEFAULTDATE_SET;
 }
 
+void Task::SetUpdate(){
+
+	standardStartdt = new DateTime(startDateTime);
+	standardEnddt = new DateTime(endDateTime);
+	startDateTime = standardStartdt->Standardized();
+	endDateTime = standardEnddt->Standardized();
+
+	startdate = standardStartdt->GetDate();
+	starttime = standardStartdt->GetTime();
+	enddate = standardEnddt->GetDate();
+	endtime = standardStartdt->GetTime();
+}
 
 string Task::GetDescription(){
 	return description;
+}
+
+string Task::GetStartDateTime(){
+	return startDateTime;
 }
 
 string Task::GetStartDate(){
@@ -205,8 +239,20 @@ string Task::GetStartDate(){
 	return startdate;
 }
 
+string Task::GetStartTime(){
+	return starttime;
+}
+
+string Task::GetEndDateTime(){
+	return endDateTime;
+}
+
 string Task::GetEndDate(){
 	return enddate;
+}
+
+string Task::GetEndTime(){
+	return endtime;
 }
 
 string Task::GetPriority(){
@@ -242,8 +288,8 @@ string Task::MarkComplete(){
 string Task::ToString(){
 	ostringstream out;
 	out << FIELD_DESCRIPTION << description << endl;
-	out << FIELD_STARTDATE << startdate << endl;
-	out << FIELD_ENDDATE << enddate << endl;
+	out << FIELD_STARTDATE << startDateTime << endl;
+	out << FIELD_ENDDATE << endDateTime << endl;
 	out << FIELD_PRIORITY << priority << endl;
 	out << FIELD_STATUS << status;
 	return out.str();
@@ -276,7 +322,7 @@ string Task::ToShortString(){
 //@author A0099303A
 string Task::ToDeadlineString(){
 	ostringstream out;
-	out << "[" << enddate << "] ";
+	out << "[" << endDateTime << "] ";
 	out << description;
 	return out.str();
 }
@@ -289,8 +335,8 @@ string Task::ToFloatingString(){
 
 string Task::ToTimedString(){
 	ostringstream out;
-	out << "[" << startdate << "]";
-	out << "[" << enddate << "] ";
+	out << "[" << startDateTime << "]";
+	out << "[" << endDateTime << "] ";
 	out << description;
 	return out.str();
 }
@@ -299,8 +345,8 @@ string Task::ToTXTString(){
 	//this to string method is used in storage to write to txt files
 	ostringstream out;
 	out << FIELD_DESCRIPTION << description << endl;
-	out << FIELD_STARTDATE << startdate << endl;
-	out << FIELD_ENDDATE << enddate << endl;
+	out << FIELD_STARTDATE << startDateTime << endl;
+	out << FIELD_ENDDATE << endDateTime << endl;
 	out << FIELD_PRIORITY << priority << endl;
 	out << FIELD_STATUS << status;
 	return out.str();
@@ -309,8 +355,8 @@ string Task::ToTXTString(){
 string Task::ToCSVString(){
 	ostringstream out;
 	out << "\"" << description << "\",";
-	out << "\"" << startdate << "\",";
-	out << "\"" << enddate<< "\",";
+	out << "\"" << startDateTime << "\",";
+	out << "\"" << endDateTime<< "\",";
 	out << "\"" << priority << "\",";
 	out << "\"" << status << "\"";
 	return out.str();
@@ -354,7 +400,7 @@ string Task::ToDatelessFloatingString(){
 
 string Task::ToDatelessTimedString(){
 	ostringstream out;
-	out << "[" << enddate << "] ";
+	out << "[" << endDateTime << "] ";
 	out << description;
 	return out.str();
 }
@@ -368,10 +414,10 @@ ostream& operator<<(ostream& out, Task& task){
 
 //@author A0119491B
 Task::TASKTYPE Task::GetType(){     
-	if (enddate == "" && startdate == ""){
+	if (endDateTime == "" && startDateTime == ""){
 		return Task::TASKTYPE::FLOATING;
 	}
-	else if (startdate == "" && enddate!=""){
+	else if (startDateTime == "" && endDateTime!=""){
 		return Task::TASKTYPE::DEADLINE;
 	}
 	else{
@@ -403,8 +449,8 @@ bool Task::isContainInDate(string input){
 	int pos_start, pos_end; 
 	if (dt->isValidFormat){
 		string datetime = dt->Standardized();
-		pos_start = startdate.find(datetime);
-		pos_end = enddate.find(datetime);
+		pos_start = startDateTime.find(datetime);
+		pos_end = endDateTime.find(datetime);
 			if (pos_start != string::npos || pos_end != string::npos){
 				return true;
 			}
@@ -511,7 +557,7 @@ size_t Task::LevenshteinDistance(const std::string &s1, const std::string &s2){
 //author A0119513L
 bool Task::isFloating(){
 	bool floating = false;
-	if (enddate == "" && startdate == "")
+	if (endDateTime == "" && startDateTime == "")
 		floating = true;
 	return floating;
 }
@@ -519,7 +565,7 @@ bool Task::isFloating(){
 //author A0119513L	
 bool Task::isDeadline(){
 	bool deadline = false;
-	if (enddate != "" && startdate == "")
+	if (endDateTime != "" && startDateTime == "")
 		deadline = true;
 	return deadline;
 }
@@ -527,7 +573,7 @@ bool Task::isDeadline(){
 //@author A0119513L
 bool Task::isTimed(){
 	bool timed = false;
-	if (enddate != "" && startdate != "")
+	if (endDateTime != "" && startDateTime != "")
 		timed = true;
 	return timed;
 }
