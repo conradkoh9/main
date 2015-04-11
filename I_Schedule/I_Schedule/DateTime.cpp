@@ -99,6 +99,7 @@ string DateTime::GetInfo(){
 
 string DateTime::GetDate(){
 	ostringstream date;
+	int db = _month;
 	string month_s = GetMonthName(_month);
 	date << _day << " " << month_s;
 	return date.str();
@@ -330,7 +331,7 @@ string DateTime::StandardizeDay(string input){
 		struct tm timeinfo;
 		localtime_s(&timeinfo, &timeresult);
 		_day = timeinfo.tm_mday;
-		_month = timeinfo.tm_mon;
+		_month = timeinfo.tm_mon + 1;
 		_year = timeinfo.tm_year + 1900;
 	}
 	else{
