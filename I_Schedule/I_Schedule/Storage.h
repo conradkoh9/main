@@ -126,6 +126,9 @@ private:
 	static const string _FEEDBACK_FILETYPE_INVALID;
 	static const string _FEEDBACK_DEFAULT_SESSION_STARTED;
 	static const string _FEEDBACK_STARTUP;
+	static const string _FEEDBACK_ARCHIVE_EMPTY;
+	static const string _FEEDBACK_VIEW_ARCHIVE;
+	static const string _FEEDBACK_DAYVIEW;
 	//formatting variables
 	static const string _rtfboldtagstart;
 	static const string _rtfboldtagend;

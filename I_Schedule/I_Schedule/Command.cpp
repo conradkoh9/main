@@ -48,19 +48,6 @@ string Command::Execute(string){   //invalid command
 	return _FEEDBACK_INVALID_COMMAND;
 }
 
-//string Command::GetFloating(){
-//	return fout.str();
-//}
-//string Command::GetTimed(){
-//	return tout.str();
-//}
-//string Command::GetDisplay(){
-//	return dout.str();
-//}
-//string Command::GetStatus(){
-//	return status.str();
-//}
-
 //Add Command
 AddCommand::AddCommand(){
 
@@ -134,7 +121,7 @@ DisplayCommand::~DisplayCommand(){
 }
 
 string DisplayCommand::Execute(string all){
-	return storage->ToString();
+	return storage->DayView();
 }
 
 //Edit Command

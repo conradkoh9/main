@@ -26,6 +26,8 @@ Logic::Logic()
 	dout << storage->GetDeadlineList();
 	fout << storage->GetFloatingList();
 	mout << storage->ToString();
+	storage->status.clear();
+	storage->status.str("");
 	logfile << "Logic created";
 }
 
@@ -61,6 +63,8 @@ string Logic::Execute(string input){
 	fout << storage->GetFloatingList();
 	mout << mainDisplay;
 	status << storage->status.str();
+	storage->status.clear();
+	storage->status.str("");
 	return "";
 }
 
@@ -125,7 +129,7 @@ Command* Logic::GetCommand(Smartstring::COMMAND command){
 
 string Logic::QuickSearch(string input){
 	Command* cmd = GetCommand(Smartstring::SEARCH);
-	cmd->Execute(input);
+	mout << cmd->Execute(input);
 	return "";
 }
 

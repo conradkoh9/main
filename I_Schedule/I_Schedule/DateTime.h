@@ -91,6 +91,8 @@ public:
 	string unformattedDateTime;
 	string formattedDateTime;
 	bool isValidFormat;
+	bool isDateSet;
+	bool isTimeSet;
 	time_t time_in_seconds;
 
 	//Methods
@@ -152,7 +154,7 @@ public:
 	bool CompareDateTime(string, string);
 	bool isDateType(string);
 	bool isTimeType(string);
-	string GetDefaultDuration();  //Ziqi needs it
+	DateTime* GetDefaultEndDate();  //Ziqi needs it
 
 private:
 	int _day;

@@ -121,7 +121,7 @@ public:
 
 	bool isFloating();
 	bool isDeadline();
-	bool isTimed();
+	bool IsTimed();
 
 
 	friend ostream& operator<<(ostream& out, Task& task);

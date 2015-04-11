@@ -1,7 +1,7 @@
 #include "Storage.h"
 
 //Constant variable declaration
-const string Storage::_FEEDBACK_ADD_SUCCESS = "Successfull added.";
+const string Storage::_FEEDBACK_ADD_SUCCESS = "Successfully added.";
 const string Storage::_FEEDBACK_GENERIC_SUCCESS = "Update succeeded.";
 const string Storage::_FEEDBACK_GENERIC_FAILURE = "Update failed.";
 const string Storage::_FEEDBACK_LOAD_SUCCESS = "Load succeeded.";
@@ -32,6 +32,9 @@ const string Storage::_FEEDBACK_DATA_CORRUPTED = "Data corrupted.";
 const string Storage::_FEEDBACK_FILETYPE_INVALID = "Invalid filetype.";
 const string Storage::_FEEDBACK_DEFAULT_SESSION_STARTED = "Default session started.";
 const string Storage::_FEEDBACK_STARTUP = "Using ";
+const string Storage::_FEEDBACK_ARCHIVE_EMPTY = "Archive empty.";
+const string Storage::_FEEDBACK_VIEW_ARCHIVE = "Viewing archive.";
+const string Storage::_FEEDBACK_DAYVIEW = "Day view.";
 //formatting variables
 const string Storage::_rtfboldtagstart = "\\b ";
 const string Storage::_rtfboldtagend = "\\b0 ";
@@ -66,6 +69,7 @@ string Storage::Add(Task* task){
 	Update();
 	Rewrite();
 	string feedback = _FEEDBACK_ADD_SUCCESS;
+	status << feedback;
 	return feedback;
 }
 
@@ -100,9 +104,11 @@ string Storage::Delete(int position){
 		feedback = Remove(position);
 		Rewrite();
 		Update();
+		status << feedback;
 		return feedback;
 	}
 	catch (out_of_range){
+		status << _FEEDBACK_DELETE_FAILURE;
 		return _FEEDBACK_DELETE_FAILURE;
 	}
 }
@@ -121,13 +127,16 @@ string Storage::Edit(int position, Smartstring::LIST list, vector<string> newinf
 		Update();
 
 		string feedback = _FEEDBACK_EDIT_SUCCESS;
+		status << feedback;
 		return feedback;
 	}
 
 	catch (InvalidIndex){
+		status << _FEEDBACK_INVALID_INDEX;
 		return _FEEDBACK_INVALID_INDEX;
 	}
 	catch (InvalidList){
+		status << _FEEDBACK_INVALID_LIST;
 		return _FEEDBACK_INVALID_LIST;
 	}
 }
@@ -164,8 +173,10 @@ string Storage::Complete(int position){
 		Update();
 	}
 	catch (InvalidIndex){
+		status << _FEEDBACK_INVALID_INDEX;
 		return _FEEDBACK_INVALID_INDEX;
 	}
+	status << feedback;
 	return feedback;
 }
 
@@ -192,12 +203,14 @@ string Storage::Load(){
 		}
 		else{
 			logfile << _FEEDBACK_FILETYPE_INVALID;
+			status << _FEEDBACK_FILETYPE_INVALID;
 			throw load_failure;
 		}
 	}
 	
 	catch (LoadFailure){
 		logfile << DefaultSession();
+		status << _FEEDBACK_LOAD_FAILURE;
 		feedback = _FEEDBACK_LOAD_FAILURE;
 	}
 	return feedback;
@@ -231,6 +244,7 @@ string Storage::Load(string filename){
 		logfile << DefaultSession();
 		feedback = _FEEDBACK_LOAD_FAILURE;
 	}
+	status << feedback;
 	return feedback;
 }
 
@@ -240,6 +254,7 @@ string Storage::Save(){
 	string feedback;
 	feedback = Rewrite();
 	feedback = SaveSessionData();
+	status << feedback;
 	return feedback;
 }
 
@@ -251,14 +266,17 @@ string Storage::SaveAs(string newFileName){
 			_filename = newFileName;
 			string feedback = Rewrite();
 			feedback = SaveSessionData();
+			status << feedback;
 			return feedback;
 		}
 		else{
+			status << _FEEDBACK_FILE_NOT_EMPTY;
 			return _FEEDBACK_FILE_NOT_EMPTY;
 		}
 		
 	}
 	else{
+		status << _FEEDBACK_FILETYPE_INVALID;
 		return _FEEDBACK_FILETYPE_INVALID;
 	}
 }
@@ -483,7 +501,7 @@ string Storage::GetTimedList(){
 
 string Storage::GetDeadlineList(){
 	int startIndex = timedList.size() + 1;
-		return ToString(deadlineList, startIndex);
+	return ToString(deadlineList, startIndex);
 }
 
 string Storage::GetFloatingList(){
@@ -514,9 +532,11 @@ string Storage::ArchiveToString(){
 				out << _rtfboldtagstart << index << ": " << _rtfboldtagend << (*iter)->ToShortString();
 			}
 		}
+		status << _FEEDBACK_VIEW_ARCHIVE;
 		return out.str();
 	}
 	else{
+		status << _FEEDBACK_ARCHIVE_EMPTY;
 		return "";
 	}
 	
@@ -572,8 +592,8 @@ string Storage::DayView(){
 	string currentday;
 	DateTime* dt = new DateTime();
 	for (iter = taskList.begin(); iter != taskList.end(); ++iter){
-		if (currentday != (*iter)->GetStartDateTime()){
-			currentday = (*iter)->GetStartDateTime();
+		if (currentday != (*iter)->GetStartDate()){
+			currentday = (*iter)->GetStartDate();
 			string representative = currentday;
 			if (currentday == dt->Today()){
 				representative = "Today";
@@ -586,14 +606,18 @@ string Storage::DayView(){
 			string	formattedDay = prefixes + representative + suffixes;
 			out << formattedDay << endl;
 		}
-		++index;
-		if (iter + 1 != taskList.end()){
-			out <<_rtftab << _rtfboldtagstart << index << ": " << _rtfboldtagend << (*iter)->ToDatelessString() << endl;
-		}
-		else{
-			out <<_rtftab << _rtfboldtagstart << index << ": " << _rtfboldtagend << (*iter)->ToDatelessString();
+
+		if ((*iter)->IsTimed()){
+			++index;
+			if (iter + 1 != taskList.end()){
+				out << _rtftab << _rtfboldtagstart << index << ": " << _rtfboldtagend << (*iter)->ToDatelessString() << endl;
+			}
+			else{
+				out << _rtftab << _rtfboldtagstart << index << ": " << _rtfboldtagend << (*iter)->ToDatelessString();
+			}
 		}
 	}
+	status << _FEEDBACK_DAYVIEW;
 	return out.str();
 }
 
@@ -606,6 +630,7 @@ string Storage::DayView(){
 string Storage::DefaultSession(){
 	_filename = _FILENAME_DEFAULT;
 	Update();
+	status << _FEEDBACK_DEFAULT_SESSION_STARTED;
 	return _FEEDBACK_DEFAULT_SESSION_STARTED;
 }
 

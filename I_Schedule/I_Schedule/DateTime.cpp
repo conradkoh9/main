@@ -61,6 +61,8 @@ vector<string> DateTime::timeType;
 
 //@author A0094213M
 DateTime::DateTime(){
+	isDateSet = false;
+	isTimeSet = false;
 	Initialize();
 }
 
@@ -68,11 +70,13 @@ DateTime::DateTime(){
 DateTime::DateTime(string input){
 	unformattedDateTime = input;
 	isValidFormat = true;
-
+	isDateSet = false;
+	isTimeSet = false;
 	Initialize();
 	SetDefaults();
 	SetStandards();
 }
+
 
 DateTime::~DateTime(){
 }
@@ -98,18 +102,29 @@ string DateTime::GetInfo(){
 }
 
 string DateTime::GetDate(){
-	ostringstream date;
-	int db = _month;
-	string month_s = GetMonthName(_month);
-	date << _day << " " << month_s;
-	return date.str();
+	if (isDateSet){
+		ostringstream date;
+		int db = _month;
+		string month_s = GetMonthName(_month);
+		date << _day << " " << month_s;
+		return date.str();
+	}
+	else{
+		return "";
+	}
 	
 }
 
 string DateTime::GetTime(){
-	ostringstream out;
-	out << setw(2) << setfill('0') << _hours << ":" << setw(2) << setfill('0') << _mins;
-	return out.str();
+	if (isTimeSet){
+		ostringstream out;
+		out << setw(2) << setfill('0') << _hours << ":" << setw(2) << setfill('0') << _mins;
+		string dbg = out.str();
+		return out.str();
+	}
+	else{
+		return "";
+	}
 }
 
 //string DateTime::GetTomorrowDate(DateTime* dt){
@@ -302,6 +317,7 @@ string DateTime::StandardizeDate(string input){
 	_day = day;
 	_month = month;
 	_year = atoi(tokens[2].c_str());
+	isDateSet = true;
 
 	ostringstream monthout;
 	monthout << setw(2) << setfill('0') << month;
@@ -333,6 +349,7 @@ string DateTime::StandardizeDay(string input){
 		_day = timeinfo.tm_mday;
 		_month = timeinfo.tm_mon + 1;
 		_year = timeinfo.tm_year + 1900;
+		isDateSet = true;
 	}
 	else{
 		output = input;
@@ -397,7 +414,7 @@ string DateTime::StandardizeTime(string input){
 		_hours = hour % 24;
 		_mins = mins % 60;
 	}
-	
+	isTimeSet = true;
 
 
 	ostringstream minout;
@@ -984,8 +1001,11 @@ bool DateTime::CompareTime(string time1, string time2){
 	return isGreater;
 }
 
-string DateTime::GetDefaultDuration(){
-	return "";
+DateTime* DateTime::GetDefaultEndDate(){
+	DateTime* dt = new DateTime();
+	*dt = *this;
+	dt->_hours++;
+	return dt;
 }
 
 void DateTime::Initialize(){
