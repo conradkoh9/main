@@ -4,6 +4,11 @@
 #include <sstream>
 #include <vector>
 #include <cassert>
+#include <exception>
+#include "Logger.h"
+#include "assert.h"
+
+
 using namespace std;
 class Smartstring
 {

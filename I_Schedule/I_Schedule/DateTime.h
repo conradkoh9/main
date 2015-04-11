@@ -9,6 +9,7 @@
 #include "Smartstring.h"
 #include "assert.h"
 #include <exception>
+#include "Logger.h"
 
 using namespace std;
 class DateTime
@@ -121,7 +122,7 @@ private:
 
 
 	DAY GetDayEnum(string input); //Gets the DAY in enum format of an input string. i.e. sunday = 0, monday = 1...
-	string ToStringMonth(int input); //converts month to string
+	string GetMonthName(int input); //converts month to string
 	int CalculateOffset(DAY startday, DAY endday); //Gets the offset for the next occurance of endday based on startday.
 
 	string GetDayFromTime(time_t time); 

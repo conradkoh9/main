@@ -4,7 +4,10 @@
 #include <sstream>
 #include "Smartstring.h"
 #include "Task.h"
-#include "Logger.h";
+#include "Logger.h"
+#include "assert.h"
+#include <exception>
+
 
 using namespace std;
 using namespace logging;

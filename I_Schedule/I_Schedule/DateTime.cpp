@@ -32,8 +32,10 @@ const string DateTime::DATETYPE_SUNDAY4 = "sun";
 const string DateTime::DATETYPE_TODAY1 = "today";
 const string DateTime::DATETYPE_TOMORROW1 = "tomorrow";
 const string DateTime::DATETYPE_TOMORROW2 = "tmr";
+
 const string DateTime::TIMETYPE_AM = "am";
 const string DateTime::TIMETYPE_PM = "pm";
+
 const string DateTime::_MONTH_JANUARY = "January";
 const string DateTime::_MONTH_FEBRUARY = "February";
 const string DateTime::_MONTH_MARCH = "March";
@@ -56,17 +58,17 @@ int DateTime::numberOfTimeType;
 vector<string> DateTime::dateType;
 vector<string> DateTime::timeType;
 
-//==========================================================
-//Methods suggested by Conrad
-//==========================================================
 
+//@author A0094213M
 DateTime::DateTime(){
 	Initialize();
 }
 
+//@author A0094213M
 DateTime::DateTime(string input){
 	unformattedDateTime = input;
 	isValidFormat = true;
+
 	Initialize();
 	SetDefaults();
 	SetStandards();
@@ -79,21 +81,27 @@ string DateTime::Standardized(){
 	return formattedDateTime;
 }
 
+
 string DateTime::GetInfo(){
-	ostringstream out;
-	out << "Date: " << setw(2) << setfill('0') << _day << "/" << setw(2) << setfill('0')
-		<< _month << "/" << setw(2) << setfill('0') << _year << endl;
+	ostringstream info;
 
-	out << "Time: " << setw(2) << setfill('0') << _hours << ":" << setw(2) << setfill('0') << _mins;
+	info << "Date: " << setw(2) << setfill('0') 
+		<< _day << "/" << setw(2) << setfill('0')
+		<< _month << "/" << setw(2) << setfill('0')
+		<< _year << endl;
 
-	return out.str();
+	info << "Time: " << setw(2) << setfill('0') 
+		<< _hours << ":" << setw(2) << setfill('0') 
+		<< _mins;
+
+	return info.str();
 }
 
 string DateTime::GetDate(){
-	ostringstream out;
-	string month_s = ToStringMonth(_month);
-	out << _day << " " << month_s;
-	return out.str();
+	ostringstream date;
+	string month_s = GetMonthName(_month);
+	date << _day << " " << month_s;
+	return date.str();
 	
 }
 
@@ -141,7 +149,6 @@ void DateTime::SetDefaults(){
 	_year = timeinfo.tm_year + 1900;
 	_hours = 0;
 	_mins = 0;
-	//_seconds = 0;
 }
 
 void DateTime::SetStandards(){
@@ -242,7 +249,7 @@ string DateTime::StandardizeTriple(vector<string> input){
 			}
 		}
 	}
-	output = time + " on " + date;
+	output = time + date;
 	return output;
 }
 
@@ -523,7 +530,7 @@ DateTime::DAY DateTime::GetDayEnum(string input){
 	return DAY::INVALID;
 }
 
-string DateTime::ToStringMonth(int input){
+string DateTime::GetMonthName(int input){
 	switch (input){
 		case 1:{
 			return _MONTH_JANUARY;
@@ -694,9 +701,6 @@ DateTime::DAY DateTime::GetTomorrow(){
 	}
 	assert(false && "in DateTime::GetTomorrow function");
 }
-//==========================================================
-//End section Methods suggested by Conrad
-//==========================================================
 
 string DateTime::Now(){
 	time_t now = time(0); //raw time -> this is generally implemented as an integer offset from 00:00hours, jan1, 2970 UTC. This leads me to the assumption

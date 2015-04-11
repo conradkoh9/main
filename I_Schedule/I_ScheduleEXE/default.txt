@@ -9,7 +9,17 @@ End:
 Priority: 
 Status: Incomplete
 Description: homework from monday
-Start:  on 
+Start: 00:00am
+End: 
+Priority: 
+Status: Incomplete
+Description: homework from monday
+Start: 
+End: 
+Priority: 
+Status: Incomplete
+Description: homework from monday
+Start: 
 End: 
 Priority: 
 Status: Incomplete
