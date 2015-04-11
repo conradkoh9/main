@@ -20,11 +20,17 @@ ostringstream Logic::status; //status bar display stream
 Logic::Logic()
 {
 	parser = new Parser();
+<<<<<<< HEAD
 	command = new Command();
 	string sstatus = command->GetStatus();
 	//status << _MESSAGE_WELCOME + " " + storage->status.str();
 	status << _MESSAGE_WELCOME + " " + sstatus;
 	/*
+=======
+	storage = new Storage();
+	status << _MESSAGE_WELCOME + " " + storage->status.str();
+	string test = storage->GetFloatingList();
+>>>>>>> 152c1305b2d41a73f9b2b11403bb9a4801dbd531
 	tout << storage->GetTimedList();
 	dout << storage->GetDeadlineList();
 	fout << storage->GetFloatingList();
@@ -46,6 +52,7 @@ Logic::Logic(string input){
 	parser = new Parser();
 	storage = new Storage(input);
 	status << _MESSAGE_WELCOME;
+<<<<<<< HEAD
 	//string sTimedList = command->sGetTimedList();
 	//string sDeadlineList = command->sGetDeadlineList();
 	//string sFloatingList = command->sGetFloatingList();
@@ -54,6 +61,14 @@ Logic::Logic(string input){
 	//dout << sDeadlineList;
 	//tout << sFloatingList;
 	//tout << sMainList;
+=======
+	tout << storage->GetTimedList();
+	dout << storage->GetDeadlineList();
+	fout << storage->GetFloatingList();
+
+
+	mout << storage->ToString();
+>>>>>>> 152c1305b2d41a73f9b2b11403bb9a4801dbd531
 	logfile << "Logic created";
 }
 
@@ -61,6 +76,7 @@ Logic::~Logic()
 {
 }
 
+<<<<<<< HEAD
 void Logic::Run(string input){
 	Execute(input);
 	/*
@@ -74,6 +90,16 @@ void Logic::Run(string input){
 	//string sMainList = command->sGetMainList();
 
 	return;
+=======
+string Logic::Run(string input){
+	string feedback = Execute(input);
+	status << feedback;
+	tout << storage->GetTimedList();
+	dout << storage->GetDeadlineList();
+	fout << storage->GetFloatingList(); 
+
+	return feedback;
+>>>>>>> 152c1305b2d41a73f9b2b11403bb9a4801dbd531
 }
 
 string Logic::Execute(string input){
@@ -313,6 +339,10 @@ string Logic::Archived(string input){
 	string feedback = "Viewing archived";
 	mout << storage->ArchiveToString();
 	return feedback;
+<<<<<<< HEAD
 }
 
 */
+=======
+}
+>>>>>>> 152c1305b2d41a73f9b2b11403bb9a4801dbd531
