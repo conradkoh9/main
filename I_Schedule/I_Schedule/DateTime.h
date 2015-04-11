@@ -7,6 +7,8 @@
 #include <cassert>
 #include <iomanip>
 #include "Smartstring.h"
+#include "assert.h"
+#include <exception>
 
 using namespace std;
 class DateTime

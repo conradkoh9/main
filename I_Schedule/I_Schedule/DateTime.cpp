@@ -324,6 +324,7 @@ string DateTime::StandardizeDay(string input){
 }
 
 string DateTime::StandardizeTime(string input){
+	assert(input != "");
 	string output;
 	string result = input;
 	string period = "am";
@@ -413,6 +414,7 @@ bool DateTime::IsValidDayDate(string input){
 }
 
 bool DateTime::IsValidDate(string input){
+	assert(input != "");
 	string dbg = input;
 	int found = 0;
 	int startIdx = 0;
@@ -449,6 +451,7 @@ bool DateTime::IsValidDay(string input){
 }
 
 bool DateTime::IsValidTime(string input){
+	assert(input != "");
 	string dbg = input;
 	bool isValid = false;
 	string result = input;
