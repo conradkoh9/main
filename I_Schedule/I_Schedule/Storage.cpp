@@ -31,6 +31,8 @@ const string Storage::_FEEDBACK_EDIT_SUCCESS = "Edit success.";
 const string Storage::_FEEDBACK_DATA_CORRUPTED = "Data corrupted.";
 const string Storage::_FEEDBACK_FILETYPE_INVALID = "Invalid filetype.";
 const string Storage::_FEEDBACK_DEFAULT_SESSION_STARTED = "Default session started.";
+const string Storage::_FEEDBACK__SORT_FAILURE = "Sort failed.";
+const string Storage::_FEEDBACK_SORT_SUCCESS = "Sort success";
 const string Storage::_FEEDBACK_STARTUP = "Using ";
 const string Storage::_FEEDBACK_ARCHIVE_EMPTY = "Archive empty.";
 const string Storage::_FEEDBACK_VIEW_ARCHIVE = "Viewing archive.";
@@ -329,10 +331,18 @@ string Storage::Undo(){
 
 //@author a0119491B
 string Storage::Search(string input){
-	vector<Task*> PowerSearch_Result = PowerSearch(input);
+	vector<Task*> PowerSearch_Result;
+	try{
+		PowerSearch_Result = PowerSearch(input);
+	}
+	catch (InvalidList){
+		return _FEEDBACK_SEARCH_FAILURE;
+	}
+
 	if (PowerSearch_Result.empty()){
 		return _FEEDBACK_SEARCH_FAILURE;
-	}else{
+	}
+	else{
 		return ToString(PowerSearch_Result, 1);
 	}
 }
@@ -341,6 +351,11 @@ string Storage::Search(string input){
 vector<Task*> Storage::PowerSearch(string input){
 	vector<Task*>::iterator iter;
 	vector<Task*> searchResult;
+
+	if (taskList.size() == 0){
+		throw invalid_list;
+	}
+
 	for (iter = taskList.begin(); iter != taskList.end(); ++iter){
 		Task* currentTask = *iter;
 		if (currentTask->isContains(input)){
@@ -376,12 +391,12 @@ void Storage::InitializeDayTask(string date){
 		string dateTime = taskList[i]->GetStartTime();
 		size_t position = 0;
 		position = dateTime.find_first_of(":"); // 17:00pm 07/04/2015 Only this format can be recognized
+		assert(position > 0);
 		if (position != string::npos){
 			daytask.push_back(taskList[i]);
 		}
 	}
 }
-
 //@author A0119491B
 void Storage::SetDayCalendar(){
 	InitializeDayCalendar();
@@ -432,37 +447,42 @@ void Storage::SetOccupiedSlots(){
 //@auhtor A0119491B
 string Storage::GetEmptySlots(){
 	int startindex = 0, endindex = 0, time_intervals = 48, starthr, endhr;
-	
-	int j = 0;
+
+	int next = 0;
 	for (int i = 0; i < time_intervals; i++)
 	{
+		assert(daycalendar[i] != "");
 		startindex = i;
-		j = i;
-		while (daycalendar[j] == "empty" && i!=47){ // find empty slots
-			j++;
+		next = i;
+		while (daycalendar[next] == "empty" && i != 47){ // find empty slots
+			next++;
+			assert(daycalendar[next] != "");
 		}
 
-		endindex = j;
-		if (i != j){
-			if (startindex%2 == 0 && endindex%2 == 0){
+		endindex = next;
+		if (i != next){
+			if (startindex % 2 == 0 && endindex % 2 == 0){ //check startindex and endindex are odd or even
 				starthr = startindex / 2;
 				endhr = endindex / 2;
 				ostringstream oss;
 				oss << setw(2) << setfill('0') << starthr << ":" << "00 to " << setw(2) << setfill('0') << endhr << ":00";
 				emptyslots.push_back(oss.str());
-			}else if (startindex % 2 != 0 && endindex % 2 == 0){
+			}
+			else if (startindex % 2 != 0 && endindex % 2 == 0){
 				starthr = startindex / 2;
 				endhr = endindex / 2;
 				ostringstream oss;
 				oss << setw(2) << setfill('0') << starthr << ":" << "30 to " << setw(2) << setfill('0') << endhr << ":00";
 				emptyslots.push_back(oss.str());
-			}else if (startindex % 2 == 0 && endindex % 2 != 0){
+			}
+			else if (startindex % 2 == 0 && endindex % 2 != 0){
 				starthr = startindex / 2;
 				endhr = endindex / 2;
 				ostringstream oss;
 				oss << setw(2) << setfill('0') << starthr << ":" << "00 to " << setw(2) << setfill('0') << endhr << ":30";
 				emptyslots.push_back(oss.str());
-			}else if (startindex % 2 != 0 && endindex % 2 != 0){
+			}
+			else if (startindex % 2 != 0 && endindex % 2 != 0){
 				starthr = startindex / 2;
 				endhr = endindex / 2;
 				ostringstream oss;
@@ -472,11 +492,12 @@ string Storage::GetEmptySlots(){
 
 			i = endindex; //let for loop continnue at endindex
 		}
-		
+
 	}
-	
+
 	return ToString(emptyslots);
 }
+
 
 //====================================================================
 //STATS
@@ -651,12 +672,10 @@ void Storage::Update(){
 //Filter Methods
 //====================================================================
 
-//@author A0119491B
-void Storage::FilterTask(){
+string Storage::FilterTask(){
 	ClearFilteredLists();
 	InitializeLists();
-	SortAllLists();
-	return;
+	return SortAllLists();
 }
 //@author A0119491B
 void Storage::InitializeLists(){
@@ -678,23 +697,46 @@ void Storage::InitializeLists(){
 	}
 }
 //@author A0119491B
-void Storage::SortAllLists(){
-	SortListsByTime(timedList);
-	SortListsByTime(deadlineList);
+string Storage::SortAllLists(){
+	try{
+		SortListsByTime(timedList);
+	}
+	catch (InvalidList){
+		return _FEEDBACK__SORT_FAILURE;
+	}
+
+	try{
+		SortListsByTime(deadlineList);
+	}
+	catch (InvalidList){
+		return _FEEDBACK__SORT_FAILURE;
+	}
 	SortTaskList();
+	return _FEEDBACK_SORT_SUCCESS;
 }
 //@author A0119491B
 void Storage::SortListsByTime(vector <Task*> &V){
 	int size_V = V.size();
-	string datetime1, datetime2;
+	string dt1, dt2, datetime1, datetime2;
 	for (int i = 0; i < size_V; i++){
 		for (int j = i; j < size_V; ++j){
-			datetime1 = V[i]->GetStartDateTime();
-			datetime2 = V[j]->GetStartDateTime();
+			dt1 = V[i]->GetStartDateTime();
+			dt2 = V[j]->GetStartDateTime();
 
-			if (datetime1 == "" && datetime2 == ""){
-				datetime1 = V[i]->GetEndDate();
-				datetime2 = V[j]->GetEndDate();
+
+			if (dt1 != "" && dt2 != "")
+			{
+				datetime1 = dt1;
+				datetime2 = dt2;
+			}
+			else if (dt1 == "" && dt2 == ""){
+				dt1 = V[i]->GetEndDate();
+				dt2 = V[j]->GetEndDate();
+				datetime1 = dt1;
+				datetime2 = dt2;
+			}
+			else{
+				throw invalid_list;
 			}
 
 			DateTime dt1(datetime1);
@@ -710,6 +752,7 @@ void Storage::SortListsByTime(vector <Task*> &V){
 //@author A0119491B
 void Storage::SortTaskList(){
 	taskList.clear();
+	assert(taskList.size() == 0);
 	vector<Task*>::iterator iter;
 	for (iter = timedList.begin(); iter != timedList.end(); iter++){
 		taskList.push_back(*iter);

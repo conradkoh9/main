@@ -129,6 +129,8 @@ private:
 	static const string _FEEDBACK_ARCHIVE_EMPTY;
 	static const string _FEEDBACK_VIEW_ARCHIVE;
 	static const string _FEEDBACK_DAYVIEW;
+	static const string _FEEDBACK__SORT_FAILURE;
+	static const string _FEEDBACK_SORT_SUCCESS;
 	//formatting variables
 	static const string _rtfboldtagstart;
 	static const string _rtfboldtagend;
@@ -152,10 +154,10 @@ private:
 	void Update(); //Updates all the vectors with the new information
 
 	//filter methods
-	void FilterTask();
+	string FilterTask();
 	void SortListsByTime(vector<Task*> &V);
 	void InitializeLists();
-	void SortAllLists();
+	string SortAllLists();
 	void SortTaskList();
 
 	//clear methods
