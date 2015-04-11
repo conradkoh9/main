@@ -150,7 +150,7 @@ Command* Logic::GetCommand(Smartstring::COMMAND command){
 }
 
 void Logic::UpdateDisplays(){
-	mout << 
+	return;
 }
 /*
 	switch (cmd){
