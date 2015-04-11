@@ -13,12 +13,7 @@ class Parser
 public:
 	Parser();
 	~Parser();
-	//methods
-	string integerLiteral(string);
-	string identifierLiteral(string);
-	string stringLiteral(string);
-	
-	//suggestions for methods by Conrad
+
 	Smartstring::COMMAND IdentifyCommand(string input);
 	Smartstring::LIST IdentifyList(string input);
 	vector<string> IdentifyTaskFields(string input);
