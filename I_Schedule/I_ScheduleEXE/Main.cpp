@@ -12,12 +12,13 @@ int main(){
 	Logic* logic = new Logic();
 	string myinput = "add homework from monday on: tuesday priority 1";
 	string feedback;
-	feedback = logic->Run(myinput);
+	logic->Run(myinput);
 	cout << feedback << "\r\n";
 	string input;
 
 	while (!logic->exit && getline(cin, input)){
-		string output = logic->Run(input);
+		string output = "";
+		logic->Run(input);
 		cout << output << "\r\n";
 	}
 

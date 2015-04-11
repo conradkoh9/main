@@ -111,6 +111,15 @@ string DateTime::GetTime(){
 	return out.str();
 }
 
+//string DateTime::GetTomorrowDate(DateTime* dt){
+//	struct tm * tomorrow;
+//	tomorrow->tm_hour = dt->_hours;
+//	tomorrow->tm_mday = dt->_day;
+//	tomorrow->tm_mon = dt->_month - 1;
+//	tomorrow->tm_min = dt->_mins;
+//	tomorrow->tm_year = dt->_year - 1900;
+//}
+
 bool DateTime::IsEarlierThan(DateTime dt){
 	bool isEarlier = false;
 	if (_year < dt._year){

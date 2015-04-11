@@ -20,31 +20,12 @@ ostringstream Logic::status; //status bar display stream
 Logic::Logic()
 {
 	parser = new Parser();
-<<<<<<< HEAD
-	command = new Command();
-	string sstatus = command->GetStatus();
-	//status << _MESSAGE_WELCOME + " " + storage->status.str();
-	status << _MESSAGE_WELCOME + " " + sstatus;
-	/*
-=======
 	storage = new Storage();
 	status << _MESSAGE_WELCOME + " " + storage->status.str();
-	string test = storage->GetFloatingList();
->>>>>>> 152c1305b2d41a73f9b2b11403bb9a4801dbd531
 	tout << storage->GetTimedList();
 	dout << storage->GetDeadlineList();
 	fout << storage->GetFloatingList();
-
 	mout << storage->ToString();
-	*/
-	string sTimedList = command->sGetTimedList();
-	string sDeadlineList = command->sGetDeadlineList();
-	string sFloatingList = command->sGetFloatingList();
-	string sMainList = command->sGetMainList();
-	tout << sTimedList;
-	dout << sDeadlineList;
-	tout << sFloatingList;
-	tout << sMainList;
 	logfile << "Logic created";
 }
 
@@ -52,23 +33,10 @@ Logic::Logic(string input){
 	parser = new Parser();
 	storage = new Storage(input);
 	status << _MESSAGE_WELCOME;
-<<<<<<< HEAD
-	//string sTimedList = command->sGetTimedList();
-	//string sDeadlineList = command->sGetDeadlineList();
-	//string sFloatingList = command->sGetFloatingList();
-	//string sMainList = command->sGetMainList();
-	//tout << sTimedList;
-	//dout << sDeadlineList;
-	//tout << sFloatingList;
-	//tout << sMainList;
-=======
+
 	tout << storage->GetTimedList();
 	dout << storage->GetDeadlineList();
 	fout << storage->GetFloatingList();
-
-
-	mout << storage->ToString();
->>>>>>> 152c1305b2d41a73f9b2b11403bb9a4801dbd531
 	logfile << "Logic created";
 }
 
@@ -76,30 +44,10 @@ Logic::~Logic()
 {
 }
 
-<<<<<<< HEAD
+
 void Logic::Run(string input){
 	Execute(input);
-	/*
-	tout << storage->GetTimedList();
-	dout << storage->GetDeadlineList();
-	fout << storage->GetFloatingList(); 
-	*/
-	//string sTimedList = command->sGetTimedList();
-	//string sDeadlineList = command->sGetDeadlineList();
-	//string sFloatingList = command->sGetFloatingList();
-	//string sMainList = command->sGetMainList();
-
 	return;
-=======
-string Logic::Run(string input){
-	string feedback = Execute(input);
-	status << feedback;
-	tout << storage->GetTimedList();
-	dout << storage->GetDeadlineList();
-	fout << storage->GetFloatingList(); 
-
-	return feedback;
->>>>>>> 152c1305b2d41a73f9b2b11403bb9a4801dbd531
 }
 
 string Logic::Execute(string input){
@@ -120,64 +68,67 @@ Command* Logic::GetCommand(Smartstring::COMMAND command){
 	Command* cmd_o = new Command();
 	switch (command){
 		case (Smartstring::COMMAND::ADD) : {
-			cmd_o = new AddCommand();
+			cmd_o = new AddCommand(storage, parser);
 			break;
 		}
 		case (Smartstring::COMMAND::DELETE) : {
-			cmd_o = new DeleteCommand();
+			cmd_o = new DeleteCommand(storage, parser);
 			break;
 		}
 		case (Smartstring::COMMAND::DISPLAY) : {
-			cmd_o = new DisplayCommand();
+			cmd_o = new DisplayCommand(storage, parser);
 			break;
 		}
 		case(Smartstring::COMMAND::EDIT) : {
-			cmd_o = new EditCommand();
+			cmd_o = new EditCommand(storage, parser);
 			break;
 		}
 		case (Smartstring::COMMAND::SEARCH) : {
-			cmd_o = new SearchCommand();
+			cmd_o = new SearchCommand(storage, parser);
 			break;
 		}
 		case (Smartstring::COMMAND::CLEAR) : {
-			cmd_o = new ClearCommand();
+			cmd_o = new ClearCommand(storage, parser);
 			break;
 		}
 		case (Smartstring::COMMAND::COMPLETE) : {
-			cmd_o = new CompleteCommand();
+			cmd_o = new CompleteCommand(storage, parser);
 			break;
 		}
 		case (Smartstring::COMMAND::SAVE) : {
-			cmd_o = new SaveCommand();
+			cmd_o = new SaveCommand(storage, parser);
 			break;
 		}
 		case (Smartstring::COMMAND::FREE) : {
-			cmd_o = new FreeCommand();
+			cmd_o = new FreeCommand(storage, parser);
 			break;
 		}
 		case (Smartstring::COMMAND::UNDO) : {
-			cmd_o = new UndoCommand();
+			cmd_o = new UndoCommand(storage, parser);
 			break;
 		}
 		case (Smartstring::COMMAND::LOAD) : {
-			cmd_o = new LoadCommand();
+			cmd_o = new LoadCommand(storage, parser);
 			break;
 		}
 		case (Smartstring::COMMAND::ARCHIVED) : {
-			cmd_o = new ArchivedCommand();
+			cmd_o = new ArchivedCommand(storage, parser);
 			break;
 		}
 		case(Smartstring::COMMAND::INVALID_CMD) : {       //shouldn't it be set just as default
-			cmd_o = new Command();
+			cmd_o = new Command(storage, parser);
 			break;
 		}
 	}
 	return cmd_o;
 }
 
-void Logic::UpdateDisplays(){
-	return;
+string Logic::QuickSearch(string input){
+	Command* cmd = GetCommand(Smartstring::SEARCH);
+	cmd->Execute(input);
+	return "";
 }
+
 /*
 	switch (cmd){
 		case (Smartstring::COMMAND::ADD) : {
@@ -339,10 +290,6 @@ string Logic::Archived(string input){
 	string feedback = "Viewing archived";
 	mout << storage->ArchiveToString();
 	return feedback;
-<<<<<<< HEAD
 }
 
 */
-=======
-}
->>>>>>> 152c1305b2d41a73f9b2b11403bb9a4801dbd531

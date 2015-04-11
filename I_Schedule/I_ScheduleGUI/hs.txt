@@ -48,13 +48,3 @@ Start: 02:00pm on 11/04/2015
 End: 04:00pm on 11/04/2015
 Priority: 
 Status: Incomplete
-Description: homework
-Start: 13/04/2015
-End: 
-Priority: 
-Status: Incomplete
-Description: homework
-Start: 07:00pm on 13/04/2015
-End: 08:00pm on 13/04/2015
-Priority: 
-Status: Complete

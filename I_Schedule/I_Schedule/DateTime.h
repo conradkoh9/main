@@ -129,7 +129,6 @@ private:
 	string GetStandardDate(time_t time);
 	string GetStandardTime(time_t time);
 	time_t OffsetByDay(time_t startday, time_t offset_in_days); //given a startday and number of days to offset by, converts to a time_t value
-
 	DAY GetToday();
 	DAY GetTomorrow();
 

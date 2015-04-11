@@ -35,7 +35,7 @@ void UI_Controller::Run(string input){
 }
 void UI_Controller::QuickSearch(string input){
 	if (!input.empty()){
-		logic->Search(input);
+		logic->QuickSearch(input);
 		UpdateDisplays();
 		ClearStreams();
 	}
@@ -73,6 +73,7 @@ void UI_Controller::ToRTF(string filename, string input){
 
 string UI_Controller::UpdateDisplays(){
 	string feedback = "";
+	string dbg = logic->mout.str();
 	DISPLAY_STATUS = logic->status.str();
 	ToRTF(rtf_main, logic->mout.str());
 	ToRTF(rtf_deadline, logic->dout.str());

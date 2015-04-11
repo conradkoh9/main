@@ -13,7 +13,7 @@ class Command
 {
 public:
 	Command();
-	Command(string input);
+	Command(Storage* store_, Parser* parser_);;
 	~Command();
 	Storage* storage;
 	Parser* parser;
@@ -46,6 +46,7 @@ public:
 class AddCommand : public Command{
 public:
 	AddCommand();
+	AddCommand(Storage* store_, Parser* parser_);
 	~AddCommand();
 
 	string Execute(string) override;
@@ -54,6 +55,7 @@ public:
 class ClearCommand : public Command{
 public:
 	ClearCommand();
+	ClearCommand(Storage* store_, Parser* parser_);
 	~ClearCommand();
 
 	string Execute(string) override;
@@ -62,6 +64,7 @@ public:
 class DeleteCommand : public Command{
 public:
 	DeleteCommand();
+	DeleteCommand(Storage* store_, Parser* parser_);
 	~DeleteCommand();
 
 	string Execute(string) override;
@@ -70,6 +73,7 @@ public:
 class DisplayCommand : public Command{
 public:
 	DisplayCommand();
+	DisplayCommand(Storage* store_, Parser* parser_);
 	~DisplayCommand();
 
 	string Execute(string) override;
@@ -78,6 +82,7 @@ public:
 class EditCommand : public Command{
 public:
 	EditCommand();
+	EditCommand(Storage* store_, Parser* parser_);
 	~EditCommand();
 
 	string Execute(string) override;
@@ -86,6 +91,7 @@ public:
 class SaveCommand : public Command{
 public:
 	SaveCommand();
+	SaveCommand(Storage* store_, Parser* parser_);
 	~SaveCommand();
 
 	string Execute(string) override;
@@ -94,6 +100,7 @@ public:
 class SearchCommand : public Command{
 public:
 	SearchCommand();
+	SearchCommand(Storage* store_, Parser* parser_);
 	~SearchCommand();
 
 	string Execute(string) override;
@@ -102,6 +109,7 @@ public:
 class CompleteCommand : public Command{
 public:
 	CompleteCommand();
+	CompleteCommand(Storage* store_, Parser* parser_);
 	~CompleteCommand();
 
 	string Execute(string) override;
@@ -110,6 +118,7 @@ public:
 class FreeCommand : public Command{
 public:
 	FreeCommand();
+	FreeCommand(Storage* store_, Parser* parser_);
 	~FreeCommand();
 
 	string Execute(string) override;
@@ -118,6 +127,7 @@ public:
 class LoadCommand : public Command{
 public:
 	LoadCommand();
+	LoadCommand(Storage* store_, Parser* parser_);
 	~LoadCommand();
 
 	string Execute(string) override;
@@ -126,6 +136,7 @@ public:
 class UndoCommand : public Command{
 public:
 	UndoCommand();
+	UndoCommand(Storage* store_, Parser* parser_);
 	~UndoCommand();
 
 	string Execute(string) override;
@@ -134,6 +145,7 @@ public:
 class ArchivedCommand : public Command{
 public:
 	ArchivedCommand();
+	ArchivedCommand(Storage* store_, Parser* parser_);
 	~ArchivedCommand();
 
 	string Execute(string) override;
@@ -142,6 +154,7 @@ public:
 class Invalid_cmdCommand : public Command{
 public:
 	Invalid_cmdCommand();
+	Invalid_cmdCommand(Storage* store_, Parser* parser_);
 	~Invalid_cmdCommand();
 
 	string Execute(string) override;

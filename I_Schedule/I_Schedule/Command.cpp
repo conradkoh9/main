@@ -8,11 +8,12 @@ const string Command::_FEEDBACK_SEARCH = "Displaying search results.";
 const string Command::_FEEDBACK_UNDO = "Undo previous command.";
 const string Command::_FEEDBACK_INVALID_COMMAND = "Invalid command entered.";
 const string Command::_MESSAGE_WELCOME = "Welcome to I_Schedule.";
-
 Command::Command(){
-}
 
-Command::Command(string input){
+}
+Command::Command(Storage* store_, Parser* parser_){
+	storage = store_;
+	parser = parser_;
 }
 
 Command::~Command(){
@@ -61,9 +62,12 @@ string Command::Execute(string){   //invalid command
 //}
 
 //Add Command
-
 AddCommand::AddCommand(){
 
+}
+AddCommand::AddCommand(Storage* store_, Parser* parser_){
+	storage = store_;
+	parser = parser_;
 }
 
 AddCommand::~AddCommand(){
@@ -74,14 +78,16 @@ string AddCommand::Execute(string taskInput){
 	vector<string> taskinfo = parser->IdentifyTaskFields(taskInput);
 	Task* task = new Task(taskinfo);
 	string feedback = storage->Add(task);
-	mout << task->ToString();
-	return feedback;
+	return task->ToString();
 }
 
 //Clear Command
-
 ClearCommand::ClearCommand(){
 
+}
+ClearCommand::ClearCommand(Storage* store_, Parser* parser_){
+	storage = store_;
+	parser = parser_;
 }
 
 ClearCommand::~ClearCommand(){
@@ -89,14 +95,18 @@ ClearCommand::~ClearCommand(){
 }
 
 string ClearCommand::Execute(string all){
-	string feedback = storage->Clear();
-	return feedback;
+	storage->Clear();
+	return storage->ToString();
 }
 
 //Delete Command
 
 DeleteCommand::DeleteCommand(){
+}
 
+DeleteCommand::DeleteCommand(Storage* store_, Parser* parser_){
+	storage = store_;
+	parser = parser_;
 }
 
 DeleteCommand::~DeleteCommand(){
@@ -104,21 +114,19 @@ DeleteCommand::~DeleteCommand(){
 }
 
 string DeleteCommand::Execute(string taskInput){
-	Smartstring listname;
-	istringstream in(taskInput);
-	int position;
-	in >> listname;
-	in >> position;
-	//delete from list function
-	string feedback = storage->DeleteFromList(position, listname.ListType());
-	return feedback;
+	int position = atoi(taskInput.c_str());
+	storage->Delete(position);
+	return storage->ToString();
 }
 
 
 //Display Command
-
 DisplayCommand::DisplayCommand(){
 
+}
+DisplayCommand::DisplayCommand(Storage* store_, Parser* parser_){
+	storage = store_;
+	parser = parser_;
 }
 
 DisplayCommand::~DisplayCommand(){
@@ -126,13 +134,16 @@ DisplayCommand::~DisplayCommand(){
 }
 
 string DisplayCommand::Execute(string all){
-	return _FEEDBACK_DISPLAY;
+	return storage->ToString();
 }
 
 //Edit Command
-
 EditCommand::EditCommand(){
 
+}
+EditCommand::EditCommand(Storage* store_, Parser* parser_){
+	storage = store_;
+	parser = parser_;
 }
 
 EditCommand::~EditCommand(){
@@ -156,9 +167,12 @@ string EditCommand::Execute(string taskInput){
 }
 
 //Save Command
-
 SaveCommand::SaveCommand(){
 
+}
+SaveCommand::SaveCommand(Storage* store_, Parser* parser_){
+	storage = store_;
+	parser = parser_;
 }
 
 SaveCommand::~SaveCommand(){
@@ -171,9 +185,12 @@ string SaveCommand::Execute(string input){
 }
 
 //Search Command
-
 SearchCommand::SearchCommand(){
 
+}
+SearchCommand::SearchCommand(Storage* store_, Parser* parser_){
+	storage = store_;
+	parser = parser_;
 }
 
 SearchCommand::~SearchCommand(){
@@ -185,9 +202,12 @@ string SearchCommand::Execute(string taskInput){
 }
 
 //Complete Command
-
 CompleteCommand::CompleteCommand(){
 
+}
+CompleteCommand::CompleteCommand(Storage* store_, Parser* parser_){
+	storage = store_;
+	parser = parser_;
 }
 
 CompleteCommand::~CompleteCommand(){
@@ -195,23 +215,23 @@ CompleteCommand::~CompleteCommand(){
 }
 
 string CompleteCommand::Execute(string input){
-	Smartstring listname;
 	istringstream in(input);
 	int position;
-	in >> listname;
 	in >> position;
 
 	//Complete function
 	string feedback = storage->Complete(position);
-	mout << storage->ToString();
 
-	return feedback;
+	return storage->ToString();
 }
 
 //Free Command
-
 FreeCommand::FreeCommand(){
 
+}
+FreeCommand::FreeCommand(Storage* store_, Parser* parser_){
+	storage = store_;
+	parser = parser_;
 }
 
 FreeCommand::~FreeCommand(){
@@ -224,9 +244,12 @@ string FreeCommand::Execute(string input){
 }
 
 //Load Command
-
 LoadCommand::LoadCommand(){
 
+}
+LoadCommand::LoadCommand(Storage* store_, Parser* parser_){
+	storage = store_;
+	parser = parser_;
 }
 
 LoadCommand::~LoadCommand(){
@@ -240,9 +263,13 @@ string LoadCommand::Execute(string input){
 
 
 //Undo Command
-
 UndoCommand::UndoCommand(){
 
+}
+
+UndoCommand::UndoCommand(Storage* store_, Parser* parser_){
+	storage = store_;
+	parser = parser_;
 }
 
 UndoCommand::~UndoCommand(){
@@ -251,8 +278,7 @@ UndoCommand::~UndoCommand(){
 
 string UndoCommand::Execute(string undo){
 	string feedback = storage->Undo();
-	mout << storage->ToString();
-	return feedback;
+	return storage->ToString();
 }
 
 //Archived Command
@@ -261,12 +287,16 @@ ArchivedCommand::ArchivedCommand(){
 
 }
 
+ArchivedCommand::ArchivedCommand(Storage* store_, Parser* parser_){
+	storage = store_;
+	parser = parser_;
+}
+
 ArchivedCommand::~ArchivedCommand(){
 
 }
 
 string ArchivedCommand::Execute(string input){
-	string feedback = "Viewing archived";
-	mout << storage->ArchiveToString();
-	return feedback;
+	string dbg = storage->ArchiveToString();
+	return storage->ArchiveToString();
 }
