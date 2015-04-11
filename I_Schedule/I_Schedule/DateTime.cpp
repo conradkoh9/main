@@ -99,7 +99,7 @@ string DateTime::GetDate(){
 
 string DateTime::GetTime(){
 	ostringstream out;
-	out << _hours << ":" << _mins;
+	out << setw(2) << setfill('0') << _hours << ":" << setw(2) << setfill('0') << _mins;
 	return out.str();
 }
 

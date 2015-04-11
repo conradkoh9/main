@@ -75,10 +75,15 @@ Task::Task(vector<string> input){
 }
 
 Task::Task(Task* task){
+	startDateTime = "";
 	startdate = "";
+	starttime = "";
 	description = "";
 	priority = "";
 	endDateTime = "";
+	enddate = "";
+	endtime = "";
+
 	sdate = "";
 	edate = "";
 	stime = "";
@@ -322,7 +327,7 @@ string Task::ToShortString(){
 //@author A0099303A
 string Task::ToDeadlineString(){
 	ostringstream out;
-	out << "[" << endDateTime << "] ";
+	out << "[" << enddate << "," << endtime << "] ";
 	out << description;
 	return out.str();
 }
@@ -335,8 +340,8 @@ string Task::ToFloatingString(){
 
 string Task::ToTimedString(){
 	ostringstream out;
-	out << "[" << startDateTime << "]";
-	out << "[" << endDateTime << "] ";
+	out << "[" << startdate << "," << starttime << "]";
+	out << "[" << enddate << "," << endtime << "] ";
 	out << description;
 	return out.str();
 }
