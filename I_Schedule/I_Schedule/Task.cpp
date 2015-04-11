@@ -70,7 +70,7 @@ Task::Task(vector<string> input){
 	priority = input[Smartstring::FIELD::PRIORITY];
 	status = input[Smartstring::FIELD::STATUS];
 	if (status == ""){
-		status = _STATUS_INCOMPLETE;
+	status = _STATUS_INCOMPLETE;
 	}*/
 }
 
@@ -114,22 +114,22 @@ string Task::Edit(vector<string> newinfo){
 				newinfo[i] = "";
 			}
 			switch (i){
-				case Smartstring::FIELD::DESCRIPTION:{
-					SetDescription(newinfo[i]);
-					break;
-				}
-				case Smartstring::FIELD::STARTDATE:{
-					SetStartDateTime(newinfo[i]);
-					break;
-				}
-				case Smartstring::FIELD::ENDDATE:{
-					SetEndDateTime(newinfo[i]);
-					break;
-				}
-				case Smartstring::FIELD::PRIORITY:{
-					SetPriority(newinfo[i]);
-					break;
-				}
+			case Smartstring::FIELD::DESCRIPTION:{
+				SetDescription(newinfo[i]);
+				break;
+			}
+			case Smartstring::FIELD::STARTDATE:{
+				SetStartDateTime(newinfo[i]);
+				break;
+			}
+			case Smartstring::FIELD::ENDDATE:{
+				SetEndDateTime(newinfo[i]);
+				break;
+			}
+			case Smartstring::FIELD::PRIORITY:{
+				SetPriority(newinfo[i]);
+				break;
+			}
 			}
 		}
 	}
@@ -188,13 +188,14 @@ string Task::SetEDate(){
 }
 
 string Task::SetSTime(){
-	int sPos;
+	/* sPos;
 	sPos = stime.find_first_of(":");
 	if (sPos != string::npos){
-		sPos = sPos - 2;
-		stime = stime.substr(sPos);
-		return _FEEDBACK_STIME_SET;
-	}
+	sPos = sPos - 2;
+	stime = stime.substr(sPos);
+	return _FEEDBACK_STIME_SET;
+	}*/
+	stime = standardStartdt->GetTime();
 	return "";
 }
 
@@ -213,7 +214,7 @@ string Task::SetETime(){
 string Task::SetDefaultEnddate(){
 	if (startDateTime != "" && endDateTime == "")
 	{
-		endDateTime = standardStartdt-> GetDefaultDuration();
+		endDateTime = standardStartdt->GetDefaultDuration();
 	}
 	return _FEEDBACK_DEFAULTDATE_SET;
 }
@@ -304,22 +305,22 @@ string Task::ToShortString(){
 	string output = "";
 	TASKTYPE tasktype = GetType();
 	switch (tasktype){
-		case(TASKTYPE::DEADLINE) : {
-			output = ToDeadlineString();
-			break;
-		}
-		case(TASKTYPE::FLOATING) : {
-			output = ToFloatingString();
-			break;
-		}
-		case(TASKTYPE::TIMED) : {
-			output = ToTimedString();
-			break;
-		}
-		default:{
-			output = ToTimedString();
-			break;
-		}
+	case(TASKTYPE::DEADLINE) : {
+		output = ToDeadlineString();
+		break;
+	}
+	case(TASKTYPE::FLOATING) : {
+		output = ToFloatingString();
+		break;
+	}
+	case(TASKTYPE::TIMED) : {
+		output = ToTimedString();
+		break;
+	}
+	default:{
+		output = ToTimedString();
+		break;
+	}
 	}
 	return output;
 }
@@ -361,7 +362,7 @@ string Task::ToCSVString(){
 	ostringstream out;
 	out << "\"" << description << "\",";
 	out << "\"" << startDateTime << "\",";
-	out << "\"" << endDateTime<< "\",";
+	out << "\"" << endDateTime << "\",";
 	out << "\"" << priority << "\",";
 	out << "\"" << status << "\"";
 	return out.str();
@@ -371,22 +372,22 @@ string Task::ToDatelessString(){
 	string output = "";
 	TASKTYPE tasktype = GetType();
 	switch (tasktype){
-		case(TASKTYPE::DEADLINE) : {
-			output = ToDatelessDeadlineString();
-			break;
-		}
-		case(TASKTYPE::FLOATING) : {
-			output = ToDatelessFloatingString();
-			break;
-		}
-		case(TASKTYPE::TIMED) : {
-			output = ToDatelessTimedString();
-			break;
-		}
-		default:{
-			output = ToDatelessTimedString();
-			break;
-		}
+	case(TASKTYPE::DEADLINE) : {
+		output = ToDatelessDeadlineString();
+		break;
+	}
+	case(TASKTYPE::FLOATING) : {
+		output = ToDatelessFloatingString();
+		break;
+	}
+	case(TASKTYPE::TIMED) : {
+		output = ToDatelessTimedString();
+		break;
+	}
+	default:{
+		output = ToDatelessTimedString();
+		break;
+	}
 	}
 	return output;
 }
