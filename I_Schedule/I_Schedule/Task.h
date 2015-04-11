@@ -24,14 +24,6 @@ private:
 	string priority;
 	string status;
 
-	//not clear what these are
-	string sdate;
-	string edate;
-	string stime;
-	string etime;
-
-
-
 public:
 	Task();
 	Task(vector<string> input);
@@ -55,10 +47,6 @@ public:
 	static const string _FEEDBACK_DEFAULTDATE_SET;
 	static const string _FEEDBACK_STANDARD_START_DATE_SET;
 	static const string _FEEDBACK_STANDARD_END_DATE_SET;
-	static const string _FEEDBACK_SDATE_SET;
-	static const string _FEEDBACK_EDATE_SET;
-	static const string _FEEDBACK_STIME_SET;
-	static const string _FEEDBACK_ETIME_SET;
 
 	static const string _STATUS_COMPLETE;
 	static const string _STATUS_INCOMPLETE;
@@ -72,26 +60,18 @@ public:
 	string SetEndDateTime(string input);
 	string SetPriority(string input);
 	string SetStatus(string input);
-	string SetSDate();
-	string SetEDate();
-	string SetSTime();
-	string SetETime();
 	string SetDefaultEnddate();
 	void SetUpdate();
 
 	string GetDescription();
 	string GetStartDateTime();
-	string GetStartDate();
-	string GetStartTime();
 	string GetEndDateTime();
-	string GetEndDate();
-	string GetEndTime();
 	string GetPriority();
 	string GetStatus();
-	string GetSDate();
-	string GetEDate();
-	string GetSTime();
-	string GetETime();
+	string GetStartDate();
+	string GetEndDate();
+	string GetStartTime();
+	string GetEndTime();
 
 	string MarkComplete();
 
