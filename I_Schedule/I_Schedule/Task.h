@@ -11,14 +11,26 @@ class Task
 {
 private:
 	string description;
-	string startdate;
-	string enddate;
-	string priority;
-	string standardStart;
-	string standardEnd;
-	string status;
+
 	DateTime* standardStartdt;
 	DateTime* standardEnddt;
+	string startDateTime;
+	string endDateTime;
+	string startdate;
+	string starttime;
+	string enddate;
+	string endtime;
+
+	string priority;
+	string status;
+
+	//not clear what these are
+	string sdate;
+	string edate;
+	string stime;
+	string etime;
+
+
 
 public:
 	Task();
@@ -40,8 +52,13 @@ public:
 	static const string _FEEDBACK_ENDDATE_SET;
 	static const string _FEEDBACK_PRIORITY_SET;
 	static const string _FEEDBACK_STATUS_SET;
+	static const string _FEEDBACK_DEFAULTDATE_SET;
 	static const string _FEEDBACK_STANDARD_START_DATE_SET;
 	static const string _FEEDBACK_STANDARD_END_DATE_SET;
+	static const string _FEEDBACK_SDATE_SET;
+	static const string _FEEDBACK_EDATE_SET;
+	static const string _FEEDBACK_STIME_SET;
+	static const string _FEEDBACK_ETIME_SET;
 
 	static const string _STATUS_COMPLETE;
 	static const string _STATUS_INCOMPLETE;
@@ -51,20 +68,30 @@ public:
 	string Edit(vector<string> newinfo);
 
 	string SetDescription(string input);
-	string SetStartDate(string input);
-	string SetEndDate(string input);
+	string SetStartDateTime(string input);
+	string SetEndDateTime(string input);
 	string SetPriority(string input);
 	string SetStatus(string input);
-	string SetStandardStartDate();
-	string SetStandardEndDate();
+	string SetSDate();
+	string SetEDate();
+	string SetSTime();
+	string SetETime();
+	string SetDefaultEnddate();
+	void SetUpdate();
 
 	string GetDescription();
+	string GetStartDateTime();
 	string GetStartDate();
+	string GetStartTime();
+	string GetEndDateTime();
 	string GetEndDate();
+	string GetEndTime();
 	string GetPriority();
 	string GetStatus();
-	string GetStandardStartDateTime();
-	string GetStandardEndDateTime();
+	string GetSDate();
+	string GetEDate();
+	string GetSTime();
+	string GetETime();
 
 	string MarkComplete();
 
@@ -85,13 +112,17 @@ public:
 
 	TASKTYPE GetType();
 	bool isContains(string input);
-	bool isNearMatch(string input);
+	bool isContainInDate(string input);
+	bool isContainPriority(string input);
+	bool isContainDescription(string input);
+	bool isNearMatch(string input, string des);
 	size_t LevenshteinDistance(const std::string &s1, const std::string &s2);
 
 
 	bool isFloating();
 	bool isDeadline();
 	bool isTimed();
+
 
 	friend ostream& operator<<(ostream& out, Task& task);
 	friend istream& operator>>(istream& in, Task& task);

@@ -1,3 +1,4 @@
+//@author A0094213M
 #pragma once
 #include <iostream>
 #include <string>
@@ -6,6 +7,9 @@
 #include <cassert>
 #include <iomanip>
 #include "Smartstring.h"
+#include "assert.h"
+#include <exception>
+#include "Logger.h"
 
 using namespace std;
 class DateTime
@@ -52,6 +56,20 @@ private:
 	static const string DATETYPE_TODAY1;
 	static const string DATETYPE_TOMORROW1;
 	static const string DATETYPE_TOMORROW2;
+	static const string _MONTH_JANUARY;
+	static const string _MONTH_FEBRUARY;
+	static const string _MONTH_MARCH;
+	static const string _MONTH_APRIL;
+	static const string _MONTH_MAY;
+	static const string _MONTH_JUNE;
+	static const string _MONTH_JULY;
+	static const string _MONTH_AUGUST;
+	static const string _MONTH_SEPTEMBER;
+	static const string _MONTH_OCTOBER;
+	static const string _MONTH_NOVEMBER;
+	static const string _MONTH_DECEMBER;
+
+
 
 	static const string TIMETYPE_AM;
 	static const string TIMETYPE_PM;
@@ -78,6 +96,8 @@ public:
 	//Methods
 	string Standardized();
 	string GetInfo();
+	string GetDate();
+	string GetTime();
 	int GetSeconds();
 	bool IsEarlierThan(DateTime dt);
 private:
@@ -92,6 +112,7 @@ private:
 	string StandardizeDate(string input); //Standardize input assuming that it is a date
 	string StandardizeDay(string input); //Standardize input assuming that it is a day
 	string StandardizeTime(string input);
+	string TwentyFourHourFormat();
 	bool CompareDate(string, string);
 	bool CompareTime(string, string);
 	bool IsValidDayDate(string input); //Check if input is a valid day or date
@@ -101,6 +122,7 @@ private:
 
 
 	DAY GetDayEnum(string input); //Gets the DAY in enum format of an input string. i.e. sunday = 0, monday = 1...
+	string GetMonthName(int input); //converts month to string
 	int CalculateOffset(DAY startday, DAY endday); //Gets the offset for the next occurance of endday based on startday.
 
 	string GetDayFromTime(time_t time); 
@@ -131,6 +153,7 @@ public:
 	bool CompareDateTime(string, string);
 	bool isDateType(string);
 	bool isTimeType(string);
+	string GetDefaultDuration();  //Ziqi needs it
 
 private:
 	int _day;

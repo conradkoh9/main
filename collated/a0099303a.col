@@ -1,0 +1,1842 @@
+//@author: a0099303a
+
+
+
+	/**
+	 * origin: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\Logger.cpp
+	 */
+
+namespace logging{
+	Logger::Logger()
+	{
+	}
+
+
+	Logger::~Logger()
+	{
+	}
+
+	string Logger::Write(string input){
+		string feedback = "";
+		ofstream out;
+		DateTime timeinfo;
+		out.open(_filename.c_str(), ios::app);
+		out << "[" << timeinfo.Today() << "] " << "[" << timeinfo.Now() << "]: " << input << endl;
+		out.close();
+		return feedback;
+	}
+
+	Logger& operator<<(Logger& logger, string input){
+		logger.Write(input);
+		return logger;
+	}
+}
+	// End of segment: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\Logger.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\Storage.cpp
+	 */
+
+//PUBLIC =================================================================================================
+Storage::Storage(){
+	status << Load();
+}
+
+Storage::Storage(string input){
+	_filename = input;
+	Update();
+}
+
+Storage::~Storage(){
+}
+
+	// End of segment: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\Storage.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\Storage.cpp
+	 */
+
+string Storage::Add(Task* task){
+	lastList = taskList;
+	taskList.push_back(task);
+	Update();
+	Rewrite();
+	string feedback = _FEEDBACK_ADD_SUCCESS;
+	return feedback;
+}
+
+	// End of segment: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\Storage.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\Storage.cpp
+	 */
+
+string Storage::DeleteFromList(int position, Smartstring::LIST list){
+	lastList = taskList;
+	try{
+		Task* toDelete = GetTask(position, list);
+		Erase(toDelete);
+		Rewrite();
+		Update();
+		return _FEEDBACK_DELETE_SUCCESS;
+	}
+	catch (InvalidIndex){
+		return _FEEDBACK_INVALID_INDEX;
+	}
+	catch (InvalidList){
+		return _FEEDBACK_INVALID_LIST;
+	}
+}
+
+
+	// End of segment: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\Storage.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\Storage.cpp
+	 */
+
+string Storage::Edit(int position, Smartstring::LIST list, vector<string> newinfo){
+	lastList = taskList;
+	try{
+		Task* taskptr = GetTask(position, list);
+		Task* newTask = new Task(taskptr);
+	//	(*newTask) = (*taskptr);
+		newTask->Edit(newinfo);
+		ReplaceTask(taskptr, newTask);
+		Rewrite();
+		Update();
+
+		string feedback = _FEEDBACK_EDIT_SUCCESS;
+		return feedback;
+	}
+
+	catch (InvalidIndex){
+		return _FEEDBACK_INVALID_INDEX;
+	}
+	catch (InvalidList){
+		return _FEEDBACK_INVALID_LIST;
+	}
+}
+
+	// End of segment: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\Storage.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\Storage.cpp
+	 */
+
+string Storage::Complete(int position, Smartstring::LIST list){
+
+	string feedback = "";
+	lastList = taskList;
+
+	try{
+		Task* toComplete = GetTask(position, list);
+		MarkComplete(toComplete);
+		Archive(toComplete);
+		Rewrite();
+		Update();
+		return _FEEDBACK_GENERIC_SUCCESS;
+	}
+	catch (InvalidIndex){
+		return _FEEDBACK_INVALID_INDEX;
+	}
+	catch (InvalidList){
+		return _FEEDBACK_INVALID_LIST;
+	}
+
+
+	//feedback = MarkComplete(position);
+	//Archive(position);
+	//Rewrite();
+	//Update();
+	return feedback;
+}
+
+	// End of segment: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\Storage.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\Storage.cpp
+	 */
+
+string Storage::Load(){
+	logfile << "load called.";
+	string feedback;
+	logfile << LoadSessionData(); //change active file
+	ClearVectors();
+	feedback = LoadRawFileContent();
+	logfile << feedback;
+	logfile << LoadTaskList();
+	Update();
+	logfile << "end of load.";
+	return feedback;
+}
+
+	// End of segment: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\Storage.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\Storage.cpp
+	 */
+
+string Storage::Load(string filename){
+	FILETYPE filetype = IdentifyFileType(filename);
+	if (filetype != FILETYPE::INVALID){
+		string feedback;
+		_filename = filename;
+		ClearVectors();
+		ClearUndoVector();
+		feedback = LoadRawFileContent();
+		LoadTaskList();
+		Update();
+		logfile << _FEEDBACK_LOAD_SUCCESS << " " << filename;
+		return feedback;
+	}
+	else{
+		logfile << _FEEDBACK_FILE_NOT_EMPTY;
+		return _FEEDBACK_FILE_NOT_EMPTY;
+	}
+
+}
+
+
+	// End of segment: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\Storage.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\Storage.cpp
+	 */
+
+string Storage::Save(){
+	string feedback;
+	feedback = Rewrite();
+	feedback = SaveSessionData();
+	return feedback;
+}
+
+	// End of segment: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\Storage.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\Storage.cpp
+	 */
+
+string Storage::SaveAs(string newFileName){
+	FILETYPE filetype = IdentifyFileType(newFileName);
+	if (FileEmpty(newFileName) && filetype!= FILETYPE::INVALID){
+		_filename = newFileName;
+		string feedback = Rewrite();
+		feedback = SaveSessionData();
+		return feedback;
+	}
+	else{
+		return _FEEDBACK_FILE_NOT_EMPTY;
+	}
+}
+
+	// End of segment: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\Storage.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\Storage.cpp
+	 */
+
+string Storage::Rewrite(){
+	ClearFile();
+	WriteToArchive();
+	string feedback = WriteToFile();
+	return feedback;
+}
+
+	// End of segment: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\Storage.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\Storage.cpp
+	 */
+
+string Storage::Reset(){
+	_filename = _FILENAME_DEFAULT;
+	Clear();
+	return _FEEDBACK_RESET;
+}
+
+	// End of segment: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\Storage.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\Storage.cpp
+	 */
+
+string Storage::Clear(){
+	lastList = taskList;
+	ClearFile();
+	ClearVectors();
+	Update();
+	return _FEEDBACK_CLEAR_SUCCESS;
+}
+
+	// End of segment: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\Storage.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\Storage.cpp
+	 */
+
+void Storage::Update(){
+	FilterTask();
+	SaveSessionData();
+	return;
+}
+
+
+	// End of segment: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\Storage.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\Storage.cpp
+	 */
+
+//====================================================================
+//Clear Methods
+//====================================================================
+void Storage::ClearFile(){
+	ofstream out(_filename, ofstream::trunc);
+	return;
+}
+
+	// End of segment: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\Storage.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\Storage.cpp
+	 */
+
+void Storage::ClearFilteredLists(){
+	timedList.clear();
+	floatingList.clear();
+	deadlineList.clear();
+	return;
+}
+
+	// End of segment: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\Storage.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\Storage.cpp
+	 */
+
+void Storage::ClearVectors(){
+	taskList.clear();
+	timedList.clear();
+	floatingList.clear();
+	deadlineList.clear();
+	_filecontent.clear();
+	return;
+}
+
+	// End of segment: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\Storage.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\Storage.cpp
+	 */
+
+void Storage::ClearUndoVector(){
+	lastList.clear();
+	return;
+}
+
+	// End of segment: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\Storage.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\Storage.cpp
+	 */
+
+string Storage::Remove(int position){
+	try{
+		int size_taskList = taskList.size();
+		if (position > size_taskList || position < 1){
+			throw invalid_index;
+		}
+		taskList.erase(taskList.begin() + position - 1);
+	}
+	catch (InvalidIndex){
+		throw invalid_index;
+		return _FEEDBACK_DELETE_FAILURE;
+	}
+	return _FEEDBACK_DELETE_SUCCESS;
+}
+
+	// End of segment: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\Storage.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\Storage.cpp
+	 */
+
+string Storage::Erase(Task* taskptr){
+	vector<Task*>::iterator iter;
+	for (iter = taskList.begin(); iter != taskList.end();){
+		if (taskptr == (*iter)){
+			iter = taskList.erase(iter);
+		}
+		else{
+			++iter;
+		}
+	}
+	return _FEEDBACK_DELETE_SUCCESS;
+}
+//====================================================================
+//Save methods
+//====================================================================
+	// End of segment: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\Storage.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\Storage.cpp
+	 */
+
+string Storage::SaveSessionData(){
+	ofstream of;
+	string feedback;
+	of.open(_FILENAME_SESSION_DATA.c_str(), ios::trunc);
+	of << _filename;
+	of.close();
+	ifstream file;
+	file.open(_FILENAME_SESSION_DATA.c_str());
+	string buffer;
+	file >> buffer;
+	file.close();
+	if (buffer.empty()){
+		feedback = _FEEDBACK_SESSION_SAVE_FAILURE;
+	}
+	else{
+		feedback = _FEEDBACK_SESSION_SAVE_SUCCESS + " " + buffer;
+	}
+	return feedback;
+}
+
+	// End of segment: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\Storage.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\Storage.cpp
+	 */
+
+string Storage::WriteToFile(){
+	FILETYPE filetype = IdentifyFileType(_filename);
+	string feedback;
+	switch (filetype){
+	case (FILETYPE::CSV) : {
+		feedback = WriteToCSV();
+		break;
+	}
+	case(FILETYPE::TXT) : {
+		feedback = WriteToTXT();
+		break;
+	}
+	case(FILETYPE::INVALID) : {
+		return _FEEDBACK_INVALID_FILE_FORMAT;
+		break;
+	}
+	}
+	return feedback;
+
+}
+
+	// End of segment: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\Storage.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\Storage.cpp
+	 */
+
+string Storage::WriteToCSV(){
+	ostringstream out;
+	ofstream of;
+	of.open(_filename.c_str(), ios::app);
+	vector<Task*>::iterator iter;
+	int size = taskList.size();
+	for (iter = taskList.begin(); iter != taskList.end(); ++iter){
+		if (iter + 1 != taskList.end()){
+			out << (*iter)->ToCSVString() << endl;
+		}
+		else{
+			out << (*iter)->ToCSVString();
+		}
+	}
+	string str = out.str();
+	of << out.str();
+	return _FEEDBACK_WRITE_SUCCESS;
+}
+
+	// End of segment: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\Storage.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\Storage.cpp
+	 */
+
+string Storage::WriteToTXT(){
+	ostringstream out;
+	ofstream of;
+	of.open(_filename.c_str(), ios::app);
+	vector<Task*>::iterator iter;
+	for (iter = taskList.begin(); iter != taskList.end(); ++iter){
+		if (iter + 1 != taskList.end()){
+			out << (*iter)->ToTXTString() << endl;
+		}
+		else{
+			out << (*iter)->ToTXTString();
+		}
+	}
+	of << out.str();
+
+	return _FEEDBACK_WRITE_SUCCESS;
+}
+
+string Storage::WriteToArchive(){
+	ostringstream out;
+	ofstream of;
+	of.open(_archivefile.c_str(), ios::app);
+	vector<Task*>::iterator iter;
+	int size = archiveList.size();
+	for (iter = archiveList.begin(); iter != archiveList.end(); ++iter){
+		out << (*iter)->ToCSVString() << endl;
+	}
+	archiveList.clear();
+	string str = out.str();
+	of << out.str();
+	return _FEEDBACK_WRITE_SUCCESS;
+}
+
+//====================================================================
+//Load methods
+//====================================================================
+	// End of segment: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\Storage.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\Storage.cpp
+	 */
+
+string Storage::LoadSessionData(){
+	ifstream file;
+	file.open(_FILENAME_SESSION_DATA);
+	getline(file, _filename);
+	string feedback;
+	if (_filename.empty()){
+		feedback = _FEEDBACK_LOAD_FAILURE;
+	}
+	else{
+		feedback = _FEEDBACK_LOAD_SUCCESS;
+	}
+	logfile << _filename;
+	logfile << feedback;
+
+	return feedback;
+}
+
+	// End of segment: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\Storage.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\Storage.cpp
+	 */
+
+string Storage::LoadRawFileContent(){
+	string line;
+	vector<string> all_lines;
+	ifstream in(_filename.c_str());
+	try{
+		if (in.is_open()){
+			while (getline(in, line)){
+				if (line == _EMPTY_STRING){
+					return _FEEDBACK_FILE_EMPTY;
+				}
+
+				all_lines.push_back(line);
+			}
+			_filecontent = all_lines;
+			return _FEEDBACK_LOAD_SUCCESS;
+		}
+	}
+	catch (out_of_range){
+		return _FEEDBACK_LOAD_FAILURE;
+	}
+	return _FEEDBACK_LOAD_FAILURE;
+}
+
+	// End of segment: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\Storage.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\Storage.cpp
+	 */
+
+string Storage::LoadTaskList(){
+	FILETYPE filetype = IdentifyFileType(_filename);
+	string feedback;
+	switch (filetype){
+	case (FILETYPE::CSV) : {
+		feedback = LoadCSVContent();
+		break;
+	}
+	case(FILETYPE::TXT) : {
+		feedback = LoadTXTContent();
+		break;
+	}
+	case(FILETYPE::INVALID) : {
+		return _FEEDBACK_LOAD_FAILURE;
+		break;
+	}
+	}
+	return feedback;
+	
+}
+
+	// End of segment: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\Storage.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\Storage.cpp
+	 */
+
+string Storage::LoadCSVContent(){
+	Smartstring str;
+	const int startfield = Smartstring::FIELD::DESCRIPTION;
+	int currentfield = startfield;
+	int fieldcount = Smartstring::NUMBER_OF_FIELDS;
+	vector<string>::iterator iter;
+	Task* taskptr = new Task();
+	try{
+		int msize = _filecontent.size();
+		for (iter = _filecontent.begin(); iter != _filecontent.end(); ++iter){
+			str = (*iter);
+			vector<string> output = str.Tokenize(_DELIMITERS_CSV);
+			vector<string>::iterator iter2;
+			for (iter2 = output.begin(); iter2 != output.end(); ++iter2){
+				int end = (*iter2).length() - 2;
+				*iter2 = (*iter2).substr(1, end);
+			}
+			string test = output.front();
+			if (output.size() != Smartstring::NUMBER_OF_FIELDS){
+				assert(false && "In Storage LoadCSVContent load failed, size does not match definition");
+				return _FEEDBACK_LOAD_FAILURE;
+			}
+			taskptr = new Task(output);
+			taskList.push_back(taskptr);
+		}
+	}
+
+	catch (out_of_range){
+		return _FEEDBACK_LOAD_FAILURE;
+	}
+	return _FEEDBACK_LOAD_SUCCESS;
+	return _FEEDBACK_LOAD_FAILURE;
+}
+
+	// End of segment: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\Storage.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\Storage.cpp
+	 */
+
+string Storage::LoadTXTContent(){
+	Smartstring str;
+	const int startfield = Smartstring::FIELD::DESCRIPTION;
+	int currentfield = startfield;
+	int fieldcount = Smartstring::NUMBER_OF_FIELDS;
+	vector<string>::iterator iter;
+	Task* taskptr = new Task();
+	//remove field description from _filecontent
+	vector<string> taskContent;
+	for (iter = _filecontent.begin(); iter != _filecontent.end(); ++iter){
+		string line = (*iter);
+		istringstream is(line);
+		string buffer;
+		is >> buffer;
+		string output;
+		getline(is, output);
+		int length = line.length() - 1;
+		output = output.substr(1, length);
+		taskContent.push_back(output);
+	}
+	
+	//end remove field description from _filecontent
+	try{
+		for (iter = taskContent.begin(); iter != taskContent.end(); ++iter){
+			if (currentfield == Smartstring::FIELD::DESCRIPTION){
+				taskptr = new Task();
+				taskList.push_back(taskptr);
+			}
+			switch (currentfield){
+			case Smartstring::FIELD::DESCRIPTION:{
+				taskptr->SetDescription(*iter);
+				break;
+			}
+			case Smartstring::FIELD::STARTDATE:{
+				taskptr->SetStartDate(*iter);
+				break;
+			}
+			case Smartstring::FIELD::ENDDATE:{
+				taskptr->SetEndDate(*iter);
+				break;
+			}
+			case Smartstring::FIELD::PRIORITY:{
+				taskptr->SetPriority(*iter);
+				break;
+			}
+			case Smartstring::FIELD::STATUS:{
+				taskptr->SetStatus(*iter);
+			}
+
+			}
+			currentfield = (currentfield + 1) % fieldcount;
+		}
+	}
+
+	catch (out_of_range){
+		return _FEEDBACK_LOAD_FAILURE;
+	}
+	return _FEEDBACK_LOAD_SUCCESS;
+}
+
+//====================================================================
+//Mark methods
+//====================================================================
+	// End of segment: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\Storage.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\Storage.cpp
+	 */
+
+string Storage::MarkComplete(Task* taskptr){
+
+	vector<Task*>::iterator iter;
+	for (iter = taskList.begin(); iter != taskList.end(); ++iter){
+		if (taskptr == (*iter)){
+			(*iter)->MarkComplete();
+		}
+	}
+	return _FEEDBACK_UPDATE_SUCCESS;
+}
+
+void Storage::Archive(Task* taskptr){
+	archiveList.push_back(taskptr);
+	Erase(taskptr);
+	return;
+}
+
+//====================================================================
+//File analysis methods
+//====================================================================
+	// End of segment: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\Storage.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\Storage.cpp
+	 */
+
+Storage::FILETYPE Storage::IdentifyFileType(string input){
+	if (input.find(_FILE_EXTENSION_CSV) != string::npos){
+		return FILETYPE::CSV;
+	}
+	else{
+		if (input.find(_FILE_EXTENSION_TXT) != string::npos){
+			return FILETYPE::TXT;
+		}
+		else{
+			return FILETYPE::INVALID;
+		}
+	}
+}
+
+	// End of segment: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\Storage.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\Storage.cpp
+	 */
+
+bool Storage::FileEmpty(string filename){
+	ifstream ifs;
+	ifs.open(filename);
+	string test;
+	ifs >> test;
+	if (test.empty()){
+		ifs.close();
+		return true;
+	}
+	else{
+		ifs.close();
+		return false;
+	}
+}
+
+//====================================================================
+//Get Task* methods
+//====================================================================
+	// End of segment: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\Storage.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\Storage.cpp
+	 */
+
+Task* Storage::GetTask(int position, Smartstring::LIST list){
+	Task* taskptr;
+	switch (list){
+		case Smartstring::LIST::TIMED:{
+			taskptr = GetTimedTask(position);
+			break;
+		}
+		case Smartstring::LIST::DEADLINE:{
+			taskptr = GetDeadlineTask(position);
+			break;
+		}
+		case Smartstring::LIST::FLOAT:{
+			taskptr = GetFloatingTask(position);
+			break;
+		}
+
+		default:{
+			throw invalid_list;
+		}
+	}
+	return taskptr;
+}
+	// End of segment: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\Storage.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\Storage.cpp
+	 */
+
+Task* Storage::GetTimedTask(int position){
+	int size = timedList.size();
+	if (position > size || position < 1){
+		throw invalid_index;
+	}
+	else{
+		return timedList[position - 1];
+	}
+	assert(false && "GetTimedTask failure");
+	return NULL;
+}
+
+	// End of segment: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\Storage.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\Storage.cpp
+	 */
+
+Task* Storage::GetDeadlineTask(int position){
+	int size = deadlineList.size();
+	if (position > size || position < 1){
+		throw invalid_index;
+	}
+	else{
+		return deadlineList[position - 1];
+	}
+
+	assert(false && "GetDeadlineTask failure");
+	return NULL;
+}
+
+	// End of segment: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\Storage.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\Storage.cpp
+	 */
+
+Task* Storage::GetFloatingTask(int position){
+	int size = floatingList.size();
+	if (position > size || position < 1){
+		throw invalid_index;
+	}
+	else{
+		return floatingList[position - 1];
+	}
+
+	assert(false && "GetFloatingTask failure");
+	return NULL;
+}
+
+void Storage::ReplaceTask(Task* taskptr, Task* replacer){
+	vector<Task*>::iterator iter;
+	for (iter = taskList.begin(); iter != taskList.end(); ++iter){
+		if ((*iter) == taskptr){
+			(*iter) = replacer;
+		}
+	}
+
+	return;
+}
+	// End of segment: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\Storage.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\Task.cpp
+	 */
+
+string Task::ToDeadlineString(){
+	ostringstream out;
+	out << "[" << enddate << "] ";
+	out << description;
+	return out.str();
+}
+
+string Task::ToFloatingString(){
+	ostringstream out;
+	out << description;
+	return out.str();
+}
+
+string Task::ToTimedString(){
+	ostringstream out;
+	out << "[" << startdate << "]";
+	out << "[" << enddate << "] ";
+	out << description;
+	return out.str();
+}
+
+string Task::ToTXTString(){
+	//this to string method is used in storage to write to txt files
+	ostringstream out;
+	out << FIELD_DESCRIPTION << description << endl;
+	out << FIELD_STARTDATE << startdate << endl;
+	out << FIELD_ENDDATE << enddate << endl;
+	out << FIELD_PRIORITY << priority << endl;
+	out << FIELD_STATUS << status;
+	return out.str();
+}
+
+string Task::ToCSVString(){
+	ostringstream out;
+	out << "\"" << description << "\",";
+	out << "\"" << startdate << "\",";
+	out << "\"" << enddate<< "\",";
+	out << "\"" << priority << "\",";
+	out << "\"" << status << "\"";
+	return out.str();
+}
+
+string Task::ToDatelessString(){
+	string output = "";
+	TASKTYPE tasktype = GetType();
+	switch (tasktype){
+		case(TASKTYPE::DEADLINE) : {
+			output = ToDatelessDeadlineString();
+			break;
+		}
+		case(TASKTYPE::FLOATING) : {
+			output = ToDatelessFloatingString();
+			break;
+		}
+		case(TASKTYPE::TIMED) : {
+			output = ToDatelessTimedString();
+			break;
+		}
+		default:{
+			output = ToDatelessTimedString();
+			break;
+		}
+	}
+	return output;
+}
+
+string Task::ToDatelessDeadlineString(){
+	ostringstream out;
+	out << description;
+	return out.str();
+}
+
+string Task::ToDatelessFloatingString(){
+	ostringstream out;
+	out << description;
+	return out.str();
+}
+
+string Task::ToDatelessTimedString(){
+	ostringstream out;
+	out << "[" << enddate << "] ";
+	out << description;
+	return out.str();
+}
+
+
+
+ostream& operator<<(ostream& out, Task& task){
+	out << task.ToString();
+	return out;
+}
+
+Task::TASKTYPE Task::GetType(){     
+	if (enddate == "" && startdate == ""){
+		return Task::TASKTYPE::FLOATING;
+	}
+	else if (startdate == "" && enddate!=""){
+		return Task::TASKTYPE::DEADLINE;
+	}
+	else{
+		return Task::TASKTYPE::TIMED;
+	}
+}
+
+bool Task::isContains(string input){
+	bool found = false;
+	int pos;
+	vector<string> taskVect;
+	//initialization 
+	for (int fields = 0; fields < numberOfFields; fields++){
+		taskVect.push_back("");
+	}
+	taskVect[Smartstring::FIELD::DESCRIPTION] = description;
+	taskVect[Smartstring::FIELD::STARTDATE] = startdate;
+	taskVect[Smartstring::FIELD::ENDDATE] = enddate;
+	taskVect[Smartstring::FIELD::PRIORITY] = priority;
+
+	//end initialization
+	for (int i = 0; i < numberOfFields; ++i){
+		if (!found){
+			pos = taskVect[i].find(input);
+			if (pos != string::npos){
+				found = true;
+			}
+		}
+	}
+	return found;
+}
+//@auhtor A0119491B
+bool Task::isNearMatch(string input){
+	bool match = false;
+	size_t difference;
+	size_t tolarent_diff = 3;
+
+	for (int i = 0; i < numberOfFields; ++i){
+		if (!match){
+			difference = LevenshteinDistance(input, description);
+			if (difference <= tolarent_diff)
+				match = true;
+			}
+		}
+
+	return match;
+}
+	// End of segment: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\Task.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\UI_Controller.cpp
+	 */
+
+UI_Controller::UI_Controller()
+{
+	logic = new Logic();
+	UpdateDisplays();
+	ClearStreams();
+	logfile << "UI Created";
+}
+
+
+UI_Controller::~UI_Controller()
+{
+}
+
+void UI_Controller::Run(string input){
+	logic->Run(input);
+	UpdateDisplays();
+	ClearStreams();
+	return;
+}
+void UI_Controller::QuickSearch(string input){
+	if (!input.empty()){
+		logic->Search(input);
+		UpdateDisplays();
+		ClearStreams();
+	}
+	return;
+}
+
+void UI_Controller::ToRTF(string filename, string input){
+	string dbg = input;
+	ofstream of;
+	of.open(filename.c_str(), ios::trunc);
+	of << _rtfheadercolor;
+
+	//start replace new line characters
+	static int startIdx = 0;
+	int endIdx = input.length() - 1;
+	int found = input.find_first_of('\n');
+	while (found != string::npos){
+		string before = input.substr(0, found);
+		string after = input.substr(found + 1, endIdx);
+		string result = before + _rtfnewline + after;
+		input = result;
+
+		startIdx = found + _rtfnewline.length();
+		found = input.find_first_of('\n', startIdx);
+
+	}
+	//end replace new line characters
+
+	of << input;
+	of << _rtffooter;
+	of.close();
+
+	return;
+}
+
+string UI_Controller::UpdateDisplays(){
+	string feedback = "";
+	DISPLAY_STATUS = logic->status.str();
+	ToRTF(rtf_main, logic->mout.str());
+	ToRTF(rtf_deadline, logic->dout.str());
+	ToRTF(rtf_float, logic->fout.str());
+	ToRTF(rtf_timed, logic->tout.str());
+	return feedback;
+}
+
+string UI_Controller::ClearStreams(){
+	string feedback;
+	logic->dout.clear();
+	logic->dout.str("");
+	logic->fout.clear();
+	logic->fout.str("");
+	logic->tout.clear();
+	logic->tout.str("");
+	logic->mout.clear();
+	logic->mout.str("");
+	logic->status.clear();
+	logic->status.str("");
+	return feedback;
+}
+	// End of segment: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\UI_Controller.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_ScheduleLibraryTest\Libtest.cpp
+	 */
+
+		TEST_METHOD(STORAGE_TXT_ADD){
+			string expected[2];
+			vector<Task*> tasklist;
+			//testing the partiton n>0; boundary case n = 1; where n is the number of tasks added
+			Storage* storage = new Storage("Storage_Add.txt");
+			storage->Clear();
+			Task* task = new Task();
+			task->SetDescription("do homework");
+			task->SetEndDate("07/06/2015");
+			task->SetStartDate("05/06/2015");
+			task->SetPriority("1");
+			task->SetStatus("Incomplete");
+			storage->Add(task);
+
+			expected[0] = "Description: do homework\nStart: 05/06/2015\nEnd: 07/06/2015\nPriority: 1\nStatus: Incomplete";
+			Assert::AreEqual(expected[0], storage->GetTask(0));
+
+			//testing the partition when n>1; boundary case n = 2; where n is the number of tasks added
+			Task* task2 = new Task();
+			task2->SetDescription("do homework 2");
+			task2->SetEndDate("07/06/2015");
+			task2->SetStartDate("05/06/2015");
+			task2->SetPriority("12");
+			task2->SetStatus("Complete");
+			storage->Add(task2);
+			//tasklist = storage->GetTaskList();
+
+			expected[1] = "Description: do homework 2\nStart: 05/06/2015\nEnd: 07/06/2015\nPriority: 12\nStatus: Complete";
+			Assert::AreEqual(expected[1], storage->GetTask(1));
+			tasklist.clear();
+
+		}
+	// End of segment: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_ScheduleLibraryTest\Libtest.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_ScheduleLibraryTest\Libtest.cpp
+	 */
+
+		TEST_METHOD(STORAGE_TXT_LOAD_REWRITE){
+			//Testing the Load() and Rewrite() functions in storage
+			//testing the partition when n > 1; boundary case n = 1; where n is the number of entries to be loaded and rewritten
+
+			Storage* storage = new Storage("Unit_test_IO2.txt");
+			storage->Clear();
+			Task* task = new Task();
+			task->SetDescription("do homework");
+			task->SetEndDate("07/06/2015 at 4pm");
+			task->SetStartDate("06/06/2015 at 3pm");
+			task->SetPriority("1");
+			task->SetStatus("Complete");
+			storage->Add(task);
+
+			task = new Task();
+			task->SetDescription("do homework 2");
+			task->SetEndDate("05/02/2015 at 1pm");
+			task->SetStartDate("01/02/2015 at 1pm");
+			task->SetPriority("1234");
+			task->SetStatus("Incomplete");
+			storage->Add(task);
+
+			storage->Rewrite();
+
+			delete storage;
+			storage = new Storage();
+
+			int size = storage->Size();
+			Assert::IsTrue(size > 0);
+			string expected[2];
+			expected[1] = "Description: do homework\nStart: 03:00pm on 06/06/2015\nEnd: 04:00pm on 07/06/2015\nPriority: 1\nStatus: Complete";
+			expected[0] = "Description: do homework 2\nStart: 01:00pm on 01/02/2015\nEnd: 01:00pm on 05/02/2015\nPriority: 1234\nStatus: Incomplete";
+
+			for (int i = 0; i < size; i++){
+				Assert::AreEqual(expected[i], storage->GetTask(i));
+			}
+
+		}
+
+	// End of segment: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_ScheduleLibraryTest\Libtest.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_ScheduleLibraryTest\Libtest.cpp
+	 */
+
+		TEST_METHOD(STORAGE_CSV_ADD_LOAD_REWRITE){
+
+			//Testing the Load() and Rewrite() functions in storage
+			//testing the partition when n > 1; boundary case n = 1; where n is the number of entries to be loaded and rewritten
+			Storage* storage = new Storage("UNIT_TEST_CSV_ADD_LOAD_REWRITE.csv");
+			storage->Clear();
+			Task* task = new Task();
+			task->SetDescription("do homework");
+			task->SetEndDate("08/04/2015");
+			task->SetStartDate("07/04/2015");
+			task->SetPriority("1");
+			task->SetStatus("Complete");
+			storage->Add(task);
+
+			task = new Task();
+			task->SetDescription("do homework 2");
+			task->SetEndDate("10/04/2015");
+			task->SetStartDate("09/04/2015");
+			task->SetPriority("123");
+			storage->Add(task);
+
+			storage->Save();
+
+			delete storage;
+			storage = new Storage();
+
+
+			int size = storage->Size();
+			Assert::IsTrue(size > 0);
+			string expected[2];
+			expected[0] = "Description: do homework\nStart: 07/04/2015\nEnd: 08/04/2015\nPriority: 1\nStatus: Complete";
+			expected[1] = "Description: do homework 2\nStart: 09/04/2015\nEnd: 10/04/2015\nPriority: 123\nStatus: Incomplete";
+
+			for (int i = 0; i < size; i++){
+				Assert::AreEqual(expected[i], storage->GetTask(i));
+			}
+
+		}
+
+	// End of segment: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_ScheduleLibraryTest\Libtest.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_ScheduleLibraryTest\Libtest.cpp
+	 */
+
+		TEST_METHOD(PARSER_IdentifyTaskFields){
+			Parser* parser = new Parser();
+			//Case: fields with varied length
+			string input = "go to school till: monday p: 1 from: today";
+			vector<string> output = parser->IdentifyTaskFields(input);
+			Assert::AreEqual(output[Smartstring::DESCRIPTION].c_str(), "go to school");
+			Assert::AreEqual(output[Smartstring::STARTDATE].c_str(), "today"); //NEED TO CHANGE FORMAT FOR FINAL TEST
+			Assert::AreEqual(output[Smartstring::PRIORITY].c_str(), "1");
+			Assert::AreEqual(output[Smartstring::ENDDATE].c_str(), "monday"); //NEED TO CHANGE FORMAT FOR FINAL TEST
+
+			//Case: fields with length 1
+			input = "homework from: Monday priority: 1 end: Friday";
+			output.clear();
+			output = parser->IdentifyTaskFields(input);
+			Assert::AreEqual(output[Smartstring::DESCRIPTION].c_str(), "homework");
+			Assert::AreEqual(output[Smartstring::STARTDATE].c_str(), "Monday"); //NEED TO CHANGE FORMAT FOR FINAL TEST
+			Assert::AreEqual(output[Smartstring::PRIORITY].c_str(), "1");
+			Assert::AreEqual(output[Smartstring::ENDDATE].c_str(), "Friday"); //NEED TO CHANGE FORMAT FOR FINAL TEST
+		}
+
+	// End of segment: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_ScheduleLibraryTest\Libtest.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_ScheduleLibraryTest\Libtest.cpp
+	 */
+
+		TEST_METHOD(PARSER_IdentifyCommand){
+			Parser* parser = new Parser();
+			//Case: ADD
+			string input = "add homework from: Monday priority: 1 end: Friday";
+			int expected = Smartstring::COMMAND::ADD;
+			int actual = parser->IdentifyCommand(input);
+			Assert::AreEqual(expected, actual);
+
+			//Case: CLEAR
+			input = "clear file";
+			expected = Smartstring::COMMAND::CLEAR;
+			actual = parser->IdentifyCommand(input);
+			Assert::AreEqual(expected, actual);
+
+			//Case: DELETE
+			input = "delete homework everyday";
+			expected = Smartstring::COMMAND::DELETE;
+			actual = parser->IdentifyCommand(input);
+			Assert::AreEqual(expected, actual);
+
+			//Case: DISPLAY
+			input = "display all items";
+			expected = Smartstring::COMMAND::DISPLAY;
+			actual = parser->IdentifyCommand(input);
+			Assert::AreEqual(expected, actual);
+
+			//Case: EDIT
+			input = "edit this item";
+			expected = Smartstring::COMMAND::EDIT;
+			actual = parser->IdentifyCommand(input);
+			Assert::AreEqual(expected, actual);
+
+
+			//Case: SEARCH
+			input = "search homework";
+			expected = Smartstring::COMMAND::SEARCH;
+			actual = parser->IdentifyCommand(input);
+			Assert::AreEqual(expected, actual);
+
+		}
+
+	// End of segment: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_ScheduleLibraryTest\Libtest.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_ScheduleLibraryTest\Libtest.cpp
+	 */
+
+		TEST_METHOD(PARSER_RemoveCommand){
+			Parser* parser = new Parser();
+			//Case: Test empty
+			string input = "";
+			string expected = "";
+			string actual = parser->RemoveCommand(input);
+			Assert::AreEqual(expected, actual);
+
+			//Case: Test one word input
+			input = "search";
+			expected = "";
+			actual = parser->RemoveCommand(input);
+			Assert::AreEqual(expected, actual);
+
+			//Case: Test more than one word input
+			input = "search for homework";
+			expected = "for homework";
+			actual = parser->RemoveCommand(input);
+			Assert::AreEqual(expected, actual);
+		}
+
+		TEST_METHOD(TASK){
+			//default constructor test
+			Task* task = new Task();
+			Assert::AreEqual("", task->GetDescription().c_str());
+			Assert::AreEqual("", task->GetStartDate().c_str());
+			Assert::AreEqual("", task->GetEndDate().c_str());
+			Assert::AreEqual("", task->GetPriority().c_str());
+
+			//vector constructor test
+			vector<string> testinput;
+			testinput.push_back("do my homework");
+			testinput.push_back("09/10/2015");
+			testinput.push_back("10/10/2015");
+			testinput.push_back("1");
+			testinput.push_back("Incomplete");
+
+			Task* vectTask = new Task(testinput);
+			Assert::AreEqual("do my homework", vectTask->GetDescription().c_str());
+			Assert::AreEqual("09/10/2015", vectTask->GetStartDate().c_str());
+			Assert::AreEqual("10/10/2015", vectTask->GetEndDate().c_str());
+			Assert::AreEqual("1", vectTask->GetPriority().c_str());
+			Assert::AreEqual("Incomplete", vectTask->GetStatus().c_str());
+
+			string actual = vectTask->ToCSVString();
+			string expected = "\"do my homework\",\"09/10/2015\",\"10/10/2015\",\"1\",\"Incomplete\"";
+			Assert::AreEqual(expected, actual);
+
+		}
+
+		TEST_METHOD(TASK_INTEGRATED){
+			//default constructor test
+			Task* task = new Task();
+			Assert::AreEqual("", task->GetDescription().c_str());
+			Assert::AreEqual("", task->GetStartDate().c_str());
+			Assert::AreEqual("", task->GetEndDate().c_str());
+			Assert::AreEqual("", task->GetPriority().c_str());
+
+			//vector constructor test
+			vector<string> testinput;
+			testinput.push_back("do my homework");
+			testinput.push_back("09/10/2015 at 5pm");
+			testinput.push_back("10/10/2015 at 6pm");
+			testinput.push_back("1");
+			testinput.push_back("Incomplete");
+			
+			Task* vectTask = new Task(testinput);
+
+			Assert::AreEqual("do my homework", vectTask->GetDescription().c_str());
+			Assert::AreEqual("05:00pm on 09/10/2015", vectTask->GetStartDate().c_str());
+			Assert::AreEqual("06:00pm on 10/10/2015", vectTask->GetEndDate().c_str());
+			Assert::AreEqual("1", vectTask->GetPriority().c_str());
+			Assert::AreEqual("Incomplete", vectTask->GetStatus().c_str());
+			
+		}
+
+	// End of segment: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_ScheduleLibraryTest\Libtest.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_ScheduleLibraryTest\Libtest.cpp
+	 */
+
+		TEST_METHOD(LOGIC){
+			Logic* logic = new Logic();
+			logic->mout.clear();
+			logic->mout.str("");
+			logic->Clear();
+			logic->storage->Reset();
+			string file = logic->storage->GetFileName();
+			string myinput = "add homework from: 07/04/2015 till: 08/04/2015 p: 1";
+			string expected = "Description: homework\nStart: 07/04/2015\nEnd: 08/04/2015\nPriority: 1\nStatus: Incomplete";
+			string feedback;
+			feedback = logic->Run(myinput);
+			string output = logic->mout.str();
+
+			Assert::AreEqual(expected, output);
+		}
+
+	// End of segment: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_ScheduleLibraryTest\Libtest.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_ScheduleLibraryTest\Libtest.cpp
+	 */
+
+		TEST_METHOD(SMARTSTRING_TOKENIZE){
+			//testing the partition inpult length > 0
+			string input = "\"hello\",\"how\",\"are\",\"you\",\"doing\",\"today\"";
+			Smartstring str(input);
+			vector<string> result = str.Tokenize(",\"");
+			int size = result.size();
+			Assert::AreEqual(6, size);
+			Assert::AreEqual("hello", result[0].c_str());
+			Assert::AreEqual("how", result[1].c_str());
+			Assert::AreEqual("are", result[2].c_str());
+			Assert::AreEqual("you", result[3].c_str());
+			Assert::AreEqual("doing", result[4].c_str());
+			Assert::AreEqual("today", result[5].c_str());
+
+			//testing partition input length 0
+			input = "";
+			str = Smartstring(input);
+			result = str.Tokenize(" ");
+			size = result.size();
+			Assert::AreEqual(size, 0);
+		}
+
+	// End of segment: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_ScheduleLibraryTest\Libtest.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_ScheduleLibraryTest\Libtest.cpp
+	 */
+
+		TEST_METHOD(DATETIME_USER_INPUTS){
+			string input;
+			string expected;
+			string actual;
+			//testing the partition where no day reset is crossed
+			input = "Tuesday at 5pm";
+			DateTime dt(input);
+			actual = dt.Standardized();
+			expected = "05:00pm on 14/04/2015";
+			Assert::AreEqual(expected, actual);
+
+			input = "5pm on Tuesday";
+			dt = DateTime(input);
+			actual = dt.Standardized();
+			expected = "05:00pm on 14/04/2015";
+			Assert::AreEqual(expected, actual);
+
+			input = "Friday at 10pm";
+			dt = DateTime(input);
+			actual = dt.Standardized();
+			expected = "10:00pm on 10/04/2015";
+			Assert::AreEqual(expected, actual);
+
+			//testing the partition where a day reset is crossed e.g today is wednesday, appointment on monday
+			input = "Monday at 6pm";
+			dt = DateTime(input);
+			actual = dt.Standardized();
+			expected = "06:00pm on 13/04/2015";
+			Assert::AreEqual(expected, actual);
+
+			//testing that Standardized() does not change empty strings
+			input = "";
+			dt = DateTime(input);
+			actual = dt.Standardized();
+			expected = "";
+			Assert::AreEqual(expected, actual);
+
+			//test the partition where only a time is set
+			input = "5pm";
+			dt = DateTime(input);
+			actual = dt.Standardized();
+			expected = "05:00pm";
+			Assert::AreEqual(expected, actual);
+
+			//testing today and tomorrow keywords
+			input = "today";
+			dt = DateTime(input);
+			actual = dt.Standardized();
+			expected = "08/04/2015";
+			Assert::AreEqual(expected, actual);
+
+			input = "tomorrow";
+			dt = DateTime(input);
+			actual = dt.Standardized();
+			expected = "09/04/2015";
+			Assert::AreEqual(expected, actual);
+
+			//important lacking test: testing when month is crossed
+
+		}
+
+	// End of segment: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_ScheduleLibraryTest\Libtest.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_ScheduleLibraryTest\Libtest.cpp
+	 */
+
+		TEST_METHOD(DATETIME_STANDARD_INPUTS){
+			string input;
+			string expected[10];
+			string actual[10];
+			DateTime dt;
+
+			//testing that standard inputs can be reconstructed
+			input = "06:00pm on 13/04/2015";
+			dt = DateTime(input);
+			actual[0] = dt.Standardized();
+			expected[0] = "06:00pm on 13/04/2015";
+			Assert::AreEqual(expected[0], actual[0]);
+
+			input = "13/04/2015 at 06:00pm";
+			dt = DateTime(input);
+			actual[3] = dt.Standardized();
+			expected[3] = "06:00pm on 13/04/2015";
+			Assert::AreEqual(expected[3], actual[3]);
+
+			//testing date only input
+			input = "13/04/2015";
+			dt = DateTime(input);
+			actual[1] = dt.Standardized();
+			expected[1] = "13/04/2015";
+			Assert::AreEqual(expected[1], actual[1]);
+
+			//testing time only input
+			input = "05:30pm";
+			dt = DateTime(input);
+			actual[2] = dt.Standardized();
+			expected[2] = "05:30pm";
+			Assert::AreEqual(expected[2], actual[2]);
+
+		}
+
+	// End of segment: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_ScheduleLibraryTest\Libtest.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_ScheduleLibraryTest\Libtest.cpp
+	 */
+
+		TEST_METHOD(DATETIME_INTERNAL_INFO){
+			string input;
+			string expected[10];
+			string actual[10];
+			DateTime dt;
+
+			input = "13/04/2015";
+			dt = DateTime(input);
+			actual[0] = dt.GetInfo();
+			expected[0] = "Date: 13/04/2015\nTime: 00:00";
+			Assert::AreEqual(expected[0], actual[0]);
+
+			input = "13/04/2015 at 5pm";
+			dt = DateTime(input);
+			actual[1] = dt.GetInfo();
+			expected[1] = "Date: 13/04/2015\nTime: 17:00";
+			Assert::AreEqual(expected[1], actual[1]);
+
+			input = "13/04/2014 at 7:30am";
+			dt = DateTime(input);
+			actual[2] = dt.GetInfo();
+			expected[2] = "Date: 13/04/2014\nTime: 07:30";
+			Assert::AreEqual(expected[2], actual[2]);
+
+			input = "8:09pm";
+			dt = DateTime(input);
+			actual[3] = dt.GetInfo();
+			expected[3] = "Date: 08/04/2015\nTime: 20:09";
+			Assert::AreEqual(expected[3], actual[3]);
+
+		}
+
+	// End of segment: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_ScheduleLibraryTest\Libtest.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_ScheduleLibraryTest\Libtest.cpp
+	 */
+
+		TEST_METHOD(DATETIME_ISEARLIERTHAN){
+			string date1;
+			string date2;
+			DateTime dt1;
+			DateTime dt2;
+			
+			//testing the partition where only dates are inputs
+			date1 = "07/04/2014";
+			date2 = "08/04/2014";
+			dt1 = DateTime(date1);
+			dt2 = DateTime(date2);
+			Assert::IsTrue(dt1.IsEarlierThan(dt2));
+
+			//testing the partition where only times are inputs
+			date1 = "5pm";
+			date2 = "6pm";
+			dt1 = DateTime(date1);
+			dt2 = DateTime(date2);
+			Assert::IsTrue(dt1.IsEarlierThan(dt2));
+
+			//testing the partition where dates are equal but time is greater
+			date1 = "07/04/2014 at 5pm";
+			date2 = "07/04/2014 at 6pm";
+			dt1 = DateTime(date1);
+			dt2 = DateTime(date2);
+			Assert::IsTrue(dt1.IsEarlierThan(dt2));
+
+			//testing the function returning false when condition is not satisfied
+			date1 = "07/04/2014 at 6pm";
+			date2 = "07/04/2014 at 5pm";
+			dt1 = DateTime(date1);
+			dt2 = DateTime(date2);
+			Assert::IsFalse(dt1.IsEarlierThan(dt2));
+
+			//testing the partition where dates are different but time is equal
+			date1 = "07/04/2014 at 5pm";
+			date2 = "08/04/2014 at 5pm";
+			dt1 = DateTime(date1);
+			dt2 = DateTime(date2);
+			Assert::IsTrue(dt1.IsEarlierThan(dt2));
+		}
+
+		TEST_METHOD(DATETIME_ISVALIDFORMAT){
+			string date;
+			DateTime dt;
+
+			//testing the partition input is valid
+			date = "07/04/2014";
+			dt = DateTime(date);
+			Assert::IsTrue(dt.isValidFormat);
+
+			//testing the partition where input is not valid
+			date = "owkdowkdow";
+			dt = DateTime(date);
+			Assert::AreEqual(dt.Standardized(), date);
+			Assert::IsFalse(dt.isValidFormat);
+		}
+
+		TEST_METHOD(DATETIME_INVALIDINPUTS_UNCHANGED){
+			string date;
+			DateTime dt;
+			date = "owkdowkdowdkowdww";
+			dt = DateTime(date);
+			Assert::AreEqual(dt.Standardized(), date);
+		}
+	};
+}
+	// End of segment: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_ScheduleLibraryTest\Libtest.cpp
+
+
+
+
+

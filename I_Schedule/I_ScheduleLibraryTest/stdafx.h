@@ -16,3 +16,4 @@
 #include "Smartstring.h"
 #include "Task.h"
 #include "Logic.h"
+#include "Command.h"

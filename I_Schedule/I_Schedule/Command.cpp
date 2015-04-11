@@ -8,11 +8,7 @@ const string Command::_FEEDBACK_SEARCH = "Displaying search results.";
 const string Command::_FEEDBACK_UNDO = "Undo previous command.";
 const string Command::_FEEDBACK_INVALID_COMMAND = "Invalid command entered.";
 const string Command::_MESSAGE_WELCOME = "Welcome to I_Schedule.";
-ostringstream Command::fout;
-ostringstream Command::tout; //timed task display stream
-ostringstream Command::dout; //deadline task display stream
-ostringstream Command::mout; //main display stream
-ostringstream Command::status; //status bar display stream
+
 Command::Command(){
 }
 
@@ -22,10 +18,47 @@ Command::Command(string input){
 Command::~Command(){
 }
 
-string Command::Execute(string){   //invalide command
-	mout << storage->ToString();
+//string Command::GetStatus(){
+//	string sstatus = storage->status.str();
+//	return sstatus;
+//}
+//
+//string Command::sGetTimedList(){
+//	string feedback1= storage->GetTimedList();
+//	return feedback1;
+//}
+//
+//string Command::sGetDeadlineList(){
+//	string feedback2 = storage->GetDeadlineList();
+//	return feedback2;
+//}
+//
+//string Command::sGetFloatingList(){
+//	string feedback3 = storage->GetFloatingList();
+//	return feedback3;
+//}
+//
+//string Command::sGetMainList(){
+//	string feedback4 = storage->ToString();
+//	return feedback4;
+//}
+
+string Command::Execute(string){   //invalid command
 	return _FEEDBACK_INVALID_COMMAND;
-};
+}
+
+//string Command::GetFloating(){
+//	return fout.str();
+//}
+//string Command::GetTimed(){
+//	return tout.str();
+//}
+//string Command::GetDisplay(){
+//	return dout.str();
+//}
+//string Command::GetStatus(){
+//	return status.str();
+//}
 
 //Add Command
 
@@ -78,7 +111,6 @@ string DeleteCommand::Execute(string taskInput){
 	in >> position;
 	//delete from list function
 	string feedback = storage->DeleteFromList(position, listname.ListType());
-	mout << storage->ToString();
 	return feedback;
 }
 
@@ -94,7 +126,6 @@ DisplayCommand::~DisplayCommand(){
 }
 
 string DisplayCommand::Execute(string all){
-	mout << storage->ToString();
 	return _FEEDBACK_DISPLAY;
 }
 
@@ -120,11 +151,8 @@ string EditCommand::Execute(string taskInput){
 	in >> position;
 	getline(in, remainder);
 	vector<string> newinfo = parser->IdentifyTaskFields(remainder);
-
-	string feedback = storage->Edit(position, listname.ListType(), newinfo);
-	//Edit function
-	mout << storage->ToString();
-	return feedback;
+	storage->Edit(position, listname.ListType(), newinfo);
+	return storage->ToString();
 }
 
 //Save Command
@@ -139,7 +167,7 @@ SaveCommand::~SaveCommand(){
 
 string SaveCommand::Execute(string input){
 	string feedback = storage->SaveAs(input);
-	return feedback;
+	return storage->ToString();
 }
 
 //Search Command
@@ -153,8 +181,7 @@ SearchCommand::~SearchCommand(){
 }
 
 string SearchCommand::Execute(string taskInput){
-	mout << storage->Search(taskInput);
-	return _FEEDBACK_SEARCH;
+	return storage->Search(taskInput);
 }
 
 //Complete Command
@@ -175,23 +202,23 @@ string CompleteCommand::Execute(string input){
 	in >> position;
 
 	//Complete function
-	string feedback = storage->Complete(position, listname.ListType());
+	string feedback = storage->Complete(position);
 	mout << storage->ToString();
 
 	return feedback;
 }
 
-//Emptyslots Command
+//Free Command
 
-EmptyslotsCommand::EmptyslotsCommand(){
-
-}
-
-EmptyslotsCommand::~EmptyslotsCommand(){
+FreeCommand::FreeCommand(){
 
 }
 
-string EmptyslotsCommand::Execute(string input){
+FreeCommand::~FreeCommand(){
+
+}
+
+string FreeCommand::Execute(string input){
 	string feedback = storage->SearchEmptySlots(input);
 	return feedback;
 }
@@ -225,5 +252,21 @@ UndoCommand::~UndoCommand(){
 string UndoCommand::Execute(string undo){
 	string feedback = storage->Undo();
 	mout << storage->ToString();
+	return feedback;
+}
+
+//Archived Command
+
+ArchivedCommand::ArchivedCommand(){
+
+}
+
+ArchivedCommand::~ArchivedCommand(){
+
+}
+
+string ArchivedCommand::Execute(string input){
+	string feedback = "Viewing archived";
+	mout << storage->ArchiveToString();
 	return feedback;
 }

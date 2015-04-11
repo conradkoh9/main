@@ -1,3 +1,4 @@
+//@author A0094213M
 #include "DateTime.h"
 
 const string DateTime::DATETYPE_MONDAY1 = "Monday";
@@ -31,8 +32,25 @@ const string DateTime::DATETYPE_SUNDAY4 = "sun";
 const string DateTime::DATETYPE_TODAY1 = "today";
 const string DateTime::DATETYPE_TOMORROW1 = "tomorrow";
 const string DateTime::DATETYPE_TOMORROW2 = "tmr";
+
 const string DateTime::TIMETYPE_AM = "am";
 const string DateTime::TIMETYPE_PM = "pm";
+
+const string DateTime::_MONTH_JANUARY = "January";
+const string DateTime::_MONTH_FEBRUARY = "February";
+const string DateTime::_MONTH_MARCH = "March";
+const string DateTime::_MONTH_APRIL = "April";
+const string DateTime::_MONTH_MAY = "May";
+const string DateTime::_MONTH_JUNE = "June";
+const string DateTime::_MONTH_JULY = "July";
+const string DateTime::_MONTH_AUGUST = "August";
+const string DateTime::_MONTH_SEPTEMBER = "September";
+const string DateTime::_MONTH_OCTOBER = "October";
+const string DateTime::_MONTH_NOVEMBER = "November";
+const string DateTime::_MONTH_DECEMBER = "December";
+
+
+
 
 bool DateTime::isInitialized = false;
 int DateTime::numberOfDateType;
@@ -40,17 +58,17 @@ int DateTime::numberOfTimeType;
 vector<string> DateTime::dateType;
 vector<string> DateTime::timeType;
 
-//==========================================================
-//Methods suggested by Conrad
-//==========================================================
 
+//@author A0094213M
 DateTime::DateTime(){
 	Initialize();
 }
 
+//@author A0094213M
 DateTime::DateTime(string input){
 	unformattedDateTime = input;
 	isValidFormat = true;
+
 	Initialize();
 	SetDefaults();
 	SetStandards();
@@ -63,17 +81,35 @@ string DateTime::Standardized(){
 	return formattedDateTime;
 }
 
+
 string DateTime::GetInfo(){
-	ostringstream out;
-	out << "Date: " << setw(2) << setfill('0') << _day << "/" << setw(2) << setfill('0')
-		<< _month << "/" << setw(2) << setfill('0') << _year << endl;
+	ostringstream info;
 
-	out << "Time: " << setw(2) << setfill('0') << _hours << ":" << setw(2) << setfill('0') << _mins;
+	info << "Date: " << setw(2) << setfill('0') 
+		<< _day << "/" << setw(2) << setfill('0')
+		<< _month << "/" << setw(2) << setfill('0')
+		<< _year << endl;
 
-	return out.str();
+	info << "Time: " << setw(2) << setfill('0') 
+		<< _hours << ":" << setw(2) << setfill('0') 
+		<< _mins;
+
+	return info.str();
 }
 
+string DateTime::GetDate(){
+	ostringstream date;
+	string month_s = GetMonthName(_month);
+	date << _day << " " << month_s;
+	return date.str();
+	
+}
 
+string DateTime::GetTime(){
+	ostringstream out;
+	out << setw(2) << setfill('0') << _hours << ":" << setw(2) << setfill('0') << _mins;
+	return out.str();
+}
 
 bool DateTime::IsEarlierThan(DateTime dt){
 	bool isEarlier = false;
@@ -113,7 +149,6 @@ void DateTime::SetDefaults(){
 	_year = timeinfo.tm_year + 1900;
 	_hours = 0;
 	_mins = 0;
-	//_seconds = 0;
 }
 
 void DateTime::SetStandards(){
@@ -214,7 +249,7 @@ string DateTime::StandardizeTriple(vector<string> input){
 			}
 		}
 	}
-	output = time + " on " + date;
+	output = time + date;
 	return output;
 }
 
@@ -296,6 +331,7 @@ string DateTime::StandardizeDay(string input){
 }
 
 string DateTime::StandardizeTime(string input){
+	assert(input != "");
 	string output;
 	string result = input;
 	string period = "am";
@@ -363,6 +399,18 @@ string DateTime::StandardizeTime(string input){
 	return output;
 }
 
+string DateTime::TwentyFourHourFormat(){
+	string output;
+	ostringstream min;
+	ostringstream hour;
+
+	min << setw(2) << setfill('0') << _mins;
+	hour << setw(2) << setfill('0') << _hours;
+
+	output = hour.str() + ":" + min.str();
+	return output;
+}
+
 bool DateTime::IsValidDayDate(string input){
 	if (IsValidDay(input) || IsValidDate(input)){
 		return true;
@@ -373,6 +421,7 @@ bool DateTime::IsValidDayDate(string input){
 }
 
 bool DateTime::IsValidDate(string input){
+	assert(input != "");
 	string dbg = input;
 	int found = 0;
 	int startIdx = 0;
@@ -409,6 +458,7 @@ bool DateTime::IsValidDay(string input){
 }
 
 bool DateTime::IsValidTime(string input){
+	assert(input != "");
 	string dbg = input;
 	bool isValid = false;
 	string result = input;
@@ -478,6 +528,65 @@ DateTime::DAY DateTime::GetDayEnum(string input){
 		return GetTomorrow();
 	}
 	return DAY::INVALID;
+}
+
+string DateTime::GetMonthName(int input){
+	switch (input){
+		case 1:{
+			return _MONTH_JANUARY;
+			break;
+		}
+		case 2:{
+			return _MONTH_FEBRUARY;
+			break;
+		}
+		case 3:{
+			return _MONTH_MARCH;
+			break;
+		}
+		case 4:{
+			return _MONTH_APRIL;
+			break;
+		}
+		case 5:{
+			return _MONTH_MAY;
+			break;
+		}
+		case 6:{
+			return _MONTH_JUNE;
+			break;
+		}
+		case 7:{
+			return _MONTH_JULY;
+			break;
+		}
+		case 8:{
+			return _MONTH_AUGUST;
+			break;
+		}
+		case 9:{
+			return _MONTH_SEPTEMBER;
+			break;
+		}
+		case 10:{
+			return _MONTH_OCTOBER;
+			break;
+		}
+		case 11:{
+			return _MONTH_NOVEMBER;
+			break;
+		}
+		case 12:{
+			return _MONTH_DECEMBER;
+			break;
+		}
+
+		default:{
+			return _MONTH_JANUARY;
+		}
+
+
+	}
 }
 
 int DateTime::CalculateOffset(DAY startday, DAY endday){
@@ -592,9 +701,6 @@ DateTime::DAY DateTime::GetTomorrow(){
 	}
 	assert(false && "in DateTime::GetTomorrow function");
 }
-//==========================================================
-//End section Methods suggested by Conrad
-//==========================================================
 
 string DateTime::Now(){
 	time_t now = time(0); //raw time -> this is generally implemented as an integer offset from 00:00hours, jan1, 2970 UTC. This leads me to the assumption
@@ -866,6 +972,10 @@ bool DateTime::CompareTime(string time1, string time2){
 	}
 
 	return isGreater;
+}
+
+string DateTime::GetDefaultDuration(){
+	return "";
 }
 
 void DateTime::Initialize(){

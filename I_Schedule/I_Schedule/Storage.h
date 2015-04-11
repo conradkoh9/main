@@ -14,12 +14,12 @@ using namespace logging;
 class Storage
 {
 private:
-	enum FILETYPE { CSV, TXT, INVALID };
+	enum FILETYPE { TXT, INVALID };
 	string _filename;
-	const string _archivefile = "archive.csv";
-
+	const string _archivefile = "archive.txt";
 	//DATA STORAGE VARIABLES
 	vector<string> _filecontent;
+	vector<string> _archivecontent;
 public:
 	//INFORMATION STREAMS
 	ostringstream status;
@@ -31,6 +31,7 @@ public:
 	vector<Task*> deadlineList;
 	vector<Task*> lastList;
 	vector<Task*> archiveList;
+	vector<Task*> lastArchiveList;
 
 	//
 	DateTime* dateTime;
@@ -50,7 +51,7 @@ public:
 	string DeleteFromList(int position, Smartstring::LIST list);
 	string Delete(int position);
 	string Edit(int position, Smartstring::LIST list, vector<string> newinfo);
-	string Complete(int position, Smartstring::LIST list);
+	string Complete(int position);
 	string Load();
 	string Load(string filename);
 
@@ -65,7 +66,6 @@ public:
 	//Power Search Method
 	string Search(string input);
 	vector<Task*> PowerSearch(string input);
-	vector<Task*> NearSearch(string input);
 	string SearchEmptySlots(string input);
 	void InitializeDayTask(string input);
 	void SetDayCalendar();
@@ -79,17 +79,17 @@ public:
 	string GetTask(int index);
 	string GetFileName();
 
+	string GetTimedList();
 	string GetFloatingList();
 	string GetDeadlineList();
-	string GetTimedList();
-
 
 	//Formatted display methods
 	string DayView();
 
-	//To be refactored because it is not apparent what storage->ToString should give
+	//ToString methods
+	string ArchiveToString();
 	string ToString();
-	string ToString(vector<Task*> V);
+	string ToString(vector<Task*> V, int firstIdx);
 	string ToString(vector<string> v);
 
 private:
@@ -122,7 +122,10 @@ private:
 	static const string _FEEDBACK_INVALID_LIST;
 	static const string _FEEDBACK_UPDATE_SUCCESS;
 	static const string _FEEDBACK_EDIT_SUCCESS;
-
+	static const string _FEEDBACK_DATA_CORRUPTED;
+	static const string _FEEDBACK_FILETYPE_INVALID;
+	static const string _FEEDBACK_DEFAULT_SESSION_STARTED;
+	static const string _FEEDBACK_STARTUP;
 	//formatting variables
 	static const string _rtfboldtagstart;
 	static const string _rtfboldtagend;
@@ -133,45 +136,47 @@ private:
 	static const string _rtfcolorbluesuffix;
 
 	//File Details
-	const string _FILE_EXTENSION_CSV = ".csv";
 	const string _FILE_EXTENSION_TXT = ".txt";
-	const string _DELIMITERS_CSV = ",";
-	const string _FILENAME_DEFAULT = "default.csv";
+	const string _FILENAME_DEFAULT = "default.txt";
 	const string _FILENAME_SESSION_DATA = "data.sys";
 
 
 	//METHODS
+	//Session methods
+	string DefaultSession();
+
 	//Update methods
 	void Update(); //Updates all the vectors with the new information
 
 	//filter methods
 	void FilterTask();
-	void sortListsByTime(vector<Task*> &V);
-	void initializeLists();
-	void sortTask();
-	void rearrangeTaskList();
+	void SortListsByTime(vector<Task*> &V);
+	void InitializeLists();
+	void SortAllLists();
+	void SortTaskList();
 
 	//clear methods
 	void ClearFile();
 	void ClearFilteredLists();
 	void ClearVectors();
-	void ClearUndoVector();
+	void ClearUndoVectors();
 	string Remove(int position);
 	string Erase(Task* taskptr);
 
 	//Save methods
 	string SaveSessionData();
-	string WriteToFile(); //chooses whether to write using WriteToCSV method or WriteToTXT method
-	string WriteToCSV(); //writes tasks to CSV readable format
+	string WriteToFile(); 
 	string WriteToTXT(); //writes tasks to TXT readable format
 	string WriteToArchive(); //writes archive vector to archive
 
 	//Load methods
 	string LoadSessionData();
 	string LoadRawFileContent(); //reads from a file and stores all the content into _filecontent vector
-	string LoadTaskList(); //chooses whether LoadCSVContent is called or LoadTXTContent is called, or that the current file has an invalid format
-	string LoadCSVContent(); //loads _filecontent vector into taskList vector assuming CSV format
+	string LoadRawArchiveContent();
+	string LoadTaskList(); //Loads Tasklist from FileContent vector
+	string LoadArchiveList();
 	string LoadTXTContent(); //loads _filecontent vector into taskList vector assuming TXT format
+	string LoadTXTArchiveContent();
 
 	//Complete methods
 	string MarkComplete(Task* taskptr);
@@ -182,7 +187,8 @@ private:
 	bool FileEmpty(string input);
 
 	//Get Task* methods
-	Task* GetTask(int position, Smartstring::LIST list);
+	Task* GetTaskPtr(int position, Smartstring::LIST list);
+	Task* GetTaskPtr(int position);
 	Task* GetTimedTask(int position);
 	Task* GetFloatingTask(int position);
 	Task* GetDeadlineTask(int position);
@@ -190,6 +196,8 @@ private:
 	//Replace methods
 	void ReplaceTask(Task* existing, Task* replacer);
 
+	//Indentification of list methods
+	Smartstring::LIST IdentifyListFromIndex(int index);
 
 	//exceptions
 	class InvalidIndex : public exception{
@@ -198,6 +206,18 @@ private:
 	class InvalidList : public exception{
 
 	} invalid_list;
+
+	class InvalidInput : public exception{
+	} invalid_input;
+
+	class LoadFailure : public exception{
+	} load_failure;
+
+	class FirstRun : public LoadFailure{
+	} first_run;
+
+	class CorruptedData : public LoadFailure{
+	} corrupted_data;
 
 };
 

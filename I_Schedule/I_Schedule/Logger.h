@@ -12,7 +12,7 @@ namespace logging{
 		~Logger();
 
 	private:
-		string _filename = "debug.log";
+		string _logfilename = "debug.log";
 		string Write(string input);
 		
 		friend Logger& operator<<(Logger& logger, string input);

@@ -34,16 +34,16 @@ namespace I_ScheduleGUI {
 			DISPLAY_TASK_FLOAT->LoadFile(gcnew String(controller->rtf_float.c_str()));
 			DISPLAY_MAIN->LoadFile(gcnew String(controller->rtf_main.c_str()));
 
-			//this section scrolls to the bottom of textboxes on load
-			DISPLAY_TASK_TIMED->SelectionStart = DISPLAY_TASK_TIMED->TextLength;
-			DISPLAY_TASK_TIMED->ScrollToCaret();
-			DISPLAY_TASK_FLOAT->SelectionStart = DISPLAY_TASK_FLOAT->TextLength;
-			DISPLAY_TASK_FLOAT->ScrollToCaret();
-			DISPLAY_MAIN->SelectionStart = DISPLAY_MAIN->TextLength;
-			DISPLAY_MAIN->ScrollToCaret();
-			DISPLAY_TASK_DEADLINE->SelectionStart = DISPLAY_TASK_DEADLINE->TextLength;
-			DISPLAY_TASK_DEADLINE->ScrollToCaret();
-			//end section
+			////this section scrolls to the bottom of textboxes on load
+			//DISPLAY_TASK_TIMED->SelectionStart = DISPLAY_TASK_TIMED->TextLength;
+			//DISPLAY_TASK_TIMED->ScrollToCaret();
+			//DISPLAY_TASK_FLOAT->SelectionStart = DISPLAY_TASK_FLOAT->TextLength;
+			//DISPLAY_TASK_FLOAT->ScrollToCaret();
+			//DISPLAY_MAIN->SelectionStart = DISPLAY_MAIN->TextLength;
+			//DISPLAY_MAIN->ScrollToCaret();
+			//DISPLAY_TASK_DEADLINE->SelectionStart = DISPLAY_TASK_DEADLINE->TextLength;
+			//DISPLAY_TASK_DEADLINE->ScrollToCaret();
+			////end section
 		}
 
 	protected:
@@ -331,21 +331,21 @@ namespace I_ScheduleGUI {
 
 	private: System::Void DISPLAY_TASK_FLOAT_TextChanged(System::Object^  sender, System::EventArgs^  e) {
 		//this section allows the text box to scroll to the end automatically
-		DISPLAY_TASK_FLOAT->SelectionStart = DISPLAY_TASK_FLOAT->TextLength;
-		DISPLAY_TASK_FLOAT->ScrollToCaret();
+		//DISPLAY_TASK_FLOAT->SelectionStart = DISPLAY_TASK_FLOAT->TextLength;
+		//DISPLAY_TASK_FLOAT->ScrollToCaret();
 		//end section
 
 	}
 	private: System::Void DISPLAY_MAIN_TextChanged(System::Object^  sender, System::EventArgs^  e) {
 		//this section allows the text box to scroll to the end automatically
-		DISPLAY_MAIN->SelectionStart = DISPLAY_MAIN->TextLength;
-		DISPLAY_MAIN->ScrollToCaret();
+		//DISPLAY_MAIN->SelectionStart = DISPLAY_MAIN->TextLength;
+		//DISPLAY_MAIN->ScrollToCaret();
 		//end section
 	}	
 	private: System::Void DISPLAY_TASK_TIMED_TextChanged(System::Object^  sender, System::EventArgs^  e) {
 		//this section allows the text box to scroll to the end automatically
-		DISPLAY_TASK_TIMED->SelectionStart = DISPLAY_TASK_TIMED->TextLength;
-		DISPLAY_TASK_TIMED->ScrollToCaret();
+		//DISPLAY_TASK_TIMED->SelectionStart = DISPLAY_TASK_TIMED->TextLength;
+		//DISPLAY_TASK_TIMED->ScrollToCaret();
 		//end section
 	}
 	private: System::Void GUI_Load(System::Object^  sender, System::EventArgs^  e) {
@@ -358,8 +358,8 @@ namespace I_ScheduleGUI {
 
 private: System::Void DISPLAY_TASK_DEADLINE_TextChanged(System::Object^  sender, System::EventArgs^  e) {
 	//this section allows the text box to scroll to the end automatically
-	DISPLAY_TASK_DEADLINE->SelectionStart = DISPLAY_TASK_DEADLINE->TextLength;
-	DISPLAY_TASK_DEADLINE->ScrollToCaret();
+	//DISPLAY_TASK_DEADLINE->SelectionStart = DISPLAY_TASK_DEADLINE->TextLength;
+	//DISPLAY_TASK_DEADLINE->ScrollToCaret();
 	//end section
 }
 };

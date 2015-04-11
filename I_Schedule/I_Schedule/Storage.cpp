@@ -28,6 +28,10 @@ const string Storage::_FEEDBACK_INVALID_INDEX = "Invalid index.";
 const string Storage::_FEEDBACK_INVALID_LIST = "Invalid list entered";
 const string Storage::_FEEDBACK_UPDATE_SUCCESS = "Update success.";
 const string Storage::_FEEDBACK_EDIT_SUCCESS = "Edit success.";
+const string Storage::_FEEDBACK_DATA_CORRUPTED = "Data corrupted.";
+const string Storage::_FEEDBACK_FILETYPE_INVALID = "Invalid filetype.";
+const string Storage::_FEEDBACK_DEFAULT_SESSION_STARTED = "Default session started.";
+const string Storage::_FEEDBACK_STARTUP = "Using ";
 //formatting variables
 const string Storage::_rtfboldtagstart = "\\b ";
 const string Storage::_rtfboldtagend = "\\b0 ";
@@ -41,12 +45,13 @@ const string Storage::_rtfcolorbluesuffix = "\\cf0 ";
 //@author A0099303A
 //PUBLIC =================================================================================================
 Storage::Storage(){
-	status << Load();
+	Load();
+	status << _FEEDBACK_STARTUP << _filename;
 }
 
 Storage::Storage(string input){
 	_filename = input;
-	Update();
+	SaveSessionData();
 }
 
 Storage::~Storage(){
@@ -54,7 +59,9 @@ Storage::~Storage(){
 
 //@author A0099303A
 string Storage::Add(Task* task){
+	int s = archiveList.size();
 	lastList = taskList;
+	lastArchiveList = archiveList;
 	taskList.push_back(task);
 	Update();
 	Rewrite();
@@ -65,8 +72,9 @@ string Storage::Add(Task* task){
 //@author A0099303A
 string Storage::DeleteFromList(int position, Smartstring::LIST list){
 	lastList = taskList;
+	lastArchiveList = archiveList;
 	try{
-		Task* toDelete = GetTask(position, list);
+		Task* toDelete = GetTaskPtr(position, list);
 		Erase(toDelete);
 		Rewrite();
 		Update();
@@ -83,9 +91,12 @@ string Storage::DeleteFromList(int position, Smartstring::LIST list){
 
 //@author A0119513L
 string Storage::Delete(int position){
+
+	//Smartstring::LIST list = IdentifyListFromIndex(position);
 	string feedback = "";
 	try{
 		lastList = taskList;
+		lastArchiveList = archiveList;
 		feedback = Remove(position);
 		Rewrite();
 		Update();
@@ -99,8 +110,9 @@ string Storage::Delete(int position){
 //@author A0099303A
 string Storage::Edit(int position, Smartstring::LIST list, vector<string> newinfo){
 	lastList = taskList;
+	lastArchiveList = archiveList;
 	try{
-		Task* taskptr = GetTask(position, list);
+		Task* taskptr = GetTaskPtr(position, list);
 		Task* newTask = new Task(taskptr);
 	//	(*newTask) = (*taskptr);
 		newTask->Edit(newinfo);
@@ -121,8 +133,8 @@ string Storage::Edit(int position, Smartstring::LIST list, vector<string> newinf
 }
 
 //@author A0099303A
-string Storage::Complete(int position, Smartstring::LIST list){
-
+string Storage::Complete(int position){
+/*
 	string feedback = "";
 	lastList = taskList;
 
@@ -140,48 +152,86 @@ string Storage::Complete(int position, Smartstring::LIST list){
 	catch (InvalidList){
 		return _FEEDBACK_INVALID_LIST;
 	}
-
-
-	//feedback = MarkComplete(position);
-	//Archive(position);
-	//Rewrite();
-	//Update();
+*/
+	string feedback;
+	try{
+		lastList = taskList;
+		lastArchiveList = archiveList;
+		Task* toremove = GetTaskPtr(position);
+		feedback = MarkComplete(toremove);
+		Archive(toremove);
+		Rewrite();
+		Update();
+	}
+	catch (InvalidIndex){
+		return _FEEDBACK_INVALID_INDEX;
+	}
 	return feedback;
 }
 
 //@author A0099303A
 string Storage::Load(){
-	logfile << "load called.";
-	string feedback;
 	logfile << LoadSessionData(); //change active file
-	ClearVectors();
-	feedback = LoadRawFileContent();
-	logfile << feedback;
-	logfile << LoadTaskList();
-	Update();
-	logfile << "end of load.";
+	FILETYPE filetype = IdentifyFileType(_filename);
+	string feedback;
+	try{
+		if (filetype != FILETYPE::INVALID){
+			logfile << "load called.";
+			ClearVectors();
+			ClearUndoVectors();
+			logfile << LoadRawFileContent();
+			LoadRawArchiveContent();
+			int db = _archivecontent.size();
+			int a = 0;
+			feedback = LoadTaskList();
+			LoadArchiveList();
+			logfile << feedback;
+			Update();
+			logfile << "end of load.";
+
+		}
+		else{
+			logfile << _FEEDBACK_FILETYPE_INVALID;
+			throw load_failure;
+		}
+	}
+	
+	catch (LoadFailure){
+		logfile << DefaultSession();
+		feedback = _FEEDBACK_LOAD_FAILURE;
+	}
 	return feedback;
+
 }
 
 //@author A0099303A
 string Storage::Load(string filename){
+
 	FILETYPE filetype = IdentifyFileType(filename);
-	if (filetype != FILETYPE::INVALID){
-		string feedback;
-		_filename = filename;
-		ClearVectors();
-		ClearUndoVector();
-		feedback = LoadRawFileContent();
-		LoadTaskList();
-		Update();
-		logfile << _FEEDBACK_LOAD_SUCCESS << " " << filename;
-		return feedback;
-	}
-	else{
-		logfile << _FEEDBACK_FILE_NOT_EMPTY;
-		return _FEEDBACK_FILE_NOT_EMPTY;
+	string feedback;
+	try{
+		if (filetype != FILETYPE::INVALID){
+			_filename = filename;
+			logfile << "load called.";
+			ClearVectors();
+			ClearUndoVectors();
+			logfile << LoadRawFileContent();
+			feedback = LoadTaskList();
+			logfile << feedback;
+			Update();
+			logfile << "end of load.";
+
+		}
+		else{
+			logfile << _FEEDBACK_FILETYPE_INVALID;
+		}
 	}
 
+	catch (LoadFailure){
+		logfile << DefaultSession();
+		feedback = _FEEDBACK_LOAD_FAILURE;
+	}
+	return feedback;
 }
 
 
@@ -196,14 +246,20 @@ string Storage::Save(){
 //@author A0099303A
 string Storage::SaveAs(string newFileName){
 	FILETYPE filetype = IdentifyFileType(newFileName);
-	if (FileEmpty(newFileName) && filetype!= FILETYPE::INVALID){
-		_filename = newFileName;
-		string feedback = Rewrite();
-		feedback = SaveSessionData();
-		return feedback;
+	if (filetype!= FILETYPE::INVALID){
+		if (FileEmpty(newFileName)){
+			_filename = newFileName;
+			string feedback = Rewrite();
+			feedback = SaveSessionData();
+			return feedback;
+		}
+		else{
+			return _FEEDBACK_FILE_NOT_EMPTY;
+		}
+		
 	}
 	else{
-		return _FEEDBACK_FILE_NOT_EMPTY;
+		return _FEEDBACK_FILETYPE_INVALID;
 	}
 }
 
@@ -225,6 +281,7 @@ string Storage::Reset(){
 //@author A0099303A
 string Storage::Clear(){
 	lastList = taskList;
+	lastArchiveList = archiveList;
 	ClearFile();
 	ClearVectors();
 	Update();
@@ -235,6 +292,7 @@ string Storage::Clear(){
 string Storage::Undo(){
 	if (!lastList.empty()){
 		taskList = lastList;
+		archiveList = lastArchiveList;
 		Rewrite();
 		Update();
 		return "success";
@@ -250,19 +308,14 @@ string Storage::Undo(){
 //====================================================================
 //Power Search
 //====================================================================
+
 //@author a0119491B
 string Storage::Search(string input){
 	vector<Task*> PowerSearch_Result = PowerSearch(input);
-	vector<Task*> NearSearch_Result = NearSearch(input);
-	if (PowerSearch_Result.empty() && NearSearch_Result.empty()){
+	if (PowerSearch_Result.empty()){
 		return _FEEDBACK_SEARCH_FAILURE;
-	}
-	else if (PowerSearch_Result.empty() && !NearSearch_Result.empty()){
-		return ToString(NearSearch_Result);
-	}
-	else
-	{
-		return ToString(PowerSearch_Result);
+	}else{
+		return ToString(PowerSearch_Result, 1);
 	}
 }
 
@@ -279,39 +332,30 @@ vector<Task*> Storage::PowerSearch(string input){
 	return searchResult;
 }
 
-//@author A0119491B
-vector<Task*> Storage::NearSearch(string input){
-	vector<Task*>::iterator iter;
-	vector<Task*> searchResult;
-	for (iter = taskList.begin(); iter != taskList.end(); ++iter){
-		Task* currentTask = *iter;
-		if (currentTask->isNearMatch(input)){
-			searchResult.push_back(currentTask);
-		}
-	}
-	return searchResult;
-}
+
 
 //@author A0119491B
 string Storage::SearchEmptySlots(string input){
-	/*if (dateTime->isDateType(input)){
-		string date = dateTime->ConvertDateTime(input);*/
-	DateTime* dt = new DateTime(input);
-	string stdtm = dt->Standardized();
-	if (dt->isValidFormat){
-		InitializeDayTask(input);
-		SetDayCalendar();
-		return GetEmptySlots();
+	try{
+		DateTime* dt = new DateTime(input);
+		string stdtm = dt->Standardized();
+		if (dt->isValidFormat){
+			InitializeDayTask(stdtm);
+			SetDayCalendar();
+			return GetEmptySlots();
+		}
+		else{
+			throw invalid_input;
+		}
 	}
-	/*}
-	else{
-		*return _FEEDBACK_SEARCH_FAILURE;
-	}*/
+	catch (InvalidInput){
+		return _FEEDBACK_SEARCH_FAILURE;
+	}
 }
 //@author A0119491B
 void Storage::InitializeDayTask(string date){
 	for (int i = 0; i < taskList.size(); i++){
-		string dateTime = taskList[i]->GetStartDate();
+		string dateTime = taskList[i]->GetStartDateTime();
 		size_t position = 0;
 		position = dateTime.find_first_of(":"); // 17:00pm 07/04/2015 Only this format can be recognized
 		if (position != string::npos){
@@ -348,7 +392,7 @@ void Storage::SetSleepingTime(){
 //@author A0119491B
 void Storage::SetOccupiedSlots(){
 	for (int i = 0; i < daytask.size(); i++){
-		string startDateTime = daytask[i]->GetStartDate();
+		string startDateTime = daytask[i]->GetStartDateTime();
 		string endDateTime = daytask[i]->GetEndDate();
 		size_t StartPos = 0, sPos = 2, ePos = 2;
 		string startTime, endTime;
@@ -369,24 +413,50 @@ void Storage::SetOccupiedSlots(){
 
 //@auhtor A0119491B
 string Storage::GetEmptySlots(){
-	for (int i = 0; i < 48; i++){
-		if (daycalendar[i] == "empty"){
-			if (i % 2 == 0){
-				int hour = i / 2;
-				ostringstream oss;
-				oss << setw(2) << setfill('0') << hour << ":" << "00" << " " << "to" << " " << setw(2) << setfill('0') << hour << ":" << "30";
-				string dbg = oss.str();
-				emptyslots.push_back(oss.str());
-			}
-			else{
-				int hour = i / 2;
-				ostringstream oss;
-				oss << setw(2) << setfill('0') << hour << ":" << "30" << " " << "to" << " " << setw(2) << setfill('0') << hour + 1 << ":" << "00";
-				string dbg = oss.str();
-				emptyslots.push_back(oss.str());
-			}
+	int startindex = 0, endindex = 0, time_intervals = 48, starthr, endhr;
+	
+	int j = 0;
+	for (int i = 0; i < time_intervals; i++)
+	{
+		startindex = i;
+		j = i;
+		while (daycalendar[j] == "empty" && i!=47){ // find empty slots
+			j++;
 		}
+
+		endindex = j;
+		if (i != j){
+			if (startindex%2 == 0 && endindex%2 == 0){
+				starthr = startindex / 2;
+				endhr = endindex / 2;
+				ostringstream oss;
+				oss << setw(2) << setfill('0') << starthr << ":" << "00 to " << setw(2) << setfill('0') << endhr << ":00";
+				emptyslots.push_back(oss.str());
+			}else if (startindex % 2 != 0 && endindex % 2 == 0){
+				starthr = startindex / 2;
+				endhr = endindex / 2;
+				ostringstream oss;
+				oss << setw(2) << setfill('0') << starthr << ":" << "30 to " << setw(2) << setfill('0') << endhr << ":00";
+				emptyslots.push_back(oss.str());
+			}else if (startindex % 2 == 0 && endindex % 2 != 0){
+				starthr = startindex / 2;
+				endhr = endindex / 2;
+				ostringstream oss;
+				oss << setw(2) << setfill('0') << starthr << ":" << "00 to " << setw(2) << setfill('0') << endhr << ":30";
+				emptyslots.push_back(oss.str());
+			}else if (startindex % 2 != 0 && endindex % 2 != 0){
+				starthr = startindex / 2;
+				endhr = endindex / 2;
+				ostringstream oss;
+				oss << setw(2) << setfill('0') << starthr << ":" << "30 to " << setw(2) << setfill('0') << endhr << ":30";
+				emptyslots.push_back(oss.str());
+			}
+
+			i = endindex; //let for loop continnue at endindex
+		}
+		
 	}
+	
 	return ToString(emptyslots);
 }
 
@@ -405,27 +475,54 @@ string Storage::GetFileName(){
 	return _filename;
 }
 
-string Storage::GetFloatingList(){
-	string output = ToString(floatingList);
-	int size = floatingList.size();
-	return ToString(floatingList);
+
+string Storage::GetTimedList(){
+	int startIndex = 1;
+	return ToString(timedList, startIndex);
 }
 
 string Storage::GetDeadlineList(){
-	//string dbg = deadlineList.front()->Task::ToShortString();
-	return ToString(deadlineList);
+	int startIndex = timedList.size() + 1;
+		return ToString(deadlineList, startIndex);
 }
 
-string Storage::GetTimedList(){
-	return ToString(timedList);
+string Storage::GetFloatingList(){
+	int startIndex = timedList.size() + deadlineList.size() + 1;
+	return ToString(floatingList, startIndex);
 }
+
+
 
 
 
 //@author unknown
 //====================================================================
-//To be refactored
+//ToString methods
 //====================================================================
+string Storage::ArchiveToString(){
+	Update();
+	ostringstream out;
+	int index = 0;
+	vector<Task*>::iterator iter;
+	if (archiveList.size() != 0){
+		for (iter = archiveList.begin(); iter != archiveList.end(); ++iter){
+			++index;
+			if (iter + 1 != archiveList.end()){
+				out << _rtfboldtagstart << index << ": " << _rtfboldtagend << (*iter)->ToShortString() << endl;
+			}
+			else{
+				out << _rtfboldtagstart << index << ": " << _rtfboldtagend << (*iter)->ToShortString();
+			}
+		}
+		return out.str();
+	}
+	else{
+		return "";
+	}
+	
+
+}
+
 string Storage::ToString(){
 	Update();
 	ostringstream out;
@@ -443,18 +540,17 @@ string Storage::ToString(){
 	return out.str();
 }
 
-string Storage::ToString(vector<Task*> V){
+string Storage::ToString(vector<Task*> V, int index){
 	ostringstream out;
-	int index = 0;
 	vector<Task*>::iterator iter;
 	for (iter = V.begin(); iter != V.end(); ++iter){
-		++index;
 		if (iter + 1 != V.end()){
 			out << _rtfboldtagstart << index << ": " << _rtfboldtagend << (*iter)->ToShortString() << endl;
 		}
 		else{
 			out << _rtfboldtagstart << index << ": " << _rtfboldtagend << (*iter)->ToShortString();
 		}
+		index++;
 	}
 	return out.str();
 }
@@ -476,8 +572,8 @@ string Storage::DayView(){
 	string currentday;
 	DateTime* dt = new DateTime();
 	for (iter = taskList.begin(); iter != taskList.end(); ++iter){
-		if (currentday != (*iter)->GetStartDate()){
-			currentday = (*iter)->GetStartDate();
+		if (currentday != (*iter)->GetStartDateTime()){
+			currentday = (*iter)->GetStartDateTime();
 			string representative = currentday;
 			if (currentday == dt->Today()){
 				representative = "Today";
@@ -504,6 +600,17 @@ string Storage::DayView(){
 
 //PRIVATE==========================================================================================
 //====================================================================
+//Session Methods
+//====================================================================
+//@author A0099303A
+string Storage::DefaultSession(){
+	_filename = _FILENAME_DEFAULT;
+	Update();
+	return _FEEDBACK_DEFAULT_SESSION_STARTED;
+}
+
+
+//====================================================================
 //Update Methods
 //====================================================================
 //@author A0099303A
@@ -522,13 +629,12 @@ void Storage::Update(){
 //@author A0119491B
 void Storage::FilterTask(){
 	ClearFilteredLists();
-	initializeLists();
-	sortTask();
-	rearrangeTaskList();
+	InitializeLists();
+	SortAllLists();
 	return;
 }
 //@author A0119491B
-void Storage::initializeLists(){
+void Storage::InitializeLists(){
 	int size_taskList = taskList.size();
 
 	for (int i = 0; i < size_taskList; i++){
@@ -547,18 +653,19 @@ void Storage::initializeLists(){
 	}
 }
 //@author A0119491B
-void Storage::sortTask(){
-	sortListsByTime(timedList);
-	sortListsByTime(deadlineList);
+void Storage::SortAllLists(){
+	SortListsByTime(timedList);
+	SortListsByTime(deadlineList);
+	SortTaskList();
 }
 //@author A0119491B
-void Storage::sortListsByTime(vector <Task*> &V){
+void Storage::SortListsByTime(vector <Task*> &V){
 	int size_V = V.size();
 	string datetime1, datetime2;
 	for (int i = 0; i < size_V; i++){
 		for (int j = i; j < size_V; ++j){
-			datetime1 = V[i]->GetStartDate();
-			datetime2 = V[j]->GetStartDate();
+			datetime1 = V[i]->GetStartDateTime();
+			datetime2 = V[j]->GetStartDateTime();
 
 			if (datetime1 == "" && datetime2 == ""){
 				datetime1 = V[i]->GetEndDate();
@@ -576,7 +683,7 @@ void Storage::sortListsByTime(vector <Task*> &V){
 	}
 }
 //@author A0119491B
-void Storage::rearrangeTaskList(){
+void Storage::SortTaskList(){
 	taskList.clear();
 	vector<Task*>::iterator iter;
 	for (iter = timedList.begin(); iter != timedList.end(); iter++){
@@ -616,12 +723,15 @@ void Storage::ClearVectors(){
 	floatingList.clear();
 	deadlineList.clear();
 	_filecontent.clear();
+	_archivecontent.clear();
+	archiveList.clear();
 	return;
 }
 
 //@author A0099303A
-void Storage::ClearUndoVector(){
+void Storage::ClearUndoVectors(){
 	lastList.clear();
+	lastArchiveList.clear();
 	return;
 }
 
@@ -683,41 +793,17 @@ string Storage::WriteToFile(){
 	FILETYPE filetype = IdentifyFileType(_filename);
 	string feedback;
 	switch (filetype){
-	case (FILETYPE::CSV) : {
-		feedback = WriteToCSV();
-		break;
-	}
 	case(FILETYPE::TXT) : {
 		feedback = WriteToTXT();
 		break;
 	}
-	case(FILETYPE::INVALID) : {
+	default : {
 		return _FEEDBACK_INVALID_FILE_FORMAT;
 		break;
 	}
 	}
 	return feedback;
 
-}
-
-//@author A0099303A
-string Storage::WriteToCSV(){
-	ostringstream out;
-	ofstream of;
-	of.open(_filename.c_str(), ios::app);
-	vector<Task*>::iterator iter;
-	int size = taskList.size();
-	for (iter = taskList.begin(); iter != taskList.end(); ++iter){
-		if (iter + 1 != taskList.end()){
-			out << (*iter)->ToCSVString() << endl;
-		}
-		else{
-			out << (*iter)->ToCSVString();
-		}
-	}
-	string str = out.str();
-	of << out.str();
-	return _FEEDBACK_WRITE_SUCCESS;
 }
 
 //@author A0099303A
@@ -742,14 +828,12 @@ string Storage::WriteToTXT(){
 string Storage::WriteToArchive(){
 	ostringstream out;
 	ofstream of;
-	of.open(_archivefile.c_str(), ios::app);
+	of.open(_archivefile.c_str(), ios::trunc);
 	vector<Task*>::iterator iter;
 	int size = archiveList.size();
 	for (iter = archiveList.begin(); iter != archiveList.end(); ++iter){
-		out << (*iter)->ToCSVString() << endl;
+		out << (*iter)->ToTXTString() << endl;
 	}
-	archiveList.clear();
-	string str = out.str();
 	of << out.str();
 	return _FEEDBACK_WRITE_SUCCESS;
 }
@@ -800,60 +884,65 @@ string Storage::LoadRawFileContent(){
 }
 
 //@author A0099303A
+string Storage::LoadRawArchiveContent(){
+	string line;
+	vector<string> all_lines;
+	ifstream in(_archivefile.c_str());
+	try{
+		if (in.is_open()){
+			while (getline(in, line)){
+				if (line == _EMPTY_STRING){
+					return _FEEDBACK_FILE_EMPTY;
+				}
+
+				all_lines.push_back(line);
+			}
+			_archivecontent = all_lines;
+			return _FEEDBACK_LOAD_SUCCESS;
+		}
+		int s = _archivecontent.size();
+		int a = 0;
+	}
+	catch (out_of_range){
+		return _FEEDBACK_LOAD_FAILURE;
+	}
+	return _FEEDBACK_LOAD_FAILURE;
+}
+
+//@author A0099303A
 string Storage::LoadTaskList(){
 	FILETYPE filetype = IdentifyFileType(_filename);
 	string feedback;
 	switch (filetype){
-	case (FILETYPE::CSV) : {
-		feedback = LoadCSVContent();
-		break;
-	}
-	case(FILETYPE::TXT) : {
-		feedback = LoadTXTContent();
-		break;
-	}
-	case(FILETYPE::INVALID) : {
-		return _FEEDBACK_LOAD_FAILURE;
-		break;
-	}
+		case(FILETYPE::TXT) : {
+			feedback = LoadTXTContent();
+			break;
+		}
+		default : {
+			return _FEEDBACK_LOAD_FAILURE;
+			break;
+		}
 	}
 	return feedback;
 	
 }
 
 //@author A0099303A
-string Storage::LoadCSVContent(){
-	Smartstring str;
-	const int startfield = Smartstring::FIELD::DESCRIPTION;
-	int currentfield = startfield;
-	int fieldcount = Smartstring::NUMBER_OF_FIELDS;
-	vector<string>::iterator iter;
-	Task* taskptr = new Task();
-	try{
-		int msize = _filecontent.size();
-		for (iter = _filecontent.begin(); iter != _filecontent.end(); ++iter){
-			str = (*iter);
-			vector<string> output = str.Tokenize(_DELIMITERS_CSV);
-			vector<string>::iterator iter2;
-			for (iter2 = output.begin(); iter2 != output.end(); ++iter2){
-				int end = (*iter2).length() - 2;
-				*iter2 = (*iter2).substr(1, end);
+string Storage::LoadArchiveList(){
+	FILETYPE filetype = IdentifyFileType(_filename);
+		string feedback;
+			switch (filetype){
+			case(FILETYPE::TXT) : {
+				feedback = LoadTXTArchiveContent();
+				break;
 			}
-			string test = output.front();
-			if (output.size() != Smartstring::NUMBER_OF_FIELDS){
-				assert(false && "In Storage LoadCSVContent load failed, size does not match definition");
+			default : {
 				return _FEEDBACK_LOAD_FAILURE;
-			}
-			taskptr = new Task(output);
-			taskList.push_back(taskptr);
+				break;
 		}
 	}
+	return feedback;
 
-	catch (out_of_range){
-		return _FEEDBACK_LOAD_FAILURE;
-	}
-	return _FEEDBACK_LOAD_SUCCESS;
-	return _FEEDBACK_LOAD_FAILURE;
 }
 
 //@author A0099303A
@@ -891,11 +980,11 @@ string Storage::LoadTXTContent(){
 				break;
 			}
 			case Smartstring::FIELD::STARTDATE:{
-				taskptr->SetStartDate(*iter);
+				taskptr->SetStartDateTime(*iter);
 				break;
 			}
 			case Smartstring::FIELD::ENDDATE:{
-				taskptr->SetEndDate(*iter);
+				taskptr->SetEndDateTime(*iter);
 				break;
 			}
 			case Smartstring::FIELD::PRIORITY:{
@@ -916,6 +1005,69 @@ string Storage::LoadTXTContent(){
 	}
 	return _FEEDBACK_LOAD_SUCCESS;
 }
+
+//@author A0099303A
+string Storage::LoadTXTArchiveContent(){
+	Smartstring str;
+	const int startfield = Smartstring::FIELD::DESCRIPTION;
+	int currentfield = startfield;
+	int fieldcount = Smartstring::NUMBER_OF_FIELDS;
+	vector<string>::iterator iter;
+	Task* taskptr = new Task();
+	//remove field description from _filecontent
+	vector<string> taskContent;
+	for (iter = _archivecontent.begin(); iter != _archivecontent.end(); ++iter){
+		string line = (*iter);
+		istringstream is(line);
+		string buffer;
+		is >> buffer;
+		string output;
+		getline(is, output);
+		int length = line.length() - 1;
+		output = output.substr(1, length);
+		taskContent.push_back(output);
+	}
+
+	//end remove field description from _filecontent
+	try{
+		for (iter = taskContent.begin(); iter != taskContent.end(); ++iter){
+			if (currentfield == Smartstring::FIELD::DESCRIPTION){
+				taskptr = new Task();
+				archiveList.push_back(taskptr);
+			}
+			switch (currentfield){
+			case Smartstring::FIELD::DESCRIPTION:{
+				taskptr->SetDescription(*iter);
+				break;
+			}
+			case Smartstring::FIELD::STARTDATE:{
+				taskptr->SetStartDateTime(*iter);
+				break;
+			}
+			case Smartstring::FIELD::ENDDATE:{
+				taskptr->SetEndDateTime(*iter);
+				break;
+			}
+			case Smartstring::FIELD::PRIORITY:{
+				taskptr->SetPriority(*iter);
+				break;
+			}
+			case Smartstring::FIELD::STATUS:{
+				taskptr->SetStatus(*iter);
+			}
+
+			}
+			currentfield = (currentfield + 1) % fieldcount;
+		}
+	}
+
+	catch (out_of_range){
+		return _FEEDBACK_LOAD_FAILURE;
+	}
+	return _FEEDBACK_LOAD_SUCCESS;
+}
+
+
 
 //====================================================================
 //Mark methods
@@ -943,17 +1095,13 @@ void Storage::Archive(Task* taskptr){
 //====================================================================
 //@author A0099303A
 Storage::FILETYPE Storage::IdentifyFileType(string input){
-	if (input.find(_FILE_EXTENSION_CSV) != string::npos){
-		return FILETYPE::CSV;
+	if (input.find(_FILE_EXTENSION_TXT) != string::npos){
+		return FILETYPE::TXT;
 	}
 	else{
-		if (input.find(_FILE_EXTENSION_TXT) != string::npos){
-			return FILETYPE::TXT;
-		}
-		else{
-			return FILETYPE::INVALID;
-		}
+		return FILETYPE::INVALID;
 	}
+
 }
 
 //@author A0099303A
@@ -976,7 +1124,7 @@ bool Storage::FileEmpty(string filename){
 //Get Task* methods
 //====================================================================
 //@author A0099303A
-Task* Storage::GetTask(int position, Smartstring::LIST list){
+Task* Storage::GetTaskPtr(int position, Smartstring::LIST list){
 	Task* taskptr;
 	switch (list){
 		case Smartstring::LIST::TIMED:{
@@ -997,6 +1145,15 @@ Task* Storage::GetTask(int position, Smartstring::LIST list){
 		}
 	}
 	return taskptr;
+}
+
+Task* Storage::GetTaskPtr(int position){
+	if (position <= taskList.size() && position > 0){
+		return taskList[position - 1];
+	}
+	else{
+		throw invalid_index;
+	}
 }
 //@author A0099303A
 Task* Storage::GetTimedTask(int position){
@@ -1048,4 +1205,25 @@ void Storage::ReplaceTask(Task* taskptr, Task* replacer){
 	}
 
 	return;
+}
+
+//====================================================================
+//Identification of List methods
+//====================================================================
+
+//@author A0099303A
+Smartstring::LIST Storage::IdentifyListFromIndex(int index){
+
+	Smartstring::LIST list;
+	if (index < deadlineList.size()){
+		return Smartstring::LIST::TIMED;
+	}
+	else{
+		if (index > deadlineList.size()){
+			return Smartstring::LIST::FLOAT;
+		}
+		else{
+			return Smartstring::LIST::DEADLINE;
+		}
+	}
 }

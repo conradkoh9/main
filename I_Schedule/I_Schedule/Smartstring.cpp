@@ -1,3 +1,4 @@
+//@author A0094213M
 #include "Smartstring.h"
 #include <iostream>
 //note: static fields always need to be redeclared in cpp file
@@ -19,9 +20,10 @@ const string Smartstring::COMMAND_EDIT = "edit";
 const string Smartstring::COMMAND_SAVE = "save";
 const string Smartstring::COMMAND_SEARCH = "search";
 const string Smartstring::COMMAND_COMPLETE = "complete";
-const string Smartstring::COMMAND_EMPTYSLOTS = "emptyslots";
+const string Smartstring::COMMAND_EMPTYSLOTS = "free";
 const string Smartstring::COMMAND_UNDO = "undo";
 const string Smartstring::COMMAND_LOAD = "load";
+const string Smartstring::COMMAND_ARCHIVED = "archived";
 
 
 const string Smartstring::KEYWORD_ENDDATE_1 = "date:";
@@ -90,6 +92,7 @@ void Smartstring::Initialize(){
 		commands.push_back(COMMAND_COMPLETE);
 		commands.push_back(COMMAND_UNDO);
 		commands.push_back(COMMAND_LOAD);
+		commands.push_back(COMMAND_ARCHIVED);
 
 		keywords.push_back(KEYWORD_ENDDATE_1);
 		keywords.push_back(KEYWORD_ENDDATE_2);
@@ -172,13 +175,16 @@ Smartstring::COMMAND Smartstring::Command(){
 		return Smartstring::COMMAND::COMPLETE;
 	}
 	if (description == COMMAND_EMPTYSLOTS){
-		return Smartstring::COMMAND::EMPTYSLOTS;
+		return Smartstring::COMMAND::FREE;
 	}
 	if (description == COMMAND_UNDO){
 		return Smartstring::COMMAND::UNDO;
 	}
 	if (description == COMMAND_LOAD){
 		return Smartstring::COMMAND::LOAD;
+	}
+	if (description == COMMAND_ARCHIVED){
+		return Smartstring::COMMAND::ARCHIVED;
 	}
 
 	assert(!IsCommand()); //takes care of the case when we add cases to field but did not update static list commands[];
@@ -233,6 +239,29 @@ vector<string> Smartstring::Tokenize(string delimiters){
 			tokens.push_back(result);
 		}
 		startIdx = found + 1;
+	}
+	return tokens;
+}
+
+vector<string> Smartstring::ContainedTokenize(string delimiters){
+	int found = 0;
+	string input = description;
+	int startFrame = 0;
+	int endFrame = 0;
+	int startIdx = 0;
+	int endIdx = 0;
+	vector<string> tokens;
+	while (startFrame != string::npos && endFrame != string::npos){
+		startFrame = input.find_first_of(delimiters.c_str(), startIdx);
+		if (startFrame != string::npos){
+			endFrame = input.find_first_of(delimiters.c_str(), startFrame + 1);
+			if (endFrame != string::npos){
+				int length = endFrame - startFrame - 1;
+				string result = input.substr(startFrame + 1, length);
+				tokens.push_back(result);
+			}
+		}
+		startIdx = endFrame + 1;
 	}
 	return tokens;
 }

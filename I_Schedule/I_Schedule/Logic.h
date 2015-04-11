@@ -5,6 +5,7 @@
 #include "Storage.h"
 #include "Smartstring.h"
 #include "Logger.h";
+#include "Command.h"
 
 using namespace std;
 using namespace logging;
@@ -19,21 +20,28 @@ public:
 	bool exit = false;
 	Parser* parser;
 	Storage* storage;
+	Command* command;
+
 	//methods
-	string Run(string input);
+	void Run(string input);
 	string Execute(string input);
+	Command* GetCommand(Smartstring::COMMAND command);
+	void UpdateDisplays();
+
+
+
 	string Add(string taskInput);
 	string Complete(string input);
 	string Delete(string taskInput);
 	string Display();
 	string Edit(string taskInput);
 	string Search(string taskInput);
-	string CloseSearch(string input);
 	string EmptySlots(string input);
 	string Invalid();
 	string Save(string input);
 	string Clear();
 	string Undo();
+	string Archived(string input);
 	string Load(string input);
 
 	//display streams

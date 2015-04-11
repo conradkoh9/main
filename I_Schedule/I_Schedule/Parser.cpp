@@ -69,6 +69,7 @@ Smartstring::LIST Parser::IdentifyList(string input){
 	}
 }
 
+
 //@author A0094213M
 string Parser::RemoveCommand(string input){
 	string command; 
