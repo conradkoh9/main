@@ -10,6 +10,7 @@ const string Command::_FEEDBACK_INVALID_COMMAND = "Invalid command entered.";
 const string Command::_MESSAGE_WELCOME = "Welcome to I_Schedule.";
 const string Command::_FEEDBACK_INVALID_INPUT = "Invalid input.";
 const string Command::_FEEDBACK_INVALID_INDEX = "Invalid index.";
+const string Command::_FEEDBACK_INVALID_FIELD = "Invalid field.";
 
 Command::Command(){
 
@@ -41,6 +42,9 @@ AddCommand::~AddCommand(){
 
 string AddCommand::Execute(string taskInput){
 	try{
+		if (taskInput == ""){
+			throw invalid_input;
+		}
 		vector<string> taskinfo = parser->IdentifyTaskFields(taskInput);
 		Task* task = new Task(taskinfo);
 		string feedback = storage->Add(task);
@@ -86,6 +90,9 @@ DeleteCommand::~DeleteCommand(){
 string DeleteCommand::Execute(string taskInput){
 	try{
 		int position = atoi(taskInput.c_str());
+		if (position < 0){
+			throw invalid_index;
+		}
 		storage->Delete(position);
 		return storage->ToString();
 	}
@@ -132,13 +139,22 @@ string EditCommand::Execute(string taskInput){
 
 		istringstream in(taskInput);
 		in >> position;
+		if (position < 0){
+			throw invalid_index;
+		}
 		getline(in, remainder);
 		vector<string> newinfo = parser->IdentifyTaskFields(remainder);
+		if (newinfo.size() == 0){
+			throw invalid_field;
+		}
 		storage->Edit(position, newinfo);
 		return storage->ToString();
 	}
-	catch (InvalidInput){
-		return _FEEDBACK_INVALID_INPUT;
+	catch (InvalidIndex){
+		return _FEEDBACK_INVALID_INDEX;
+	}
+	catch (InvalidField){
+		return _FEEDBACK_INVALID_FIELD;
 	}
 }
 
@@ -157,6 +173,9 @@ SaveCommand::~SaveCommand(){
 
 string SaveCommand::Execute(string input){
 	try{
+		if (input == ""){
+			throw invalid_input;
+		}
 		string feedback = storage->SaveAs(input);
 		return storage->ToString();
 	}
@@ -180,6 +199,9 @@ SearchCommand::~SearchCommand(){
 
 string SearchCommand::Execute(string taskInput){
 	try{
+		if (taskInput == ""){
+			throw invalid_input;
+		}
 		return storage->Search(taskInput);
 	}
 	catch (InvalidInput){
@@ -202,6 +224,9 @@ CompleteCommand::~CompleteCommand(){
 
 string CompleteCommand::Execute(string input){
 	try{
+		if (input == ""){
+			throw invalid_input;
+		}
 		istringstream in(input);
 		int position;
 		in >> position;
@@ -231,6 +256,9 @@ FreeCommand::~FreeCommand(){
 
 string FreeCommand::Execute(string input){
 	try{
+		if (input == ""){
+			throw invalid_input;
+		}
 		string feedback = storage->SearchEmptySlots(input);
 		return feedback;
 	}
@@ -254,6 +282,9 @@ LoadCommand::~LoadCommand(){
 
 string LoadCommand::Execute(string input){
 	try{
+		if (input == ""){
+			throw invalid_input;
+		}
 		string feedback = storage->Load(input);
 		return storage->ToString();
 	}

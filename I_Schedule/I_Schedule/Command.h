@@ -28,10 +28,14 @@ public:
 	static const string _MESSAGE_WELCOME;
 	static const string _FEEDBACK_INVALID_INPUT;
 	static const string _FEEDBACK_INVALID_INDEX;
-	
+	static const string _FEEDBACK_INVALID_FIELD;
+
 	//exceptions
 	class InvalidIndex : public exception{
 	} invalid_index;
+
+	class InvalidField : public exception{
+	} invalid_field;
 
 	class InvalidList : public exception{
 	} invalid_list;
