@@ -15,7 +15,7 @@ class Smartstring
 private: 
 	
 public:
-	string description;
+	string information;
 	enum COMMAND { ADD, CLEAR, DELETE, DISPLAY, EDIT, SAVE, SEARCH, COMPLETE, FREE, LOAD, UNDO, ARCHIVED, INVALID_CMD };
 	enum FIELD { DESCRIPTION, STARTDATE, ENDDATE, PRIORITY, STATUS, INVALID_FLD };
 	enum LIST{ TIMED, DEADLINE, FLOAT, DEFAULT };

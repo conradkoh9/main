@@ -69,14 +69,14 @@ vector<string> Smartstring::commands;
 vector<string> Smartstring::keywords;
 
 Smartstring::Smartstring(){
-	description = "";
+	information = "";
 	Initialize();
 	
 }
 
 
 Smartstring::Smartstring(string input){
-	description = input;
+	information = input;
 	Initialize();
 }
 
@@ -131,7 +131,7 @@ Smartstring::~Smartstring()
 
 bool Smartstring::IsCommand(){
 	for (int i = 0; i < numberOfCommands; ++i){
-		if (description == commands[i]){
+		if (information == commands[i]){
 			return true;
 		}
 	}
@@ -141,7 +141,7 @@ bool Smartstring::IsCommand(){
 
 bool Smartstring::IsKeyword(){
 	for (int i = 0; i < numberOfKeywords; ++i){
-		if (description == keywords[i]){
+		if (information == keywords[i]){
 			return true;
 		}
 	}
@@ -150,40 +150,40 @@ bool Smartstring::IsKeyword(){
 }
 
 Smartstring::COMMAND Smartstring::Command(){
-	if (description == COMMAND_ADD){
+	if (information == COMMAND_ADD){
 		return Smartstring::COMMAND::ADD;
 	}
-	if (description == COMMAND_DELETE){
+	if (information == COMMAND_DELETE){
 		return Smartstring::COMMAND::DELETE;
 	}
-	if (description == COMMAND_DISPLAY){
+	if (information == COMMAND_DISPLAY){
 		return Smartstring::COMMAND::DISPLAY;
 	}
-	if (description == COMMAND_EDIT){
+	if (information == COMMAND_EDIT){
 		return Smartstring::COMMAND::EDIT;
 	}
-	if (description == COMMAND_SEARCH){
+	if (information == COMMAND_SEARCH){
 		return Smartstring::COMMAND::SEARCH;
 	}
-	if (description == COMMAND_CLEAR){
+	if (information == COMMAND_CLEAR){
 		return Smartstring::COMMAND::CLEAR;
 	}
-	if (description == COMMAND_SAVE){
+	if (information == COMMAND_SAVE){
 		return Smartstring::COMMAND::SAVE;
 	}
-	if (description == COMMAND_COMPLETE){
+	if (information == COMMAND_COMPLETE){
 		return Smartstring::COMMAND::COMPLETE;
 	}
-	if (description == COMMAND_EMPTYSLOTS){
+	if (information == COMMAND_EMPTYSLOTS){
 		return Smartstring::COMMAND::FREE;
 	}
-	if (description == COMMAND_UNDO){
+	if (information == COMMAND_UNDO){
 		return Smartstring::COMMAND::UNDO;
 	}
-	if (description == COMMAND_LOAD){
+	if (information == COMMAND_LOAD){
 		return Smartstring::COMMAND::LOAD;
 	}
-	if (description == COMMAND_ARCHIVED){
+	if (information == COMMAND_ARCHIVED){
 		return Smartstring::COMMAND::ARCHIVED;
 	}
 
@@ -192,16 +192,16 @@ Smartstring::COMMAND Smartstring::Command(){
 }
 
 Smartstring::FIELD Smartstring::Field(){
-	if (description == KEYWORD_STARTDATE_1 || description == KEYWORD_STARTDATE_2 || description == KEYWORD_STARTDATE_3 || description == KEYWORD_STARTDATE_4 || description == KEYWORD_STARTDATE_5 || description == KEYWORD_STARTDATE_6 || description == KEYWORD_STARTDATE_7){
+	if (information == KEYWORD_STARTDATE_1 || information == KEYWORD_STARTDATE_2 || information == KEYWORD_STARTDATE_3 || information == KEYWORD_STARTDATE_4 || information == KEYWORD_STARTDATE_5 || information == KEYWORD_STARTDATE_6 || information == KEYWORD_STARTDATE_7){
 		return Smartstring::FIELD::STARTDATE;
 	}
-	if (description == KEYWORD_PRIORITY_1 || description == KEYWORD_PRIORITY_2){
+	if (information == KEYWORD_PRIORITY_1 || information == KEYWORD_PRIORITY_2){
 		return Smartstring::FIELD::PRIORITY;
 	}
-	if (description == KEYWORD_ENDDATE_1 || description == KEYWORD_ENDDATE_2 || description == KEYWORD_ENDDATE_3 || description == KEYWORD_ENDDATE_4 || description == KEYWORD_ENDDATE_5 || description == KEYWORD_ENDDATE_6 || description == KEYWORD_ENDDATE_7 || description == KEYWORD_ENDDATE_8 || description == KEYWORD_ENDDATE_9 || description == KEYWORD_ENDDATE_10 || description == KEYWORD_ENDDATE_11 || description == KEYWORD_ENDDATE_12){
+	if (information == KEYWORD_ENDDATE_1 || information == KEYWORD_ENDDATE_2 || information == KEYWORD_ENDDATE_3 || information == KEYWORD_ENDDATE_4 || information == KEYWORD_ENDDATE_5 || information == KEYWORD_ENDDATE_6 || information == KEYWORD_ENDDATE_7 || information == KEYWORD_ENDDATE_8 || information == KEYWORD_ENDDATE_9 || information == KEYWORD_ENDDATE_10 || information == KEYWORD_ENDDATE_11 || information == KEYWORD_ENDDATE_12){
 		return Smartstring::FIELD::ENDDATE;
 	}
-	if (description == KEYWORD_DESCRIPTION_1){
+	if (information == KEYWORD_DESCRIPTION_1){
 		return Smartstring::FIELD::DESCRIPTION;
 	}
 	
@@ -210,13 +210,13 @@ Smartstring::FIELD Smartstring::Field(){
 }
 
 Smartstring::LIST Smartstring::ListType(){
-	if (description == KEYWORD_TIMED_1){
+	if (information == KEYWORD_TIMED_1){
 		return Smartstring::LIST::TIMED;
 	}
-	if (description == KEYWORD_DEADLINE_1){
+	if (information == KEYWORD_DEADLINE_1){
 		return Smartstring::LIST::DEADLINE;
 	}
-	if (description == KEYWORD_FLOAT_1){
+	if (information == KEYWORD_FLOAT_1){
 		return Smartstring::LIST::FLOAT;
 	}
 	return Smartstring::LIST::DEFAULT;
@@ -224,7 +224,7 @@ Smartstring::LIST Smartstring::ListType(){
 
 
 string Smartstring::ToString(){
-	return description;
+	return information;
 }
 
 vector<string> Smartstring::Tokenize(string delimiters){
@@ -232,9 +232,9 @@ vector<string> Smartstring::Tokenize(string delimiters){
 	int startIdx = 0;
 	vector<string> tokens;
 	while (found != string::npos){
-		found = description.find_first_of(delimiters.c_str(),startIdx);
+		found = information.find_first_of(delimiters.c_str(), startIdx);
 		int length = found - startIdx;
-		string result = description.substr(startIdx, length);
+		string result = information.substr(startIdx, length);
 		if (result.length() != 0){
 			tokens.push_back(result);
 		}
@@ -245,7 +245,7 @@ vector<string> Smartstring::Tokenize(string delimiters){
 
 vector<string> Smartstring::ContainedTokenize(string delimiters){
 	int found = 0;
-	string input = description;
+	string input = information;
 	int startFrame = 0;
 	int endFrame = 0;
 	int startIdx = 0;
@@ -269,32 +269,32 @@ vector<string> Smartstring::ContainedTokenize(string delimiters){
 
 //operator overloading
 ostream& operator<<(ostream& os, Smartstring& ss){
-	os << ss.description;
+	os << ss.information;
 	return os;
 }
 
 istream& operator>>(istream& is, Smartstring& ss){
-	is >> ss.description;
+	is >> ss.information;
 	return is;
 }
 
 string& operator+ (string input, Smartstring& ss){
-	return (input + ss.description);
+	return (input + ss.information);
 }
 
 string& operator+ (Smartstring& ss, string& input){
-	return (ss.description + input);
+	return (ss.information + input);
 }
 
 string& operator+ (const char* s, Smartstring &ss){
 	string out;
 	string first = s;
-	out = first + ss.description.c_str();
+	out = first + ss.information.c_str();
 	return out;
 }
 string& operator+ (Smartstring &ss, const char* s){
 	string out;
 	string first = s;
-	out = first + ss.description.c_str();
+	out = first + ss.information.c_str();
 	return out;
 }
