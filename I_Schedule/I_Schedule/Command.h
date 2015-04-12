@@ -3,7 +3,6 @@
 #include <string>
 #include "Parser.h"
 #include "Storage.h"
-#include "Smartstring.h"  //do we need smartstring?
 #include "Logger.h"  //no logging inside Command yet
 
 using namespace std;
@@ -27,6 +26,27 @@ public:
 	static const string _FEEDBACK_UNDO;
 	static const string _FEEDBACK_INVALID_COMMAND;
 	static const string _MESSAGE_WELCOME;
+	static const string _FEEDBACK_INVALID_INPUT;
+	static const string _FEEDBACK_INVALID_INDEX;
+	
+	//exceptions
+	class InvalidIndex : public exception{
+	} invalid_index;
+
+	class InvalidList : public exception{
+	} invalid_list;
+
+	class InvalidInput : public exception{
+	} invalid_input;
+
+	class LoadFailure : public exception{
+	} load_failure;
+
+	class FirstRun : public LoadFailure{
+	} first_run;
+
+	class CorruptedData : public LoadFailure{
+	} corrupted_data;
 
 };
 

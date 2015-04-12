@@ -8,6 +8,9 @@ const string Command::_FEEDBACK_SEARCH = "Displaying search results.";
 const string Command::_FEEDBACK_UNDO = "Undo previous command.";
 const string Command::_FEEDBACK_INVALID_COMMAND = "Invalid command entered.";
 const string Command::_MESSAGE_WELCOME = "Welcome to I_Schedule.";
+const string Command::_FEEDBACK_INVALID_INPUT = "Invalid input.";
+const string Command::_FEEDBACK_INVALID_INDEX = "Invalid index.";
+
 Command::Command(){
 
 }
@@ -19,7 +22,7 @@ Command::Command(Storage* store_, Parser* parser_){
 Command::~Command(){
 }
 
-string Command::Execute(string){   //invalid command
+string Command::Execute(string){   //default is invalid command
 	return _FEEDBACK_INVALID_COMMAND;
 }
 
@@ -37,10 +40,15 @@ AddCommand::~AddCommand(){
 }
 
 string AddCommand::Execute(string taskInput){
-	vector<string> taskinfo = parser->IdentifyTaskFields(taskInput);
-	Task* task = new Task(taskinfo);
-	string feedback = storage->Add(task);
-	return task->ToString();
+	try{
+		vector<string> taskinfo = parser->IdentifyTaskFields(taskInput);
+		Task* task = new Task(taskinfo);
+		string feedback = storage->Add(task);
+		return task->ToString();
+	}
+	catch (InvalidInput){
+		return _FEEDBACK_INVALID_INPUT;
+	}
 }
 
 //Clear Command
@@ -76,9 +84,14 @@ DeleteCommand::~DeleteCommand(){
 }
 
 string DeleteCommand::Execute(string taskInput){
-	int position = atoi(taskInput.c_str());
-	storage->Delete(position);
-	return storage->ToString();
+	try{
+		int position = atoi(taskInput.c_str());
+		storage->Delete(position);
+		return storage->ToString();
+	}
+	catch (InvalidIndex){
+		return _FEEDBACK_INVALID_INDEX;
+	}
 }
 
 
@@ -96,7 +109,7 @@ DisplayCommand::~DisplayCommand(){
 }
 
 string DisplayCommand::Execute(string all){
-	return storage->DayView();
+		return storage->DayView();
 }
 
 //Edit Command
@@ -113,15 +126,20 @@ EditCommand::~EditCommand(){
 }
 
 string EditCommand::Execute(string taskInput){
-	string remainder;
-	int position;
+	try{
+		string remainder;
+		int position;
 
-	istringstream in(taskInput);
-	in >> position;
-	getline(in, remainder);
-	vector<string> newinfo = parser->IdentifyTaskFields(remainder);
-	storage->Edit(position, newinfo);
-	return storage->ToString();
+		istringstream in(taskInput);
+		in >> position;
+		getline(in, remainder);
+		vector<string> newinfo = parser->IdentifyTaskFields(remainder);
+		storage->Edit(position, newinfo);
+		return storage->ToString();
+	}
+	catch (InvalidInput){
+		return _FEEDBACK_INVALID_INPUT;
+	}
 }
 
 //Save Command
@@ -138,8 +156,13 @@ SaveCommand::~SaveCommand(){
 }
 
 string SaveCommand::Execute(string input){
-	string feedback = storage->SaveAs(input);
-	return storage->ToString();
+	try{
+		string feedback = storage->SaveAs(input);
+		return storage->ToString();
+	}
+	catch (InvalidInput){
+		return _FEEDBACK_INVALID_INPUT;
+	}
 }
 
 //Search Command
@@ -156,7 +179,12 @@ SearchCommand::~SearchCommand(){
 }
 
 string SearchCommand::Execute(string taskInput){
-	return storage->Search(taskInput);
+	try{
+		return storage->Search(taskInput);
+	}
+	catch (InvalidInput){
+		return _FEEDBACK_INVALID_INPUT;
+	}
 }
 
 //Complete Command
@@ -173,14 +201,19 @@ CompleteCommand::~CompleteCommand(){
 }
 
 string CompleteCommand::Execute(string input){
-	istringstream in(input);
-	int position;
-	in >> position;
+	try{
+		istringstream in(input);
+		int position;
+		in >> position;
 
-	//Complete function
-	string feedback = storage->Complete(position);
+		//Complete function
+		string feedback = storage->Complete(position);
 
-	return storage->ToString();
+		return storage->ToString();
+	}
+	catch (InvalidInput){
+		return _FEEDBACK_INVALID_INPUT;
+	}
 }
 
 //Free Command
@@ -197,8 +230,13 @@ FreeCommand::~FreeCommand(){
 }
 
 string FreeCommand::Execute(string input){
-	string feedback = storage->SearchEmptySlots(input);
-	return feedback;
+	try{
+		string feedback = storage->SearchEmptySlots(input);
+		return feedback;
+	}
+	catch (InvalidInput){
+		return _FEEDBACK_INVALID_INPUT;
+	}
 }
 
 //Load Command
@@ -215,8 +253,13 @@ LoadCommand::~LoadCommand(){
 }
 
 string LoadCommand::Execute(string input){
-	string feedback = storage->Load(input);
-	return storage->ToString();
+	try{
+		string feedback = storage->Load(input);
+		return storage->ToString();
+	}
+	catch (InvalidInput){
+		return _FEEDBACK_INVALID_INPUT;
+	}
 }
 
 
