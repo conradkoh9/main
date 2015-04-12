@@ -55,9 +55,12 @@ void Logic::Run(string input){
 string Logic::Execute(string input){
 	Smartstring::COMMAND cmd = parser->IdentifyCommand(input);
 	string remainder = parser->RemoveCommand(input);
+	assert(remainder.size() != 0);
+	assert(remainder.at(1) != '\0');
 	Command* cmd_e = GetCommand(cmd);
 	string mainDisplay = cmd_e->Execute(remainder); 
-
+	assert(remainder.size() != 0);
+	assert(remainder.at(1) != '\0');
 	tout << storage->GetTimedList();
 	dout << storage->GetDeadlineList();
 	fout << storage->GetFloatingList();
@@ -119,7 +122,7 @@ Command* Logic::GetCommand(Smartstring::COMMAND command){
 			cmd_o = new ArchivedCommand(storage, parser);
 			break;
 		}
-		case(Smartstring::COMMAND::INVALID_CMD) : {       //shouldn't it be set just as default
+		case(Smartstring::COMMAND::INVALID_CMD) : {       
 			cmd_o = new Command(storage, parser);
 			break;
 		}
@@ -128,6 +131,8 @@ Command* Logic::GetCommand(Smartstring::COMMAND command){
 }
 
 string Logic::QuickSearch(string input){
+	assert(input.size() != 0);
+	assert(input.at(1) != '\0');
 	Command* cmd = GetCommand(Smartstring::SEARCH);
 	mout << cmd->Execute(input);
 	return "";

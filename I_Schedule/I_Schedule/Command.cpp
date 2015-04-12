@@ -48,6 +48,8 @@ string AddCommand::Execute(string taskInput){
 		vector<string> taskinfo = parser->IdentifyTaskFields(taskInput);
 		Task* task = new Task(taskinfo);
 		string feedback = storage->Add(task);
+		assert(feedback.size() != 0);
+		assert(feedback.at(1) != '\0');
 		return task->ToString();
 	}
 	catch (InvalidInput){
@@ -93,6 +95,7 @@ string DeleteCommand::Execute(string taskInput){
 		if (position < 0){
 			throw invalid_index;
 		}
+		assert(position >= 0);
 		storage->Delete(position);
 		return storage->ToString();
 	}
@@ -142,11 +145,13 @@ string EditCommand::Execute(string taskInput){
 		if (position < 0){
 			throw invalid_index;
 		}
+		assert(position >= 0);
 		getline(in, remainder);
 		vector<string> newinfo = parser->IdentifyTaskFields(remainder);
 		if (newinfo.size() == 0){
 			throw invalid_field;
 		}
+		assert(newinfo.size() != 0);
 		storage->Edit(position, newinfo);
 		return storage->ToString();
 	}
@@ -230,10 +235,9 @@ string CompleteCommand::Execute(string input){
 		istringstream in(input);
 		int position;
 		in >> position;
-
-		//Complete function
 		string feedback = storage->Complete(position);
-
+		assert(feedback.size() != 0);
+		assert(feedback.at(1) != '\0');
 		return storage->ToString();
 	}
 	catch (InvalidInput){
