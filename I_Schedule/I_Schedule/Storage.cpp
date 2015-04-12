@@ -37,6 +37,8 @@ const string Storage::_FEEDBACK_STARTUP = "Using ";
 const string Storage::_FEEDBACK_ARCHIVE_EMPTY = "Archive empty.";
 const string Storage::_FEEDBACK_VIEW_ARCHIVE = "Viewing archive.";
 const string Storage::_FEEDBACK_DAYVIEW = "Day view.";
+const string Storage::_FEEDBACK_UNDO_COMPLETE = "Undo complete.";
+const string Storage::_FEEDBACK_NO_UNDO = "Nothing to undo.";
 //formatting variables
 const string Storage::_rtfboldtagstart = "\\b ";
 const string Storage::_rtfboldtagend = "\\b0 ";
@@ -116,13 +118,13 @@ string Storage::Delete(int position){
 }
 
 //@author A0099303A
-string Storage::Edit(int position, Smartstring::LIST list, vector<string> newinfo){
+string Storage::Edit(int position, vector<string> newinfo){
 	lastList = taskList;
 	lastArchiveList = archiveList;
 	try{
-		Task* taskptr = GetTaskPtr(position, list);
-		Task* newTask = new Task(taskptr);
-	//	(*newTask) = (*taskptr);
+		Task* taskptr = GetTaskPtr(position);
+		Task* newTask = new Task();
+		*newTask = *taskptr;
 		newTask->Edit(newinfo);
 		ReplaceTask(taskptr, newTask);
 		Rewrite();
@@ -145,25 +147,7 @@ string Storage::Edit(int position, Smartstring::LIST list, vector<string> newinf
 
 //@author A0099303A
 string Storage::Complete(int position){
-/*
-	string feedback = "";
-	lastList = taskList;
 
-	try{
-		Task* toComplete = GetTask(position, list);
-		MarkComplete(toComplete);
-		Archive(toComplete);
-		Rewrite();
-		Update();
-		return _FEEDBACK_GENERIC_SUCCESS;
-	}
-	catch (InvalidIndex){
-		return _FEEDBACK_INVALID_INDEX;
-	}
-	catch (InvalidList){
-		return _FEEDBACK_INVALID_LIST;
-	}
-*/
 	string feedback;
 	try{
 		lastList = taskList;
@@ -244,6 +228,7 @@ string Storage::Load(string filename){
 
 	catch (LoadFailure){
 		logfile << DefaultSession();
+		status << feedback;
 		feedback = _FEEDBACK_LOAD_FAILURE;
 	}
 	status << feedback;
@@ -264,17 +249,11 @@ string Storage::Save(){
 string Storage::SaveAs(string newFileName){
 	FILETYPE filetype = IdentifyFileType(newFileName);
 	if (filetype!= FILETYPE::INVALID){
-		if (FileEmpty(newFileName)){
-			_filename = newFileName;
-			string feedback = Rewrite();
-			feedback = SaveSessionData();
-			status << feedback;
-			return feedback;
-		}
-		else{
-			status << _FEEDBACK_FILE_NOT_EMPTY;
-			return _FEEDBACK_FILE_NOT_EMPTY;
-		}
+		_filename = newFileName;
+		string feedback = Rewrite();
+		feedback = SaveSessionData();
+		status << feedback;
+		return feedback;
 		
 	}
 	else{
@@ -315,10 +294,12 @@ string Storage::Undo(){
 		archiveList = lastArchiveList;
 		Rewrite();
 		Update();
-		return "success";
+		status << _FEEDBACK_UNDO_COMPLETE;
+		return _FEEDBACK_UNDO_COMPLETE;
 	}
 	else{
-		return "nothing to undo";
+		status << _FEEDBACK_NO_UNDO;
+		return _FEEDBACK_NO_UNDO;
 	}
 	
 }
@@ -547,6 +528,7 @@ string Storage::ArchiveToString(){
 				out << _rtfboldtagstart << index << ": " << _rtfboldtagend << (*iter)->ToShortString();
 			}
 		}
+		string dbg = status.str();
 		status << _FEEDBACK_VIEW_ARCHIVE;
 		return out.str();
 	}
@@ -1143,6 +1125,7 @@ string Storage::MarkComplete(Task* taskptr){
 			(*iter)->MarkComplete();
 		}
 	}
+
 	return _FEEDBACK_UPDATE_SUCCESS;
 }
 

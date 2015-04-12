@@ -50,7 +50,7 @@ public:
 	string Add(Task* task);
 	string DeleteFromList(int position, Smartstring::LIST list);
 	string Delete(int position);
-	string Edit(int position, Smartstring::LIST list, vector<string> newinfo);
+	string Edit(int position, vector<string> newinfo);
 	string Complete(int position);
 	string Load();
 	string Load(string filename);
@@ -131,6 +131,8 @@ private:
 	static const string _FEEDBACK_DAYVIEW;
 	static const string _FEEDBACK__SORT_FAILURE;
 	static const string _FEEDBACK_SORT_SUCCESS;
+	static const string _FEEDBACK_UNDO_COMPLETE;
+	static const string _FEEDBACK_NO_UNDO;
 	//formatting variables
 	static const string _rtfboldtagstart;
 	static const string _rtfboldtagend;

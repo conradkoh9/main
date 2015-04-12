@@ -138,18 +138,14 @@ EditCommand::~EditCommand(){
 }
 
 string EditCommand::Execute(string taskInput){
-	Smartstring listname;
-	Smartstring info;
-	Smartstring::FIELD field;
 	string remainder;
 	int position;
 
 	istringstream in(taskInput);
-	in >> listname;
 	in >> position;
 	getline(in, remainder);
 	vector<string> newinfo = parser->IdentifyTaskFields(remainder);
-	storage->Edit(position, listname.ListType(), newinfo);
+	storage->Edit(position, newinfo);
 	return storage->ToString();
 }
 
@@ -245,7 +241,7 @@ LoadCommand::~LoadCommand(){
 
 string LoadCommand::Execute(string input){
 	string feedback = storage->Load(input);
-	return feedback;
+	return storage->ToString();
 }
 
 
@@ -264,7 +260,7 @@ UndoCommand::~UndoCommand(){
 }
 
 string UndoCommand::Execute(string undo){
-	string feedback = storage->Undo();
+	storage->Undo();
 	return storage->ToString();
 }
 
@@ -284,6 +280,5 @@ ArchivedCommand::~ArchivedCommand(){
 }
 
 string ArchivedCommand::Execute(string input){
-	string dbg = storage->ArchiveToString();
 	return storage->ArchiveToString();
 }
