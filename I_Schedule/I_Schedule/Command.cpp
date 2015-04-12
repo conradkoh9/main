@@ -19,31 +19,6 @@ Command::Command(Storage* store_, Parser* parser_){
 Command::~Command(){
 }
 
-//string Command::GetStatus(){
-//	string sstatus = storage->status.str();
-//	return sstatus;
-//}
-//
-//string Command::sGetTimedList(){
-//	string feedback1= storage->GetTimedList();
-//	return feedback1;
-//}
-//
-//string Command::sGetDeadlineList(){
-//	string feedback2 = storage->GetDeadlineList();
-//	return feedback2;
-//}
-//
-//string Command::sGetFloatingList(){
-//	string feedback3 = storage->GetFloatingList();
-//	return feedback3;
-//}
-//
-//string Command::sGetMainList(){
-//	string feedback4 = storage->ToString();
-//	return feedback4;
-//}
-
 string Command::Execute(string){   //invalid command
 	return _FEEDBACK_INVALID_COMMAND;
 }

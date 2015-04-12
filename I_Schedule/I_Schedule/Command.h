@@ -18,19 +18,7 @@ public:
 	Storage* storage;
 	Parser* parser;
 
-	/*string GetStatus();
-	string sGetTimedList();
-	string sGetDeadlineList();
-	string sGetFloatingList();
-	string sGetMainList();*/
 	virtual string Execute(string);
-
-	////display streams
-	//static ostringstream fout; //floating task display stream
-	//static ostringstream tout; //timed task display stream
-	//static ostringstream dout; //deadline task display stream
-	//static ostringstream mout; //main display stream
-	//static ostringstream status; //status bar display stream
 
 	static const string _FEEDBACK_ERROR_INVALID_INDEX;
 	static const string _FEEDBACK_DISPLAY;
@@ -39,7 +27,6 @@ public:
 	static const string _FEEDBACK_UNDO;
 	static const string _FEEDBACK_INVALID_COMMAND;
 	static const string _MESSAGE_WELCOME;
-
 
 };
 
