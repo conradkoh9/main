@@ -30,21 +30,6 @@ public:
 	/*void UpdateDisplays();*/
 
 
-
-	//string Add(string taskInput);
-	//string Complete(string input);
-	//string Delete(string taskInput);
-	//string Display();
-	//string Edit(string taskInput);
-	//string Search(string taskInput);
-	//string EmptySlots(string input);
-	//string Invalid();
-	//string Save(string input);
-	//string Clear();
-	//string Undo();
-	//string Archived(string input);
-	//string Load(string input);
-
 	//display streams
 	static ostringstream fout; //floating task display stream
 	static ostringstream tout; //timed task display stream

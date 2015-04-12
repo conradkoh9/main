@@ -8,9 +8,6 @@ const string Command::_FEEDBACK_SEARCH = "Displaying search results.";
 const string Command::_FEEDBACK_UNDO = "Undo previous command.";
 const string Command::_FEEDBACK_INVALID_COMMAND = "Invalid command entered.";
 const string Command::_MESSAGE_WELCOME = "Welcome to I_Schedule.";
-const string Command::_FEEDBACK_INVALID_INPUT = "Invalid input.";
-const string Command::_FEEDBACK_INVALID_INDEX = "Invalid index.";
-const string Command::_FEEDBACK_INVALID_FIELD = "Invalid field.";
 
 Command::Command(){
 
@@ -41,20 +38,10 @@ AddCommand::~AddCommand(){
 }
 
 string AddCommand::Execute(string taskInput){
-	try{
-		if (taskInput == ""){
-			throw invalid_input;
-		}
 		vector<string> taskinfo = parser->IdentifyTaskFields(taskInput);
 		Task* task = new Task(taskinfo);
 		string feedback = storage->Add(task);
-		assert(feedback.size() != 0);
-		assert(feedback.at(1) != '\0');
 		return task->ToString();
-	}
-	catch (InvalidInput){
-		return _FEEDBACK_INVALID_INPUT;
-	}
 }
 
 //Clear Command
@@ -90,18 +77,9 @@ DeleteCommand::~DeleteCommand(){
 }
 
 string DeleteCommand::Execute(string taskInput){
-	try{
 		int position = atoi(taskInput.c_str());
-		if (position < 0){
-			throw invalid_index;
-		}
-		assert(position >= 0);
 		storage->Delete(position);
 		return storage->ToString();
-	}
-	catch (InvalidIndex){
-		return _FEEDBACK_INVALID_INDEX;
-	}
 }
 
 
@@ -136,31 +114,15 @@ EditCommand::~EditCommand(){
 }
 
 string EditCommand::Execute(string taskInput){
-	try{
 		string remainder;
 		int position;
 
 		istringstream in(taskInput);
 		in >> position;
-		if (position < 0){
-			throw invalid_index;
-		}
-		assert(position >= 0);
 		getline(in, remainder);
 		vector<string> newinfo = parser->IdentifyTaskFields(remainder);
-		if (newinfo.size() == 0){
-			throw invalid_field;
-		}
-		assert(newinfo.size() != 0);
 		storage->Edit(position, newinfo);
 		return storage->ToString();
-	}
-	catch (InvalidIndex){
-		return _FEEDBACK_INVALID_INDEX;
-	}
-	catch (InvalidField){
-		return _FEEDBACK_INVALID_FIELD;
-	}
 }
 
 //Save Command
@@ -177,16 +139,8 @@ SaveCommand::~SaveCommand(){
 }
 
 string SaveCommand::Execute(string input){
-	try{
-		if (input == ""){
-			throw invalid_input;
-		}
 		string feedback = storage->SaveAs(input);
 		return storage->ToString();
-	}
-	catch (InvalidInput){
-		return _FEEDBACK_INVALID_INPUT;
-	}
 }
 
 //Search Command
@@ -203,15 +157,7 @@ SearchCommand::~SearchCommand(){
 }
 
 string SearchCommand::Execute(string taskInput){
-	try{
-		if (taskInput == ""){
-			throw invalid_input;
-		}
 		return storage->Search(taskInput);
-	}
-	catch (InvalidInput){
-		return _FEEDBACK_INVALID_INPUT;
-	}
 }
 
 //Complete Command
@@ -228,21 +174,11 @@ CompleteCommand::~CompleteCommand(){
 }
 
 string CompleteCommand::Execute(string input){
-	try{
-		if (input == ""){
-			throw invalid_input;
-		}
 		istringstream in(input);
 		int position;
 		in >> position;
 		string feedback = storage->Complete(position);
-		assert(feedback.size() != 0);
-		assert(feedback.at(1) != '\0');
 		return storage->ToString();
-	}
-	catch (InvalidInput){
-		return _FEEDBACK_INVALID_INPUT;
-	}
 }
 
 //Free Command
@@ -259,16 +195,8 @@ FreeCommand::~FreeCommand(){
 }
 
 string FreeCommand::Execute(string input){
-	try{
-		if (input == ""){
-			throw invalid_input;
-		}
 		string feedback = storage->SearchEmptySlots(input);
 		return feedback;
-	}
-	catch (InvalidInput){
-		return _FEEDBACK_INVALID_INPUT;
-	}
 }
 
 //Load Command
@@ -285,16 +213,8 @@ LoadCommand::~LoadCommand(){
 }
 
 string LoadCommand::Execute(string input){
-	try{
-		if (input == ""){
-			throw invalid_input;
-		}
 		string feedback = storage->Load(input);
 		return storage->ToString();
-	}
-	catch (InvalidInput){
-		return _FEEDBACK_INVALID_INPUT;
-	}
 }
 
 
