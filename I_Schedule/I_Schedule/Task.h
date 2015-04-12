@@ -99,9 +99,6 @@ public:
 	size_t LevenshteinDistance(const std::string &s1, const std::string &s2);
 
 
-	bool isFloating();
-	bool isDeadline();
-	bool IsTimed();
 
 
 	friend ostream& operator<<(ostream& out, Task& task);

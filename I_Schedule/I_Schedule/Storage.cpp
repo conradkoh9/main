@@ -95,7 +95,7 @@ string Storage::DeleteFromList(int position, Smartstring::LIST list){
 }
 
 
-//@author A0119513L
+//@author A0099303A
 string Storage::Delete(int position){
 
 	//Smartstring::LIST list = IdentifyListFromIndex(position);
@@ -369,19 +369,13 @@ vector<Task*> Storage::PowerSearch(string input){
 
 //@author A0119491B
 string Storage::SearchEmptySlots(string input){
-	try{
 		DateTime* dt = new DateTime(input);
 		string stdtm = dt->Standardized();
 		if (dt->isValidFormat){
 			InitializeDayTask(stdtm);
 			SetDayCalendar();
 			return GetEmptySlots();
-		}
-		else{
-			throw invalid_input;
-		}
-	}
-	catch (InvalidInput){
+	   }else{
 		return _FEEDBACK_SEARCH_FAILURE;
 	}
 }
@@ -628,7 +622,7 @@ string Storage::DayView(){
 			out << formattedDay << endl;
 		}
 
-		if ((*iter)->IsTimed()){
+		if ((*iter)->GetType() == Task::TIMED){
 			++index;
 			if (iter + 1 != taskList.end()){
 				out << _rtftab << _rtfboldtagstart << index << ": " << _rtfboldtagend << (*iter)->ToDatelessString() << endl;
