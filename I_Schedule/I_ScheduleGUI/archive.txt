@@ -1,5 +1,0 @@
-Description: homework
-Start: 
-End: 17/04/2015
-Priority: 
-Status: Complete

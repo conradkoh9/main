@@ -284,6 +284,7 @@ string Storage::Clear(){
 	ClearFile();
 	ClearVectors();
 	Update();
+	status << _FEEDBACK_CLEAR_SUCCESS;
 	return _FEEDBACK_CLEAR_SUCCESS;
 }
 
