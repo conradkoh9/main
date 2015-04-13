@@ -135,6 +135,8 @@ private:
 	static const string _FEEDBACK_SORT_SUCCESS;
 	static const string _FEEDBACK_UNDO_COMPLETE;
 	static const string _FEEDBACK_NO_UNDO;
+	static const string _LOG_MESSAGE_FILENAME_CHANGED;
+
 	//formatting variables
 	static const string _rtfboldtagstart;
 	static const string _rtfboldtagend;

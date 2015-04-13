@@ -1,44 +1,45 @@
 #include "Storage.h"
 
 //Constant variable declaration
-const string Storage::_FEEDBACK_ADD_SUCCESS = "Successfully added.";
-const string Storage::_FEEDBACK_GENERIC_SUCCESS = "Update succeeded.";
-const string Storage::_FEEDBACK_GENERIC_FAILURE = "Update failed.";
-const string Storage::_FEEDBACK_LOAD_SUCCESS = "Load succeeded.";
-const string Storage::_FEEDBACK_LOAD_FAILURE = "Load failed.";
-const string Storage::_FEEDBACK_WRITE_SUCCESS = "Write succeeded.";
-const string Storage::_FEEDBACK_WRITE_FAILURE = "Write failed.";
-const string Storage::_FEEDBACK_CLEAR_SUCCESS = "Successfully cleared.";
-const string Storage::_FEEDBACK_CLEAR_FAILURE = "Failed to clear.";
-const string Storage::_FEEDBACK_DELETE_SUCCESS = "Successfully deleted.";
-const string Storage::_FEEDBACK_DELETE_FAILURE = "Failed to delete.";
-const string Storage::_FEEDBACK_UNDO_SUCCESS = "Undo succeeded.";
-const string Storage::_FEEDBACK_UNDO_FAILURE = "Undo failed.";
-const string Storage::_FEEDBACK_SEARCH_FAILURE = "No results found.";
-const string Storage::_FEEDBACK_FILE_EMPTY = "Specified file empty.";
-const string Storage::_FEEDBACK_FILE_NOT_EMPTY = "Specified file is not empty.";
-const string Storage::_FEEDBACK_INVALID_FILE_FORMAT = "Invalid file format entered.";
+const string Storage::_FEEDBACK_ADD_SUCCESS = "Successfully added. ";
+const string Storage::_FEEDBACK_GENERIC_SUCCESS = "Update succeeded. ";
+const string Storage::_FEEDBACK_GENERIC_FAILURE = "Update failed. ";
+const string Storage::_FEEDBACK_LOAD_SUCCESS = "Load succeeded. ";
+const string Storage::_FEEDBACK_LOAD_FAILURE = "Load failed. ";
+const string Storage::_FEEDBACK_WRITE_SUCCESS = "Write succeeded. ";
+const string Storage::_FEEDBACK_WRITE_FAILURE = "Write failed. ";
+const string Storage::_FEEDBACK_CLEAR_SUCCESS = "Successfully cleared. ";
+const string Storage::_FEEDBACK_CLEAR_FAILURE = "Failed to clear. ";
+const string Storage::_FEEDBACK_DELETE_SUCCESS = "Successfully deleted. ";
+const string Storage::_FEEDBACK_DELETE_FAILURE = "Failed to delete. ";
+const string Storage::_FEEDBACK_UNDO_SUCCESS = "Undo succeeded. ";
+const string Storage::_FEEDBACK_UNDO_FAILURE = "Undo failed. ";
+const string Storage::_FEEDBACK_SEARCH_FAILURE = "No results found. ";
+const string Storage::_FEEDBACK_FILE_EMPTY = "Specified file empty. ";
+const string Storage::_FEEDBACK_FILE_NOT_EMPTY = "Specified file is not empty. ";
+const string Storage::_FEEDBACK_INVALID_FILE_FORMAT = "Invalid file format entered. ";
 const string Storage::_EMPTY_STRING= "";
-const string Storage::_FEEDBACK_SESSION_LOAD_FAILURE = "Session failed to load. Starting default session.";
-const string Storage::_FEEDBACK_SESSION_LOAD_SUCCESS = "Session loaded.";
-const string Storage::_FEEDBACK_SESSION_SAVE_SUCCESS = "Session saved.";
-const string Storage::_FEEDBACK_SESSION_SAVE_FAILURE = "Session failed to save.";
-const string Storage::_FEEDBACK_RESET = "Storage reset.";
-const string Storage::_FEEDBACK_INVALID_INDEX = "Invalid index.";
-const string Storage::_FEEDBACK_INVALID_LIST = "Invalid list entered";
-const string Storage::_FEEDBACK_UPDATE_SUCCESS = "Update success.";
-const string Storage::_FEEDBACK_EDIT_SUCCESS = "Edit success.";
-const string Storage::_FEEDBACK_DATA_CORRUPTED = "Data corrupted.";
-const string Storage::_FEEDBACK_FILETYPE_INVALID = "Invalid filetype.";
-const string Storage::_FEEDBACK_DEFAULT_SESSION_STARTED = "Default session started.";
-const string Storage::_FEEDBACK__SORT_FAILURE = "Sort failed.";
-const string Storage::_FEEDBACK_SORT_SUCCESS = "Sort success";
+const string Storage::_FEEDBACK_SESSION_LOAD_FAILURE = "Session failed to load. Starting default session. ";
+const string Storage::_FEEDBACK_SESSION_LOAD_SUCCESS = "Session loaded. ";
+const string Storage::_FEEDBACK_SESSION_SAVE_SUCCESS = "Session saved. ";
+const string Storage::_FEEDBACK_SESSION_SAVE_FAILURE = "Session failed to save. ";
+const string Storage::_FEEDBACK_RESET = "Storage reset. ";
+const string Storage::_FEEDBACK_INVALID_INDEX = "Invalid index. ";
+const string Storage::_FEEDBACK_INVALID_LIST = "Invalid list entered. ";
+const string Storage::_FEEDBACK_UPDATE_SUCCESS = "Update success. ";
+const string Storage::_FEEDBACK_EDIT_SUCCESS = "Edit success. ";
+const string Storage::_FEEDBACK_DATA_CORRUPTED = "Data corrupted. ";
+const string Storage::_FEEDBACK_FILETYPE_INVALID = "Invalid filetype. ";
+const string Storage::_FEEDBACK_DEFAULT_SESSION_STARTED = "Default session started. ";
+const string Storage::_FEEDBACK__SORT_FAILURE = "Sort failed. ";
+const string Storage::_FEEDBACK_SORT_SUCCESS = "Sort success. ";
 const string Storage::_FEEDBACK_STARTUP = "Using ";
-const string Storage::_FEEDBACK_ARCHIVE_EMPTY = "Archive empty.";
-const string Storage::_FEEDBACK_VIEW_ARCHIVE = "Viewing archive.";
-const string Storage::_FEEDBACK_DAYVIEW = "Day view.";
-const string Storage::_FEEDBACK_UNDO_COMPLETE = "Undo complete.";
-const string Storage::_FEEDBACK_NO_UNDO = "Nothing to undo.";
+const string Storage::_FEEDBACK_ARCHIVE_EMPTY = "Archive empty. ";
+const string Storage::_FEEDBACK_VIEW_ARCHIVE = "Viewing archive. ";
+const string Storage::_FEEDBACK_DAYVIEW = "Day view. ";
+const string Storage::_FEEDBACK_UNDO_COMPLETE = "Undo complete. ";
+const string Storage::_FEEDBACK_NO_UNDO = "Nothing to undo. ";
+const string Storage::_LOG_MESSAGE_FILENAME_CHANGED = "Filename changed to: ";
 //formatting variables
 const string Storage::_rtfboldtagstart = "\\b ";
 const string Storage::_rtfboldtagend = "\\b0 ";
@@ -811,6 +812,7 @@ Task* Storage::EditToNewTask(Task task, vector<string> newinfo){
 //@author A0099303A
 void Storage::UpdateFileName(string newFileName){
 	_filename = newFileName;
+	logfile << _LOG_MESSAGE_FILENAME_CHANGED << newFileName;
 	return;
 }
 
@@ -925,6 +927,7 @@ string Storage::LoadRawFileContent(){
 		}
 	}
 	catch (out_of_range){
+		logfile << _FEEDBACK_LOAD_FAILURE;
 		return _FEEDBACK_LOAD_FAILURE;
 	}
 	return _FEEDBACK_LOAD_FAILURE;
@@ -947,10 +950,9 @@ string Storage::LoadRawArchiveContent(){
 			_archivecontent = all_lines;
 			return _FEEDBACK_LOAD_SUCCESS;
 		}
-		int s = _archivecontent.size();
-		int a = 0;
 	}
 	catch (out_of_range){
+		logfile << _FEEDBACK_LOAD_FAILURE;
 		return _FEEDBACK_LOAD_FAILURE;
 	}
 	return _FEEDBACK_LOAD_FAILURE;
@@ -966,6 +968,7 @@ string Storage::LoadTaskList(){
 			break;
 		}
 		default : {
+			logfile << _FEEDBACK_LOAD_FAILURE;
 			return _FEEDBACK_LOAD_FAILURE;
 			break;
 		}
@@ -984,6 +987,7 @@ string Storage::LoadArchiveList(){
 				break;
 			}
 			default : {
+				logfile << _FEEDBACK_LOAD_FAILURE;
 				return _FEEDBACK_LOAD_FAILURE;
 				break;
 		}
