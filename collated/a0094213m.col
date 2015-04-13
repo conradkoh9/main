@@ -39,8 +39,25 @@ const string DateTime::DATETYPE_SUNDAY4 = "sun";
 const string DateTime::DATETYPE_TODAY1 = "today";
 const string DateTime::DATETYPE_TOMORROW1 = "tomorrow";
 const string DateTime::DATETYPE_TOMORROW2 = "tmr";
+
 const string DateTime::TIMETYPE_AM = "am";
 const string DateTime::TIMETYPE_PM = "pm";
+
+const string DateTime::_MONTH_JANUARY = "January";
+const string DateTime::_MONTH_FEBRUARY = "February";
+const string DateTime::_MONTH_MARCH = "March";
+const string DateTime::_MONTH_APRIL = "April";
+const string DateTime::_MONTH_MAY = "May";
+const string DateTime::_MONTH_JUNE = "June";
+const string DateTime::_MONTH_JULY = "July";
+const string DateTime::_MONTH_AUGUST = "August";
+const string DateTime::_MONTH_SEPTEMBER = "September";
+const string DateTime::_MONTH_OCTOBER = "October";
+const string DateTime::_MONTH_NOVEMBER = "November";
+const string DateTime::_MONTH_DECEMBER = "December";
+
+
+
 
 bool DateTime::isInitialized = false;
 int DateTime::numberOfDateType;
@@ -48,80 +65,57 @@ int DateTime::numberOfTimeType;
 vector<string> DateTime::dateType;
 vector<string> DateTime::timeType;
 
-//==========================================================
-//Methods suggested by Conrad
-//==========================================================
+
+	// End of segment: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\DateTime.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\DateTime.cpp
+	 */
 
 DateTime::DateTime(){
+	isDateSet = false;
+	isTimeSet = false;
 	Initialize();
 }
+
+	// End of segment: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\DateTime.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\DateTime.cpp
+	 */
 
 DateTime::DateTime(string input){
 	unformattedDateTime = input;
 	isValidFormat = true;
+	isDateSet = false;
+	isTimeSet = false;
 	Initialize();
-	SetDefaults();
+	SetDefaultDateTime();
 	SetStandards();
 }
+
 
 DateTime::~DateTime(){
 }
 
-string DateTime::Standardized(){
-	return formattedDateTime;
-}
 
-string DateTime::GetInfo(){
-	ostringstream out;
-	out << "Date: " << setw(2) << setfill('0') << _day << "/" << setw(2) << setfill('0')
-		<< _month << "/" << setw(2) << setfill('0') << _year << endl;
-
-	out << "Time: " << setw(2) << setfill('0') << _hours << ":" << setw(2) << setfill('0') << _mins;
-
-	return out.str();
-}
-
-
-
-bool DateTime::IsEarlierThan(DateTime dt){
-	bool isEarlier = false;
-	if (_year < dt._year){
-		isEarlier = true;
-	}
-	else{
-		if (_month < dt._month){
-			isEarlier = true;
-		}
-		else{
-			if (_day < dt._day){
-				isEarlier = true;
-			}
-			else{
-				if (_hours < dt._hours){
-					isEarlier = true;
-				}
-				else{
-					if (_mins < dt._mins){
-						isEarlier = true;
-					}
-				}
-			}
-		}
-	}
-
-	return isEarlier;
-}
-
-void DateTime::SetDefaults(){
-	time_t now = time(0);
+void DateTime::SetDefaultDateTime(){
+	time_t current = time(0);
 	struct tm timeinfo;
-	localtime_s(&timeinfo, &now);
+	localtime_s(&timeinfo, &current);
 	_day = timeinfo.tm_mday;
 	_month = timeinfo.tm_mon + 1;
 	_year = timeinfo.tm_year + 1900;
 	_hours = 0;
 	_mins = 0;
-	//_seconds = 0;
 }
 
 void DateTime::SetStandards(){
@@ -133,11 +127,12 @@ void DateTime::SetStandards(){
 	vector<string> tokens = input_s.Tokenize(" ");
 	int size = tokens.size();
 
-	if (size > 3){
-		isValidFormat = false;
-	}
-	else{
-		switch (size){
+	try{
+		if (size > 3){
+			isValidFormat = false;
+		}
+		else{
+			switch (size){
 			case 0:{
 				isValidFormat = false;
 				break;
@@ -157,35 +152,45 @@ void DateTime::SetStandards(){
 				isValidFormat = false;
 				break;
 			}
+			}
 		}
+	}
+	catch (out_of_range){
+		cout << "exception occurs: size out of range" << endl;
+
 	}
 }
 
 string DateTime::StandardizeSingle(string input){
-	string output;
-	if (IsValidDayDate(input)){
-		output = StandardizeDayDate(input);
+	string standard;
+	string single = input;
+
+	assert(single != "");
+
+	if (IsValidDayDate(single)){
+		standard = StandardizeDayDate(single);
 	}
 	else{
-		if (IsValidTime(input)){
-			output = StandardizeTime(input);
+		if (IsValidTime(single)){
+			standard = StandardizeTime(single);
 		}
 		else{
-			output = input;
+			standard = single;
 			isValidFormat = false;
 		}
 	}
-	return output;
+	return standard;
 }
 
 string DateTime::StandardizeTriple(vector<string> input){
-	string output;
-	string prefix;
-	string suffix;
+	string standard;
 	string date;
 	string time;
+
 	if (input[1] == "at"){
-		//at implies day prefix and time suffix. i.e. "thursday at 5pm" and not "5pm at thursday"
+		//assumption: date before "at" and time after "at"  for example: friday at 5pm
+		assert(IsValidTime(input[2]));
+
 		if (IsValidDayDate(input[0])){
 			date = StandardizeDayDate(input[0]);
 
@@ -194,6 +199,7 @@ string DateTime::StandardizeTriple(vector<string> input){
 			date = input[0];
 			isValidFormat = false;
 		}
+
 		if (IsValidTime(input[2])){
 			time = StandardizeTime(input[2]);
 		}
@@ -204,8 +210,8 @@ string DateTime::StandardizeTriple(vector<string> input){
 
 	}
 	else{
-		if (input[1] == "on"){
-			//on implex time prefix and day suffix. i.e. "5pm on friday" and not "friday on 5pm"
+		if (input[1] == "on" || input[1] == "by"){
+
 			if (IsValidDayDate(input[2])){
 				date = StandardizeDayDate(input[2]);
 			}
@@ -222,96 +228,97 @@ string DateTime::StandardizeTriple(vector<string> input){
 			}
 		}
 	}
-	output = time + " on " + date;
-	return output;
+
+	standard = time + " on " + date;
+	return standard;
 }
 
 
 string DateTime::StandardizeDayDate(string input){
-	string output = input;
+	string standard = input;
+
 	if (IsValidDay(input)){
-		output = StandardizeDay(input);
+		standard = StandardizeDay(input);
 	}
-	else{
-		if (IsValidDate(input)){
-			output = StandardizeDate(input);
-		}
+	if (IsValidDate(input)){
+		standard = StandardizeDate(input);
 	}
-	return output;
+
+	return standard;
 }
 
 string DateTime::StandardizeDate(string input){
-	//this function assumes there are 2 / delimiters
-	string output;
+	string standard;
 	Smartstring input_s(input);
 	vector<string> tokens = input_s.Tokenize("/");
+
+	while (tokens.size() < 3){
+		tokens.push_back("");
+	}
 	assert(tokens.size() == 3);
-	//check if the ordering of month and date is explicitly wrong
+
 	int day = atoi(tokens[0].c_str());
 	int month = atoi(tokens[1].c_str());
-	if (month > 12){
-		if (day > 12){
-			//both day and month exceed 12, do nothing
-		}
-		else{
-			//only one exceeds 12
-			int temp = month;
-			month = day;
-			day = temp;
-		}
+	if (month > 12 || day > 12){
+		int temp = month;
+		month = day;
+		day = temp;
 	}
 
-	//setting the day month and year values in DateTime object
 	_day = day;
 	_month = month;
 	_year = atoi(tokens[2].c_str());
+	isDateSet = true;
+	ostringstream month_s;
+	month_s << setw(2) << setfill('0') << month;
+	ostringstream day_s;
+	day_s << setw(2) << setfill('0') << day;
 
-	ostringstream monthout;
-	monthout << setw(2) << setfill('0') << month;
-	ostringstream dayout;
-	dayout << setw(2) << setfill('0') << day;
-
-	output = dayout.str() + "/" + monthout.str() + "/" + tokens[2];
-	return output;
+	standard = day_s.str() + "/" + month_s.str() + "/" + tokens[2];
+	return standard;
 }
 
 string DateTime::StandardizeDay(string input){
-	string output;
-	
-	//when input is a day
+	string standard;
+	string today;
 	time_t now = time(0);
 	int offset;
+	DAY startday, endday;
 
-	DAY endday = GetDayEnum(input); //need to check if output is valid
-	string today = GetDayFromTime(now);
-	DAY startday = GetDayEnum(today); //need to check if output is valid
+
+	endday = GetDayEnum(input);
+	today = GetDayFromTime(now);
+	startday = GetDayEnum(today);
+
 	if (endday != DAY::INVALID && startday != DAY::INVALID){
 		int offset_in_days = CalculateOffset(startday, endday);
 		time_t timeresult = OffsetByDay(now, offset_in_days);
-		output = GetStandardDate(timeresult);
+		standard = GetStandardDate(timeresult);
 
-		//set Day, month, year valies in DateTime object
 		struct tm timeinfo;
 		localtime_s(&timeinfo, &timeresult);
 		_day = timeinfo.tm_mday;
-		_month = timeinfo.tm_mon;
+		_month = timeinfo.tm_mon + 1;
 		_year = timeinfo.tm_year + 1900;
+		isDateSet = true;
 	}
 	else{
-		output = input;
+		standard = input;
 	}
-	return output;
+
+	return standard;
 }
 
 string DateTime::StandardizeTime(string input){
-	string output;
+	assert(input != "");
+	string standard;
 	string result = input;
 	string period = "am";
 	int found;
 	int hour;
 	int mins;
 
-	//remove pm and am keywords
+
 	found = input.find("pm");
 	if (found != string::npos){
 		period = "pm";
@@ -322,35 +329,29 @@ string DateTime::StandardizeTime(string input){
 		period = "am";
 		result = result.substr(0, found);
 	}
-	//end remove pm and am keywords
 
-	//check if time format specifies minutes
+
 	found = result.find_first_of(":");
 	if (found != string::npos){
-		//getting hour
 		string hour_s = result.substr(0, found);
 		hour = stoi(hour_s.c_str());
-		//getting mins
 		int length = result.length();
-		string min_s = result.substr(found+1, length - 1);
+		string min_s = result.substr(found + 1, length - 1);
 		mins = stoi(min_s.c_str());
 	}
 	else{
-		//attempt to convert string to hour in case: 5pm as input
-		//note that this converts invalid strings to 0 so the time will display as 00:00 if it is invalid which may seem like a valid time
 		if (result.length() <= 2){
 			hour = atoi(result.c_str());
 			mins = 0;
 		}
 	}
-
+	//if the input has hour exceeding 12, change it to time with pm
 	if (hour > 12){
-		//if the hour is in 24 hour format
 		hour = hour % 12;
 		period = "pm";
 	}
 
-	//set standardized hours, mins and seconds
+	//store time info in private variables 
 	if (period == "pm"){
 		_hours = hour % 12 + 12;
 		_mins = mins % 60;
@@ -359,7 +360,8 @@ string DateTime::StandardizeTime(string input){
 		_hours = hour % 24;
 		_mins = mins % 60;
 	}
-	
+
+	isTimeSet = true;
 
 
 	ostringstream minout;
@@ -367,7 +369,97 @@ string DateTime::StandardizeTime(string input){
 	ostringstream hourout;
 	hourout << setw(2) << setfill('0') << hour;
 
-	output = hourout.str() + ":" + minout.str() + period;
+	standard = hourout.str() + ":" + minout.str() + period;
+	return standard;
+}
+
+string DateTime::Standardized(){
+	return formattedDateTime;
+}
+
+
+string DateTime::GetInfo(){
+	ostringstream info;
+
+	info << "Date: " << setw(2) << setfill('0')
+		<< _day << "/" << setw(2) << setfill('0')
+		<< _month << "/" << setw(2) << setfill('0')
+		<< _year << endl;
+
+	info << "Time: " << setw(2) << setfill('0')
+		<< _hours << ":" << setw(2) << setfill('0')
+		<< _mins;
+
+	return info.str();
+}
+
+string DateTime::GetDate(){
+	ostringstream date;
+	date << _day << "/" << _month << "/" << _year;
+	return date.str();
+}
+
+string DateTime::GetDateWithoutYear(){
+	ostringstream date;
+	int db = _month;
+	string month = GetMonthName(_month);
+	date << _day << " " << month;
+	return date.str();
+}
+
+string DateTime::GetTime(){
+	if (isTimeSet){
+		ostringstream time;
+		time << setw(2) << setfill('0') << _hours << ":" << setw(2) << setfill('0') << _mins;
+		string dbg = time.str();
+		return time.str();
+	}
+	else{
+		return "";
+	}
+}
+
+
+bool DateTime::IsEarlierThan(DateTime dt){
+	bool isEarlier = false;
+
+	if (_year < dt._year){
+		isEarlier = true;
+	}
+	else if (_year == dt._year){
+		if (_month < dt._month){
+			isEarlier = true;
+		}
+		else if (_month == dt._month){
+			if (_day < dt._day){
+				isEarlier = true;
+			}
+			else if (_day == dt._day){
+				if (_hours < dt._hours){
+					isEarlier = true;
+				}
+				else if (_hours == dt._hours){
+					if (_mins < dt._mins){
+						isEarlier = true;
+					}
+				}
+			}
+		}
+	}
+
+	return isEarlier;
+}
+
+
+string DateTime::TwentyFourHourFormat(){
+	string output;
+	ostringstream min;
+	ostringstream hour;
+
+	min << setw(2) << setfill('0') << _mins;
+	hour << setw(2) << setfill('0') << _hours;
+
+	output = hour.str() + ":" + min.str();
 	return output;
 }
 
@@ -381,19 +473,20 @@ bool DateTime::IsValidDayDate(string input){
 }
 
 bool DateTime::IsValidDate(string input){
+	assert(input != "");
 	string dbg = input;
-	int found = 0;
+	int endIdx = 0;
 	int startIdx = 0;
 	int count = 0;
 	bool isValid = false;
-	while (found != string::npos){
-		found = input.find_first_of("/", startIdx);
-		if (found != string::npos){
+
+	while (endIdx != string::npos){
+		endIdx = input.find_first_of("/", startIdx);
+		if (endIdx != string::npos){
 			count++;
 		}
-		startIdx = found + 1;
+		startIdx = endIdx + 1;
 	}
-
 
 	if (count == 2){
 		isValid = true;
@@ -403,9 +496,10 @@ bool DateTime::IsValidDate(string input){
 }
 
 bool DateTime::IsValidDay(string input){
+	int found;
 
 	for (int i = 0; i < numberOfDateType; i++){
-		size_t found = input.find(dateType[i]);
+		found = input.find(dateType[i]);
 
 		if (found != string::npos){
 			return true;
@@ -417,13 +511,18 @@ bool DateTime::IsValidDay(string input){
 }
 
 bool DateTime::IsValidTime(string input){
+	assert(input != "");
 	string dbg = input;
-	bool isValid = false;
 	string result = input;
+	string hour_s;
+	string min_s;
+	bool isValid = false;
 	int hour;
 	int mins;
+	int found;
+	int length;
 
-	int found = input.find("pm");
+	found = input.find("pm");
 	if (found != string::npos){
 		result = input.substr(0, found);
 	}
@@ -434,12 +533,11 @@ bool DateTime::IsValidTime(string input){
 
 	found = result.find_first_of(":");
 	if (found != string::npos){
-		//getting hour
-		string hour_s = result.substr(0, found);
+		hour_s = result.substr(0, found);
 		hour = atoi(hour_s.c_str());
 		//getting min
-		int length = result.length();
-		string min_s = result.substr(found, length - 1);
+		length = result.length();
+		min_s = result.substr(found, length - 1);
 		mins = atoi(min_s.c_str());
 		if (hour >= 0 && hour < 24 && mins >= 0 && mins < 60){
 			isValid = true;
@@ -453,30 +551,37 @@ bool DateTime::IsValidTime(string input){
 			isValid = true;
 		}
 	}
-	
+
 	return isValid;
 }
 
 DateTime::DAY DateTime::GetDayEnum(string input){
-	if (input == DATETYPE_SUNDAY1 || input == DATETYPE_SUNDAY2 || input == DATETYPE_SUNDAY3 || input == DATETYPE_SUNDAY4){
+	if (input == DATETYPE_SUNDAY1 || input == DATETYPE_SUNDAY2
+		|| input == DATETYPE_SUNDAY3 || input == DATETYPE_SUNDAY4){
 		return DAY::SUNDAY;
 	}
-	if (input == DATETYPE_MONDAY1 || input == DATETYPE_MONDAY2 || input == DATETYPE_MONDAY3 || input == DATETYPE_MONDAY4){
+	if (input == DATETYPE_MONDAY1 || input == DATETYPE_MONDAY2
+		|| input == DATETYPE_MONDAY3 || input == DATETYPE_MONDAY4){
 		return DAY::MONDAY;
 	}
-	if (input == DATETYPE_TUESDAY1 || input == DATETYPE_TUESDAY2 || input == DATETYPE_TUESDAY3 || input == DATETYPE_TUESDAY4){
+	if (input == DATETYPE_TUESDAY1 || input == DATETYPE_TUESDAY2
+		|| input == DATETYPE_TUESDAY3 || input == DATETYPE_TUESDAY4){
 		return DAY::TUESDAY;
 	}
-	if (input == DATETYPE_WEDNESDAY1 || input == DATETYPE_WEDNESDAY2 || input == DATETYPE_WEDNESDAY3 || input == DATETYPE_WEDNESDAY4){
+	if (input == DATETYPE_WEDNESDAY1 || input == DATETYPE_WEDNESDAY2
+		|| input == DATETYPE_WEDNESDAY3 || input == DATETYPE_WEDNESDAY4){
 		return DAY::WEDNESDAY;
 	}
-	if (input == DATETYPE_THURSDAY1 || input == DATETYPE_THURSDAY2 || input == DATETYPE_THURSDAY3 || input == DATETYPE_THURSDAY4){
+	if (input == DATETYPE_THURSDAY1 || input == DATETYPE_THURSDAY2
+		|| input == DATETYPE_THURSDAY3 || input == DATETYPE_THURSDAY4){
 		return DAY::THURSDAY;
 	}
-	if (input == DATETYPE_FRIDAY1 || input == DATETYPE_FRIDAY2 || input == DATETYPE_FRIDAY3 || input == DATETYPE_FRIDAY4){
+	if (input == DATETYPE_FRIDAY1 || input == DATETYPE_FRIDAY2
+		|| input == DATETYPE_FRIDAY3 || input == DATETYPE_FRIDAY4){
 		return DAY::FRIDAY;
 	}
-	if (input == DATETYPE_SATURDAY1 || input == DATETYPE_SATURDAY2 || input == DATETYPE_SATURDAY3 || input == DATETYPE_SATURDAY4){
+	if (input == DATETYPE_SATURDAY1 || input == DATETYPE_SATURDAY2
+		|| input == DATETYPE_SATURDAY3 || input == DATETYPE_SATURDAY4){
 		return DAY::SATURDAY;
 	}
 	if (input == DATETYPE_TODAY1){
@@ -488,50 +593,93 @@ DateTime::DAY DateTime::GetDayEnum(string input){
 	return DAY::INVALID;
 }
 
-int DateTime::CalculateOffset(DAY startday, DAY endday){
-	int result;
+	// End of segment: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\DateTime.cpp
 
-	if (startday > endday){
-		//this means that we have crossed a saturday, and the enum is reset
-		result = endday - startday + 7;
+
+
+
+
+	/**
+	 * origin: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\DateTime.cpp
+	 */
+
+string DateTime::GetMonthName(int input){
+	if (input < 1 || input>12){
+		throw std::invalid_argument("received value out of range");
 	}
-	else{
-		result = endday - startday;
+
+
+	try{
+		switch (input){
+		case 1:{
+			return _MONTH_JANUARY;
+			break;
+		}
+		case 2:{
+			return _MONTH_FEBRUARY;
+			break;
+		}
+		case 3:{
+			return _MONTH_MARCH;
+			break;
+		}
+		case 4:{
+			return _MONTH_APRIL;
+			break;
+		}
+		case 5:{
+			return _MONTH_MAY;
+			break;
+		}
+		case 6:{
+			return _MONTH_JUNE;
+			break;
+		}
+		case 7:{
+			return _MONTH_JULY;
+			break;
+		}
+		case 8:{
+			return _MONTH_AUGUST;
+			break;
+		}
+		case 9:{
+			return _MONTH_SEPTEMBER;
+			break;
+		}
+		case 10:{
+			return _MONTH_OCTOBER;
+			break;
+		}
+		case 11:{
+			return _MONTH_NOVEMBER;
+			break;
+		}
+		case 12:{
+			return _MONTH_DECEMBER;
+			break;
+		}
+
+		default:{
+			return _MONTH_JANUARY;
+		}
+		}
 	}
+	catch (const std::invalid_argument& e){
+		cout << "exception occur" << endl;
 
-	return result;
-}
 
-string DateTime::GetDayFromTime(time_t time){
-	struct tm timeinfo;
-	localtime_s(&timeinfo, &time);
-	char output[80];
-	strftime(output, 80, "%A", &timeinfo);
-	return output;
+	}
 }
+	// End of segment: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\DateTime.cpp
 
-string DateTime::GetStandardDate(time_t time){
-	struct tm timeinfo;
-	localtime_s(&timeinfo, &time);
-	char output[80];
-	strftime(output, 80, "%d/%m/%Y", &timeinfo);
-	return output;
-}
 
-string DateTime::GetStandardTime(time_t time){
-	struct tm timeinfo;
-	localtime_s(&timeinfo, &time);
-	char output[80];
-	strftime(output, 80, "%I:%M%p", &timeinfo);
-	return output;
-}
 
-time_t DateTime::OffsetByDay(time_t timeReference, time_t offset_in_days){
-	time_t output;
-	time_t offset_in_seconds = offset_in_days * 24 * 60 * 60;
-	output = timeReference + offset_in_seconds;
-	return output;
-}
+
+
+	/**
+	 * origin: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\DateTime.cpp
+	 */
 
 DateTime::DAY DateTime::GetToday(){
 	time_t now = time(0);
@@ -539,30 +687,30 @@ DateTime::DAY DateTime::GetToday(){
 	localtime_s(&timeinfo, &now);
 	int day = timeinfo.tm_wday;
 	switch (day){
-		case DAY::SUNDAY:{
-			return DAY::SUNDAY;
-		}
-		case DAY::MONDAY:{
-			return DAY::MONDAY;
-		}
-		case DAY::TUESDAY:{
-			return DAY::TUESDAY;
-		}
-		case DAY::WEDNESDAY:{
-			return DAY::WEDNESDAY;
-		}
-		case DAY::THURSDAY:{
-			return DAY::THURSDAY;
-		}
-		case DAY::FRIDAY:{
-			return DAY::FRIDAY;
-		}
-		case DAY::SATURDAY:{
-			return DAY::SATURDAY;
-		}
-		default:{
-			return DAY::INVALID;
-		}
+	case DAY::SUNDAY:{
+		return DAY::SUNDAY;
+	}
+	case DAY::MONDAY:{
+		return DAY::MONDAY;
+	}
+	case DAY::TUESDAY:{
+		return DAY::TUESDAY;
+	}
+	case DAY::WEDNESDAY:{
+		return DAY::WEDNESDAY;
+	}
+	case DAY::THURSDAY:{
+		return DAY::THURSDAY;
+	}
+	case DAY::FRIDAY:{
+		return DAY::FRIDAY;
+	}
+	case DAY::SATURDAY:{
+		return DAY::SATURDAY;
+	}
+	default:{
+		return DAY::INVALID;
+	}
 	}
 	assert(false && "in DateTime::GetToday function");
 }
@@ -573,45 +721,40 @@ DateTime::DAY DateTime::GetTomorrow(){
 	localtime_s(&timeinfo, &now);
 	int day = timeinfo.tm_wday;
 	switch (day){
-		case DAY::SUNDAY:{
-			return DAY::MONDAY;
-		}
-		case DAY::MONDAY:{
-			return DAY::TUESDAY;
-		}
-		case DAY::TUESDAY:{
-			return DAY::WEDNESDAY;
-		}
-		case DAY::WEDNESDAY:{
-			return DAY::THURSDAY;
-		}
-		case DAY::THURSDAY:{
-			return DAY::FRIDAY;
-		}
-		case DAY::FRIDAY:{
-			return DAY::SATURDAY;
-		}
-		case DAY::SATURDAY:{
-			return DAY::SUNDAY;
-		}
-		default:{
-			return DAY::INVALID;
-		}
+	case DAY::SUNDAY:{
+		return DAY::MONDAY;
+	}
+	case DAY::MONDAY:{
+		return DAY::TUESDAY;
+	}
+	case DAY::TUESDAY:{
+		return DAY::WEDNESDAY;
+	}
+	case DAY::WEDNESDAY:{
+		return DAY::THURSDAY;
+	}
+	case DAY::THURSDAY:{
+		return DAY::FRIDAY;
+	}
+	case DAY::FRIDAY:{
+		return DAY::SATURDAY;
+	}
+	case DAY::SATURDAY:{
+		return DAY::SUNDAY;
+	}
+	default:{
+		return DAY::INVALID;
+	}
 	}
 	assert(false && "in DateTime::GetTomorrow function");
 }
-//==========================================================
-//End section Methods suggested by Conrad
-//==========================================================
 
 string DateTime::Now(){
-	time_t now = time(0); //raw time -> this is generally implemented as an integer offset from 00:00hours, jan1, 2970 UTC. This leads me to the assumption
-	//that you can use (time_t time + 60) to offset by 1 minute, (time_t time + 3600) to offset by 1 hour etc
-	struct tm timeinfo; //this struct is defined by the system
-	localtime_s(&timeinfo, &now); //converts the raw time into a struct
+	time_t now = time(0);
+	struct tm timeinfo;
+	localtime_s(&timeinfo, &now);
 	char output[80];
-	strftime(output, 80, "%I:%M%p", &timeinfo); //to refer to more ways to access time format, refer to http://cplusplus.com/reference/ctime/strftime/
-	//under strftime, yellow boxes indicate certain formats that are not supported on visual studio
+	strftime(output, 80, "%I:%M%p", &timeinfo);
 	return output;
 }
 
@@ -625,94 +768,13 @@ string DateTime::Today(){
 }
 
 string DateTime::Tomorrow(){
-	time_t now = time(0);
-	time_t tomorrow = now + 24 * 60 * 60;
+	time_t currentTime = time(0);
+	time_t tomorrow = currentTime + 24 * 60 * 60;
 	struct tm timeinfo;
 	localtime_s(&timeinfo, &tomorrow);
 	char output[80];
 	strftime(output, 80, "%d/%m/%Y", &timeinfo);
 	return output;
-}
-
-
-string DateTime::ConvertDateTime(string input){
-	string task_date;
-	string task_time;
-	string output;
-
-	GetType(input); //this method is used to classify the input info into Date and Time for conversion 
-	task_date = ConvertDate(); //convert user's date to the proper one
-	task_time = ConvertTime();  //convert time to proper one 
-
-	output = task_date + task_time;
-
-	return output;
-}
-
-
-string DateTime::GetType(string input){
-	string day;
-	string time;
-	string description;
-
-	description = input;
-
-	if (isDateType(description)){
-
-	}
-
-	if (isTimeType(description)){
-
-	}
-
-
-
-	string feedback = "";
-	return feedback;
-
-}
-
-
-bool DateTime::isDateType(string input){
-	string userDateTime = input;
-
-	for (int i = 0; i < numberOfDateType; i++){
-		size_t found = userDateTime.find(dateType[i]);
-
-		if (found != string::npos){
-			return true;
-		}
-	}
-
-	return false;
-}
-
-bool DateTime::isTimeType(string input){
-	string userDateTime = input;
-
-	for (int i = 0; i < numberOfTimeType; i++){
-		size_t found = userDateTime.find(timeType[i]);
-
-		if (found != string::npos){
-			return true;
-		}
-	}
-
-	return false;
-}
-
-string DateTime::ConvertDate(){
-
-	//make use of today() function, compare and add more days to get the supposed date 
-	string feedback = "";
-	return feedback;
-}
-
-string DateTime::ConvertTime(){
-
-	//this function is simply change the format e.g if they key in 2pm, here we change it to 0200pm
-	string feedback = "";
-	return feedback;
 }
 
 bool DateTime::CompareDateTime(string input1, string input2){
@@ -838,6 +900,15 @@ bool DateTime::CompareDate(string date1, string date2){
 
 	return isGreater;
 }
+	// End of segment: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\DateTime.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\DateTime.cpp
+	 */
 
 bool DateTime::CompareTime(string time1, string time2){
 	int hour1, hour2;
@@ -875,6 +946,15 @@ bool DateTime::CompareTime(string time1, string time2){
 
 	return isGreater;
 }
+	// End of segment: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\DateTime.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\DateTime.cpp
+	 */
 
 void DateTime::Initialize(){
 	if (!isInitialized){
@@ -924,6 +1004,167 @@ void DateTime::Initialize(){
 
 
 	// End of segment: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\DateTime.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\DateTime.h
+	 */
+
+#pragma once
+#include <iostream>
+#include <string>
+#include <vector>
+#include <time.h>
+#include <cassert>
+#include <iomanip>
+#include <exception>
+#include "Smartstring.h"
+#include "assert.h"
+
+using namespace std;
+class DateTime
+{
+
+private:
+	int _day;
+	int _month;
+	int _year;
+	int _hours;
+	int _mins;
+	string _period;
+
+	static bool isInitialized;
+	static int numberOfDateType;
+	static int numberOfTimeType;
+
+	static vector<string> dateType;
+	static vector<string> timeType;
+
+	static const string DATETYPE_MONDAY1;
+	static const string DATETYPE_MONDAY2;
+	static const string DATETYPE_MONDAY3;
+	static const string DATETYPE_MONDAY4;
+	static const string DATETYPE_TUESDAY1;
+	static const string DATETYPE_TUESDAY2;
+	static const string DATETYPE_TUESDAY3;
+	static const string DATETYPE_TUESDAY4;
+	static const string DATETYPE_WEDNESDAY1;
+	static const string DATETYPE_WEDNESDAY2;
+	static const string DATETYPE_WEDNESDAY3;
+	static const string DATETYPE_WEDNESDAY4;
+	static const string DATETYPE_THURSDAY1;
+	static const string DATETYPE_THURSDAY2;
+	static const string DATETYPE_THURSDAY3;
+	static const string DATETYPE_THURSDAY4;
+	static const string DATETYPE_FRIDAY1;
+	static const string DATETYPE_FRIDAY2;
+	static const string DATETYPE_FRIDAY3;
+	static const string DATETYPE_FRIDAY4;
+	static const string DATETYPE_SATURDAY1;
+	static const string DATETYPE_SATURDAY2;
+	static const string DATETYPE_SATURDAY3;
+	static const string DATETYPE_SATURDAY4;
+	static const string DATETYPE_SUNDAY1;
+	static const string DATETYPE_SUNDAY2;
+	static const string DATETYPE_SUNDAY3;
+	static const string DATETYPE_SUNDAY4;
+	static const string DATETYPE_TODAY1;
+	static const string DATETYPE_TOMORROW1;
+	static const string DATETYPE_TOMORROW2;
+	static const string _MONTH_JANUARY;
+	static const string _MONTH_FEBRUARY;
+	static const string _MONTH_MARCH;
+	static const string _MONTH_APRIL;
+	static const string _MONTH_MAY;
+	static const string _MONTH_JUNE;
+	static const string _MONTH_JULY;
+	static const string _MONTH_AUGUST;
+	static const string _MONTH_SEPTEMBER;
+	static const string _MONTH_OCTOBER;
+	static const string _MONTH_NOVEMBER;
+	static const string _MONTH_DECEMBER;
+
+
+
+	static const string TIMETYPE_AM;
+	static const string TIMETYPE_PM;
+
+	enum DATEKEY{ TODAY, TOMORROW };
+	enum DAY{ SUNDAY, MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, INVALID };
+
+	//methods
+	void SetDefaultDateTime();
+	void SetStandards();
+	void SetSeconds();
+
+	string StandardizeSingle(string);
+	string StandardizeTriple(vector<string>);
+	string StandardizeDayDate(string); //Standardize input assuming that it is either a day, or a date
+	string StandardizeDate(string); //Standardize input assuming that it is a date
+	string StandardizeDay(string); //Standardize input assuming that it is a day
+	string StandardizeTime(string);
+	string TwentyFourHourFormat();// this method returns time in 24 hour format
+
+	bool IsValidDayDate(string); //Check if input is a valid day or date
+	bool IsValidDate(string); //Check if input is a valid date
+	bool IsValidDay(string); //Check if input is a valid day
+	bool IsValidTime(string); //Check if input is a valid time
+
+
+	DAY GetDayEnum(string); //Gets the DAY in enum format of an input string. i.e. sunday = 0, monday = 1...
+	DAY GetTomorrow();
+	DAY GetToday();
+	string GetMonthName(int); //converts month to string
+	int CalculateOffset(DAY, DAY); //Gets the offset for the next occurance of endday based on startday.
+
+	string GetDayFromTime(time_t);
+	string GetStandardDate(time_t);
+	string GetStandardTime(time_t);
+	time_t OffsetByDay(time_t, time_t); //given a startday and number of days to offset by, converts to a time_t value
+
+
+
+
+
+public:
+	string unformattedDateTime;
+	string formattedDateTime;
+	bool isValidFormat;
+	bool isDateSet;
+	bool isTimeSet;
+	time_t time_in_seconds;
+
+	DateTime();
+	DateTime(string);
+	~DateTime();
+
+	string Now();
+	string Today();
+	string Tomorrow();
+	string Standardized();
+	string GetInfo();
+	string GetDate();
+	string GetDateWithoutYear();//omit the year if the date&time is in the current year
+	string GetTime();
+	int GetSeconds();
+	bool IsEarlierThan(DateTime);
+	bool CompareDateTime(string, string);
+	bool CompareDate(string, string);
+	bool CompareTime(string, string);
+	DateTime* GetDefaultEndDate();
+	void Initialize();
+
+
+
+
+
+};
+
+
+	// End of segment: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\DateTime.h
 
 
 
@@ -1011,29 +1252,20 @@ vector<string> Parser::Tokenize(string input){
 
 #include "Smartstring.h"
 #include <iostream>
-//note: static fields always need to be redeclared in cpp file
 
-//adding commands or keywords here
-//IMPORTANT: PLEASE ADD COMMANDS IN ALPHABETICAL ORDER AND FOLLOW THE ORDERING IN ALL FILES
-//1. add a static string in header
-//2. define command or keyword in the list of const strings
-//3. push the string into commands and keywords vectors respectively in Initialize() function
-//4. change Command and Field functions for commands and keywords respectively
-//5. check the enum within smartstring to check if it matches the cases
-//6. add to the current test cases in Libtest
 
+const string Smartstring::COMMAND_ARCHIVED = "archived";
 const string Smartstring::COMMAND_ADD = "add";
 const string Smartstring::COMMAND_CLEAR = "clear";
+const string Smartstring::COMMAND_COMPLETE = "complete";
 const string Smartstring::COMMAND_DELETE = "delete";
 const string Smartstring::COMMAND_DISPLAY = "display";
 const string Smartstring::COMMAND_EDIT = "edit";
+const string Smartstring::COMMAND_EMPTYSLOTS = "free";
+const string Smartstring::COMMAND_LOAD = "load";
+const string Smartstring::COMMAND_UNDO = "undo";
 const string Smartstring::COMMAND_SAVE = "save";
 const string Smartstring::COMMAND_SEARCH = "search";
-const string Smartstring::COMMAND_COMPLETE = "complete";
-const string Smartstring::COMMAND_EMPTYSLOTS = "emptyslots";
-const string Smartstring::COMMAND_UNDO = "undo";
-const string Smartstring::COMMAND_LOAD = "load";
-
 
 const string Smartstring::KEYWORD_ENDDATE_1 = "date:";
 const string Smartstring::KEYWORD_ENDDATE_2 = "by:";
@@ -1064,43 +1296,145 @@ const string Smartstring::KEYWORD_FLOAT_1 = "float:";
 
 const string Smartstring::FEEDBACK_ADD_SUCCESSULLY = "add the entry successfully";
 const string Smartstring::FEEDBACK_DELETE_SUCCESSFULLY = "delete the entry successfully";
-const string Smartstring::FEEDBACK_DELETE_FAIL= "fail to delete the entry";
-const string Smartstring::FEEDBACK_EDIT_SUCCESSFULLY="edit the entry successfully";
-const string Smartstring::FEEDBACK_EDIT_FAIL="fail to edit the entry";
-const string Smartstring::FEEDBACK_SEARCH_FAIL="cannot find";
+const string Smartstring::FEEDBACK_DELETE_FAIL = "fail to delete the entry";
+const string Smartstring::FEEDBACK_EDIT_SUCCESSFULLY = "edit the entry successfully";
+const string Smartstring::FEEDBACK_EDIT_FAIL = "fail to edit the entry";
+const string Smartstring::FEEDBACK_SEARCH_FAIL = "cannot find";
 
 
-bool Smartstring::classInitialized = false;
+bool Smartstring::isInitialized = false;
 int Smartstring::numberOfCommands;
 int Smartstring::numberOfKeywords;
 const int Smartstring::NUMBER_OF_FIELDS = 5;
 vector<string> Smartstring::commands;
 vector<string> Smartstring::keywords;
 
+	// End of segment: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\Smartstring.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\Smartstring.cpp
+	 */
+
 Smartstring::Smartstring(){
-	description = "";
+	information = "";
 	Initialize();
-	
+
 }
 
 
 Smartstring::Smartstring(string input){
-	description = input;
+	information = input;
 	Initialize();
 }
 
+Smartstring::~Smartstring()
+{
+}
+
+//this method identifies the type of command user put in 
+Smartstring::COMMAND Smartstring::Command(){
+	if (information == COMMAND_ARCHIVED){
+		return Smartstring::COMMAND::ARCHIVED;
+	}
+
+	if (information == COMMAND_ADD){
+		return Smartstring::COMMAND::ADD;
+	}
+
+	if (information == COMMAND_CLEAR){
+		return Smartstring::COMMAND::CLEAR;
+	}
+
+	if (information == COMMAND_COMPLETE){
+		return Smartstring::COMMAND::COMPLETE;
+	}
+
+	if (information == COMMAND_DELETE){
+		return Smartstring::COMMAND::DELETE;
+	}
+
+	if (information == COMMAND_DISPLAY){
+		return Smartstring::COMMAND::DISPLAY;
+	}
+	if (information == COMMAND_EDIT){
+		return Smartstring::COMMAND::EDIT;
+	}
+
+	if (information == COMMAND_EMPTYSLOTS){
+		return Smartstring::COMMAND::FREE;
+	}
+
+	if (information == COMMAND_LOAD){
+		return Smartstring::COMMAND::LOAD;
+	}
+
+	if (information == COMMAND_UNDO){
+		return Smartstring::COMMAND::UNDO;
+	}
+
+	if (information == COMMAND_SEARCH){
+		return Smartstring::COMMAND::SEARCH;
+	}
+
+	if (information == COMMAND_SAVE){
+		return Smartstring::COMMAND::SAVE;
+	}
+
+	assert(!IsCommand()); //takes care of the case when we add cases to field but did not update static list commands[];
+	return Smartstring::COMMAND::INVALID_CMD;
+}
+
+//this method identifies the keywords that help to recoginize date and time
+Smartstring::FIELD Smartstring::Field(){
+	if (information == KEYWORD_STARTDATE_1 || information == KEYWORD_STARTDATE_2
+		|| information == KEYWORD_STARTDATE_3 || information == KEYWORD_STARTDATE_4
+		|| information == KEYWORD_STARTDATE_5 || information == KEYWORD_STARTDATE_6
+		|| information == KEYWORD_STARTDATE_7){
+
+		return Smartstring::FIELD::STARTDATE;
+	}
+
+	if (information == KEYWORD_PRIORITY_1 || information == KEYWORD_PRIORITY_2){
+		return Smartstring::FIELD::PRIORITY;
+	}
+
+	if (information == KEYWORD_ENDDATE_1 || information == KEYWORD_ENDDATE_2
+		|| information == KEYWORD_ENDDATE_3 || information == KEYWORD_ENDDATE_4
+		|| information == KEYWORD_ENDDATE_5 || information == KEYWORD_ENDDATE_6
+		|| information == KEYWORD_ENDDATE_7 || information == KEYWORD_ENDDATE_8
+		|| information == KEYWORD_ENDDATE_9 || information == KEYWORD_ENDDATE_10
+		|| information == KEYWORD_ENDDATE_11 || information == KEYWORD_ENDDATE_12){
+
+		return Smartstring::FIELD::ENDDATE;
+	}
+
+	if (information == KEYWORD_DESCRIPTION_1){
+		return Smartstring::FIELD::DESCRIPTION;
+	}
+
+	assert(!IsKeyword());
+	return Smartstring::FIELD::INVALID_FLD;
+}
+
 void Smartstring::Initialize(){
-	if (!classInitialized){
+	if (!isInitialized){
+		commands.push_back(COMMAND_ARCHIVED);
 		commands.push_back(COMMAND_ADD);
 		commands.push_back(COMMAND_CLEAR);
+		commands.push_back(COMMAND_COMPLETE);
 		commands.push_back(COMMAND_DELETE);
 		commands.push_back(COMMAND_DISPLAY);
 		commands.push_back(COMMAND_EDIT);
+		commands.push_back(COMMAND_EMPTYSLOTS);
+		commands.push_back(COMMAND_LOAD);
+		commands.push_back(COMMAND_UNDO);
 		commands.push_back(COMMAND_SAVE);
 		commands.push_back(COMMAND_SEARCH);
-		commands.push_back(COMMAND_COMPLETE);
-		commands.push_back(COMMAND_UNDO);
-		commands.push_back(COMMAND_LOAD);
+
 
 		keywords.push_back(KEYWORD_ENDDATE_1);
 		keywords.push_back(KEYWORD_ENDDATE_2);
@@ -1124,163 +1458,365 @@ void Smartstring::Initialize(){
 		keywords.push_back(KEYWORD_STARTDATE_6);
 		keywords.push_back(KEYWORD_STARTDATE_7);
 		keywords.push_back(KEYWORD_DESCRIPTION_1);
+
 		numberOfCommands = commands.size();
 		numberOfKeywords = keywords.size();
-		classInitialized = true;
+		isInitialized = true;
+
+		assert(numberOfCommands != 0);
+		assert(numberOfKeywords != 0);
 	}
-		
+
 	return;
 }
 
 
-Smartstring::~Smartstring()
-{
-}
-
 bool Smartstring::IsCommand(){
+	bool isCommand = false;
+
 	for (int i = 0; i < numberOfCommands; ++i){
-		if (description == commands[i]){
-			return true;
+		if (information == commands[i]){
+			isCommand = true;
 		}
 	}
-	
-	return false;
+
+	return isCommand;
 }
 
 bool Smartstring::IsKeyword(){
+	bool isKeyword = false;
 	for (int i = 0; i < numberOfKeywords; ++i){
-		if (description == keywords[i]){
-			return true;
+		if (information == keywords[i]){
+			isKeyword = true;
 		}
 	}
 
-	return false;
+	return isKeyword;
 }
 
-Smartstring::COMMAND Smartstring::Command(){
-	if (description == COMMAND_ADD){
-		return Smartstring::COMMAND::ADD;
-	}
-	if (description == COMMAND_DELETE){
-		return Smartstring::COMMAND::DELETE;
-	}
-	if (description == COMMAND_DISPLAY){
-		return Smartstring::COMMAND::DISPLAY;
-	}
-	if (description == COMMAND_EDIT){
-		return Smartstring::COMMAND::EDIT;
-	}
-	if (description == COMMAND_SEARCH){
-		return Smartstring::COMMAND::SEARCH;
-	}
-	if (description == COMMAND_CLEAR){
-		return Smartstring::COMMAND::CLEAR;
-	}
-	if (description == COMMAND_SAVE){
-		return Smartstring::COMMAND::SAVE;
-	}
-	if (description == COMMAND_COMPLETE){
-		return Smartstring::COMMAND::COMPLETE;
-	}
-	if (description == COMMAND_EMPTYSLOTS){
-		return Smartstring::COMMAND::EMPTYSLOTS;
-	}
-	if (description == COMMAND_UNDO){
-		return Smartstring::COMMAND::UNDO;
-	}
-	if (description == COMMAND_LOAD){
-		return Smartstring::COMMAND::LOAD;
-	}
-
-	assert(!IsCommand()); //takes care of the case when we add cases to field but did not update static list commands[];
-	return Smartstring::COMMAND::INVALID_CMD;
-}
-
-Smartstring::FIELD Smartstring::Field(){
-	if (description == KEYWORD_STARTDATE_1 || description == KEYWORD_STARTDATE_2 || description == KEYWORD_STARTDATE_3 || description == KEYWORD_STARTDATE_4 || description == KEYWORD_STARTDATE_5 || description == KEYWORD_STARTDATE_6 || description == KEYWORD_STARTDATE_7){
-		return Smartstring::FIELD::STARTDATE;
-	}
-	if (description == KEYWORD_PRIORITY_1 || description == KEYWORD_PRIORITY_2){
-		return Smartstring::FIELD::PRIORITY;
-	}
-	if (description == KEYWORD_ENDDATE_1 || description == KEYWORD_ENDDATE_2 || description == KEYWORD_ENDDATE_3 || description == KEYWORD_ENDDATE_4 || description == KEYWORD_ENDDATE_5 || description == KEYWORD_ENDDATE_6 || description == KEYWORD_ENDDATE_7 || description == KEYWORD_ENDDATE_8 || description == KEYWORD_ENDDATE_9 || description == KEYWORD_ENDDATE_10 || description == KEYWORD_ENDDATE_11 || description == KEYWORD_ENDDATE_12){
-		return Smartstring::FIELD::ENDDATE;
-	}
-	if (description == KEYWORD_DESCRIPTION_1){
-		return Smartstring::FIELD::DESCRIPTION;
-	}
-	
-	assert(!IsKeyword()); //takes care of the case when we add cases to field but did not update static list keywords[];
-	return Smartstring::FIELD::INVALID_FLD;
-}
 
 Smartstring::LIST Smartstring::ListType(){
-	if (description == KEYWORD_TIMED_1){
+	if (information == KEYWORD_TIMED_1){
 		return Smartstring::LIST::TIMED;
 	}
-	if (description == KEYWORD_DEADLINE_1){
+	if (information == KEYWORD_DEADLINE_1){
 		return Smartstring::LIST::DEADLINE;
 	}
-	if (description == KEYWORD_FLOAT_1){
+	if (information == KEYWORD_FLOAT_1){
 		return Smartstring::LIST::FLOAT;
 	}
 	return Smartstring::LIST::DEFAULT;
 }
 
 
+
 string Smartstring::ToString(){
-	return description;
+	return information;
 }
 
 vector<string> Smartstring::Tokenize(string delimiters){
-	int found = 0;
 	int startIdx = 0;
+	int endIdx = 0;
+	string piece;
 	vector<string> tokens;
-	while (found != string::npos){
-		found = description.find_first_of(delimiters.c_str(),startIdx);
-		int length = found - startIdx;
-		string result = description.substr(startIdx, length);
-		if (result.length() != 0){
-			tokens.push_back(result);
+
+	while (endIdx != string::npos){
+		endIdx = information.find_first_of(delimiters.c_str(), startIdx);
+		piece = information.substr(startIdx, endIdx - startIdx);
+
+		if (piece.length() != 0){
+			assert(piece.length() != 0);
+			tokens.push_back(piece);
 		}
-		startIdx = found + 1;
+		startIdx = endIdx + 1;
 	}
+	return tokens;
+}
+
+vector<string> Smartstring::ContainedTokenize(string delimiters){
+	string input = information;
+	string piece;
+	int found = 0;
+	int startFrame = 0;
+	int endFrame = 0;
+	int startIdx = 0;
+	int endIdx = 0;
+	vector<string> tokens;
+
+	while (startFrame != string::npos && endFrame != string::npos){
+		startFrame = input.find_first_of(delimiters.c_str(), startIdx);
+
+		if (startFrame != string::npos){
+			endFrame = input.find_first_of(delimiters.c_str(), startFrame + 1);
+			if (endFrame != string::npos){
+				int length = endFrame - startFrame - 1;
+				piece = input.substr(startFrame + 1, length);
+				tokens.push_back(piece);
+			}
+		}
+
+		startIdx = endFrame + 1;
+	}
+
 	return tokens;
 }
 
 
 //operator overloading
-ostream& operator<<(ostream& os, Smartstring& ss){
-	os << ss.description;
-	return os;
-}
-
-istream& operator>>(istream& is, Smartstring& ss){
-	is >> ss.description;
-	return is;
-}
-
-string& operator+ (string input, Smartstring& ss){
-	return (input + ss.description);
-}
-
-string& operator+ (Smartstring& ss, string& input){
-	return (ss.description + input);
-}
-
-string& operator+ (const char* s, Smartstring &ss){
-	string out;
-	string first = s;
-	out = first + ss.description.c_str();
-	return out;
-}
-string& operator+ (Smartstring &ss, const char* s){
-	string out;
-	string first = s;
-	out = first + ss.description.c_str();
-	return out;
-}
 	// End of segment: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\Smartstring.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\Smartstring.h
+	 */
+
+#pragma once
+#include <sstream>
+#include <string>
+#include <vector>
+#include <cassert>
+#include <exception>
+#include "Logger.h"
+#include "assert.h"
+
+
+using namespace std;
+class Smartstring
+{
+private:
+
+public:
+	string information;
+	enum COMMAND { ARCHIVED, ADD, CLEAR, COMPLETE, DELETE, DISPLAY, EDIT, FREE, LOAD, UNDO, SAVE, SEARCH, HELP, INVALID_CMD };
+	enum FIELD { DESCRIPTION, STARTDATE, ENDDATE, PRIORITY, STATUS, INVALID_FLD };
+	enum LIST{ TIMED, DEADLINE, FLOAT, DEFAULT };
+
+	static bool isInitialized;
+	static int numberOfCommands;
+	static int numberOfKeywords;
+	static const int NUMBER_OF_FIELDS;
+
+	static vector<string> commands;
+	static vector<string> keywords;
+
+	static const string COMMAND_ARCHIVED;
+	static const string COMMAND_ADD;
+	static const string COMMAND_CLEAR;
+	static const string COMMAND_COMPLETE;
+	static const string COMMAND_DELETE;
+	static const string COMMAND_DISPLAY;
+	static const string COMMAND_EDIT;
+	static const string COMMAND_EMPTYSLOTS;
+	static const string COMMAND_LOAD;
+	static const string COMMAND_UNDO;
+	static const string COMMAND_SAVE;
+	static const string COMMAND_SEARCH;
+	static const string COMMAND_HELP;
+
+
+	static const string KEYWORD_ENDDATE_1;
+	static const string KEYWORD_ENDDATE_2;
+	static const string KEYWORD_ENDDATE_3;
+	static const string KEYWORD_ENDDATE_4;
+	static const string KEYWORD_ENDDATE_5;
+	static const string KEYWORD_ENDDATE_6;
+	static const string KEYWORD_ENDDATE_7;
+	static const string KEYWORD_ENDDATE_8;
+	static const string KEYWORD_ENDDATE_9;
+	static const string KEYWORD_ENDDATE_10;
+	static const string KEYWORD_ENDDATE_11;
+	static const string KEYWORD_ENDDATE_12;
+	static const string KEYWORD_PRIORITY_1;
+	static const string KEYWORD_PRIORITY_2;
+	static const string KEYWORD_STARTDATE_1;
+	static const string KEYWORD_STARTDATE_2;
+	static const string KEYWORD_STARTDATE_3;
+	static const string KEYWORD_STARTDATE_4;
+	static const string KEYWORD_STARTDATE_5;
+	static const string KEYWORD_STARTDATE_6;
+	static const string KEYWORD_STARTDATE_7;
+	static const string KEYWORD_DESCRIPTION_1;
+	static const string KEYWORD_TIMED_1;
+	static const string KEYWORD_DEADLINE_1;
+	static const string KEYWORD_FLOAT_1;
+
+	static const string FEEDBACK_SEARCH_FAIL;
+	static const string FEEDBACK_ADD_SUCCESSULLY;
+	static const string FEEDBACK_DELETE_SUCCESSFULLY;
+	static const string FEEDBACK_DELETE_FAIL;
+	static const string FEEDBACK_EDIT_SUCCESSFULLY;
+	static const string FEEDBACK_EDIT_FAIL;
+
+	Smartstring();
+	Smartstring(string input);
+	~Smartstring();
+
+	//methods
+	COMMAND Command();
+	FIELD Field();
+	void Initialize();
+	bool IsCommand();
+	bool IsKeyword();
+	LIST ListType();
+	string ToString();
+	vector<string> Tokenize(string delimiters);
+	vector<string> ContainedTokenize(string delimiters);
+
+	//operators
+	friend istream& operator>>(istream& is, Smartstring& ss);
+	friend ostream& operator<< (ostream& os, Smartstring& ss);
+	friend string& operator+ (string input, Smartstring &ss);
+	friend string& operator+ (Smartstring& ss, string& input);
+	friend string& operator+ (const char* s, Smartstring &ss);
+	friend string& operator+ (Smartstring &ss, const char* s);
+
+
+};
+
+istream& operator>>(istream& is, Smartstring& ss);
+ostream& operator<<(ostream& os, Smartstring& ss);
+string& operator+ (string input, Smartstring& ss);
+string& operator+ (Smartstring& ss, string& input);
+string& operator+ (const char* s, Smartstring &ss);
+string& operator+ (Smartstring &ss, const char* s);
+
+
+
+	// End of segment: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\Smartstring.h
+
+
+
+
+
+	/**
+	 * origin: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_ScheduleLibraryTest\Libtest.cpp
+	 */
+
+			date1 = "07/07/2015";
+			date2 = "06/08/2014";
+			dt1 = DateTime(date1);
+			dt2 = DateTime(date2);
+			Assert::IsFalse(dt1.IsEarlierThan(dt2));
+			//testing case
+			date1 = "01/09/2014 at 6pm";
+			date2 = "06/08/2014 at 7pm";
+			dt1 = DateTime(date1);
+			dt2 = DateTime(date2);
+			Assert::IsFalse(dt1.IsEarlierThan(dt2));
+		}
+
+		TEST_METHOD(DATETIME_ISVALIDFORMAT){
+			string date;
+			DateTime dt;
+
+			//testing the partition input is valid
+			date = "07/04/2014";
+			dt = DateTime(date);
+			Assert::IsTrue(dt.isValidFormat);
+
+			//testing the partition where input is not valid
+			date = "owkdowkdow";
+			dt = DateTime(date);
+			Assert::AreEqual(dt.Standardized(), date);
+			Assert::IsFalse(dt.isValidFormat);
+		}
+
+		TEST_METHOD(DATETIME_INVALIDINPUTS_UNCHANGED){
+			string date;
+			DateTime dt;
+			date = "owkdowkdowdkowdww";
+			dt = DateTime(date);
+			Assert::AreEqual(dt.Standardized(), date);
+		}
+
+	// End of segment: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_ScheduleLibraryTest\Libtest.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_ScheduleLibraryTest\Libtest.cpp
+	 */
+
+		TEST_METHOD(SMARTSTRING_ISCOMMAND){
+			//test for true case
+			Smartstring test1("add");
+			bool isCommand_Expected;
+			bool isCommand_Actual;
+
+			isCommand_Expected = true;
+			isCommand_Actual = test1.IsCommand();
+
+			Assert::AreEqual(isCommand_Expected, isCommand_Actual);
+
+			// test for false case
+			Smartstring test2("dhiwihwie");
+
+			isCommand_Expected = false;
+			isCommand_Actual = test2.IsCommand();
+
+			Assert::AreEqual(isCommand_Expected, isCommand_Actual);
+		}
+
+	// End of segment: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_ScheduleLibraryTest\Libtest.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_ScheduleLibraryTest\Libtest.cpp
+	 */
+
+		TEST_METHOD(SMARTSTRING_ISKEYWORD){
+			bool isKeyword_Expected;
+			bool isKeyword_Actual;
+
+			//test for true case
+			Smartstring test1("due:");
+			isKeyword_Expected = true;
+			isKeyword_Actual = test1.IsKeyword();
+
+			Assert::AreEqual(isKeyword_Expected, isKeyword_Actual);
+
+			//test for false case
+			Smartstring test2("due");
+			isKeyword_Expected = false;
+			isKeyword_Actual = test2.IsKeyword();
+
+			Assert::AreEqual(isKeyword_Expected, isKeyword_Actual);
+	
+		}
+	// End of segment: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_ScheduleLibraryTest\Libtest.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_ScheduleLibraryTest\Libtest.cpp
+	 */
+
+		TEST_METHOD(DATETIME_COMPAREDATE){
+			bool expected;
+			bool actual;
+
+			DateTime test1;
+
+			//test for same day 
+			Assert::AreEqual(true, test1.CompareDate("10/6/2015", "10/5/2015"));
+			//same day and month
+			Assert::AreEqual(true, test1.CompareDate("10/6/2015", "10/6/2013"));
+		}
+
+
+	};
+}
+	// End of segment: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_ScheduleLibraryTest\Libtest.cpp
 
 
 

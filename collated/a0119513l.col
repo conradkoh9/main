@@ -15,29 +15,30 @@ const string Command::_FEEDBACK_SEARCH = "Displaying search results.";
 const string Command::_FEEDBACK_UNDO = "Undo previous command.";
 const string Command::_FEEDBACK_INVALID_COMMAND = "Invalid command entered.";
 const string Command::_MESSAGE_WELCOME = "Welcome to I_Schedule.";
-ostringstream Command::fout;
-ostringstream Command::tout; //timed task display stream
-ostringstream Command::dout; //deadline task display stream
-ostringstream Command::mout; //main display stream
-ostringstream Command::status; //status bar display stream
-Command::Command(){
-}
 
-Command::Command(string input){
+Command::Command(){
+
+}
+Command::Command(Storage* store_, Parser* parser_){
+	storage = store_;
+	parser = parser_;
 }
 
 Command::~Command(){
 }
 
-string Command::Execute(string){   //invalide command
-	mout << storage->ToString();
+string Command::Execute(string){   //default is invalid command
+	logfile << "Invalid command";
 	return _FEEDBACK_INVALID_COMMAND;
-};
+}
 
 //Add Command
-
 AddCommand::AddCommand(){
 
+}
+AddCommand::AddCommand(Storage* store_, Parser* parser_){
+	storage = store_;
+	parser = parser_;
 }
 
 AddCommand::~AddCommand(){
@@ -45,17 +46,20 @@ AddCommand::~AddCommand(){
 }
 
 string AddCommand::Execute(string taskInput){
+	logfile << "Execute add command";
 	vector<string> taskinfo = parser->IdentifyTaskFields(taskInput);
 	Task* task = new Task(taskinfo);
-	string feedback = storage->Add(task);
-	mout << task->ToString();
-	return feedback;
+	storage->Add(task);
+	return task->ToString();
 }
 
 //Clear Command
-
 ClearCommand::ClearCommand(){
 
+}
+ClearCommand::ClearCommand(Storage* store_, Parser* parser_){
+	storage = store_;
+	parser = parser_;
 }
 
 ClearCommand::~ClearCommand(){
@@ -63,14 +67,19 @@ ClearCommand::~ClearCommand(){
 }
 
 string ClearCommand::Execute(string all){
-	string feedback = storage->Clear();
-	return feedback;
+	logfile << "Execute clear command";
+	storage->Clear();
+	return storage->ToString();
 }
 
 //Delete Command
 
 DeleteCommand::DeleteCommand(){
+}
 
+DeleteCommand::DeleteCommand(Storage* store_, Parser* parser_){
+	storage = store_;
+	parser = parser_;
 }
 
 DeleteCommand::~DeleteCommand(){
@@ -78,22 +87,23 @@ DeleteCommand::~DeleteCommand(){
 }
 
 string DeleteCommand::Execute(string taskInput){
-	Smartstring listname;
-	istringstream in(taskInput);
-	int position;
-	in >> listname;
-	in >> position;
-	//delete from list function
-	string feedback = storage->DeleteFromList(position, listname.ListType());
-	mout << storage->ToString();
-	return feedback;
+	logfile << "Execute delete command";
+	int position = atoi(taskInput.c_str());
+	if (position <= 0) {
+		throw "Position must be positive!";
+	}
+	storage->Delete(position);
+	return storage->ToString();
 }
 
 
 //Display Command
-
 DisplayCommand::DisplayCommand(){
 
+}
+DisplayCommand::DisplayCommand(Storage* store_, Parser* parser_){
+	storage = store_;
+	parser = parser_;
 }
 
 DisplayCommand::~DisplayCommand(){
@@ -101,14 +111,17 @@ DisplayCommand::~DisplayCommand(){
 }
 
 string DisplayCommand::Execute(string all){
-	mout << storage->ToString();
-	return _FEEDBACK_DISPLAY;
+	logfile << "Execute display command";
+	return storage->DayView();
 }
 
 //Edit Command
-
 EditCommand::EditCommand(){
 
+}
+EditCommand::EditCommand(Storage* store_, Parser* parser_){
+	storage = store_;
+	parser = parser_;
 }
 
 EditCommand::~EditCommand(){
@@ -116,28 +129,28 @@ EditCommand::~EditCommand(){
 }
 
 string EditCommand::Execute(string taskInput){
-	Smartstring listname;
-	Smartstring info;
-	Smartstring::FIELD field;
+	logfile << "Execute edit command";
 	string remainder;
 	int position;
 
 	istringstream in(taskInput);
-	in >> listname;
 	in >> position;
+	if (position <= 0) {
+		throw "Position must be positive!";
+	}
 	getline(in, remainder);
 	vector<string> newinfo = parser->IdentifyTaskFields(remainder);
-
-	string feedback = storage->Edit(position, listname.ListType(), newinfo);
-	//Edit function
-	mout << storage->ToString();
-	return feedback;
+	storage->Edit(position, newinfo);
+	return storage->ToString();
 }
 
 //Save Command
-
 SaveCommand::SaveCommand(){
 
+}
+SaveCommand::SaveCommand(Storage* store_, Parser* parser_){
+	storage = store_;
+	parser = parser_;
 }
 
 SaveCommand::~SaveCommand(){
@@ -145,14 +158,18 @@ SaveCommand::~SaveCommand(){
 }
 
 string SaveCommand::Execute(string input){
-	string feedback = storage->SaveAs(input);
-	return feedback;
+	logfile << "Execute save command";
+	storage->SaveAs(input);
+	return storage->ToString();
 }
 
 //Search Command
-
 SearchCommand::SearchCommand(){
 
+}
+SearchCommand::SearchCommand(Storage* store_, Parser* parser_){
+	storage = store_;
+	parser = parser_;
 }
 
 SearchCommand::~SearchCommand(){
@@ -160,14 +177,17 @@ SearchCommand::~SearchCommand(){
 }
 
 string SearchCommand::Execute(string taskInput){
-	mout << storage->Search(taskInput);
-	return _FEEDBACK_SEARCH;
+	logfile << "Execute search command";
+	return storage->Search(taskInput);
 }
 
 //Complete Command
-
 CompleteCommand::CompleteCommand(){
 
+}
+CompleteCommand::CompleteCommand(Storage* store_, Parser* parser_){
+	storage = store_;
+	parser = parser_;
 }
 
 CompleteCommand::~CompleteCommand(){
@@ -175,38 +195,40 @@ CompleteCommand::~CompleteCommand(){
 }
 
 string CompleteCommand::Execute(string input){
-	Smartstring listname;
+	logfile << "Execute complete command";
 	istringstream in(input);
 	int position;
-	in >> listname;
 	in >> position;
-
-	//Complete function
-	string feedback = storage->Complete(position, listname.ListType());
-	mout << storage->ToString();
-
-	return feedback;
+	storage->Complete(position);
+	return storage->ToString();
 }
 
-//Emptyslots Command
+//Free Command
+FreeCommand::FreeCommand(){
 
-EmptyslotsCommand::EmptyslotsCommand(){
+}
+FreeCommand::FreeCommand(Storage* store_, Parser* parser_){
+	storage = store_;
+	parser = parser_;
+}
+
+FreeCommand::~FreeCommand(){
 
 }
 
-EmptyslotsCommand::~EmptyslotsCommand(){
-
-}
-
-string EmptyslotsCommand::Execute(string input){
+string FreeCommand::Execute(string input){
+	logfile << "Execute free command";
 	string feedback = storage->SearchEmptySlots(input);
 	return feedback;
 }
 
 //Load Command
-
 LoadCommand::LoadCommand(){
 
+}
+LoadCommand::LoadCommand(Storage* store_, Parser* parser_){
+	storage = store_;
+	parser = parser_;
 }
 
 LoadCommand::~LoadCommand(){
@@ -214,15 +236,20 @@ LoadCommand::~LoadCommand(){
 }
 
 string LoadCommand::Execute(string input){
-	string feedback = storage->Load(input);
-	return feedback;
+	logfile << "Execute load command";
+	storage->Load(input);
+	return storage->ToString();
 }
 
 
 //Undo Command
-
 UndoCommand::UndoCommand(){
 
+}
+
+UndoCommand::UndoCommand(Storage* store_, Parser* parser_){
+	storage = store_;
+	parser = parser_;
 }
 
 UndoCommand::~UndoCommand(){
@@ -230,12 +257,212 @@ UndoCommand::~UndoCommand(){
 }
 
 string UndoCommand::Execute(string undo){
-	string feedback = storage->Undo();
-	mout << storage->ToString();
-	return feedback;
+	logfile << "Execute undo command";
+	storage->Undo();
+	return storage->ToString();
+}
+
+//Archived Command
+
+ArchivedCommand::ArchivedCommand(){
+
+}
+
+ArchivedCommand::ArchivedCommand(Storage* store_, Parser* parser_){
+	storage = store_;
+	parser = parser_;
+}
+
+ArchivedCommand::~ArchivedCommand(){
+
+}
+
+string ArchivedCommand::Execute(string input){
+	logfile << "Execute achived command";
+	return storage->GetArchive();
+}
+
+HelpCommand::HelpCommand(Storage* store_, Parser* parser_){
+	storage = store_;
+	parser = parser_;
+}
+
+HelpCommand::HelpCommand(){
+
+}
+
+string HelpCommand::Execute(string input){
+	return storage->Help();
 }
 
 	// End of segment: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\Command.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\Command.h
+	 */
+
+#pragma once
+#include <string>
+#include "Parser.h"
+#include "Storage.h"
+#include "Logger.h"  //no logging inside Command yet
+
+using namespace std;
+using namespace logging;
+
+class Command
+{
+public:
+	Command();
+	Command(Storage* store_, Parser* parser_);;
+	~Command();
+	Storage* storage;
+	Parser* parser;
+
+	virtual string Execute(string);
+
+	static const string _FEEDBACK_ERROR_INVALID_INDEX;
+	static const string _FEEDBACK_DISPLAY;
+	static const string _FEEDBACK_EDIT;
+	static const string _FEEDBACK_SEARCH;
+	static const string _FEEDBACK_UNDO;
+	static const string _FEEDBACK_INVALID_COMMAND;
+	static const string _MESSAGE_WELCOME;
+	static const string _FEEDBACK_INVALID_INPUT;
+	static const string _FEEDBACK_INVALID_INDEX;
+	static const string _FEEDBACK_INVALID_FIELD;
+};
+
+class AddCommand : public Command{
+public:
+	AddCommand();
+	AddCommand(Storage* store_, Parser* parser_);
+	~AddCommand();
+
+	string Execute(string) override;
+};
+
+class ClearCommand : public Command{
+public:
+	ClearCommand();
+	ClearCommand(Storage* store_, Parser* parser_);
+	~ClearCommand();
+
+	string Execute(string) override;
+};
+
+class DeleteCommand : public Command{
+public:
+	DeleteCommand();
+	DeleteCommand(Storage* store_, Parser* parser_);
+	~DeleteCommand();
+
+	string Execute(string) override;
+};
+
+class DisplayCommand : public Command{
+public:
+	DisplayCommand();
+	DisplayCommand(Storage* store_, Parser* parser_);
+	~DisplayCommand();
+
+	string Execute(string) override;
+};
+
+class EditCommand : public Command{
+public:
+	EditCommand();
+	EditCommand(Storage* store_, Parser* parser_);
+	~EditCommand();
+
+	string Execute(string) override;
+};
+
+class SaveCommand : public Command{
+public:
+	SaveCommand();
+	SaveCommand(Storage* store_, Parser* parser_);
+	~SaveCommand();
+
+	string Execute(string) override;
+};
+
+class SearchCommand : public Command{
+public:
+	SearchCommand();
+	SearchCommand(Storage* store_, Parser* parser_);
+	~SearchCommand();
+
+	string Execute(string) override;
+};
+
+class CompleteCommand : public Command{
+public:
+	CompleteCommand();
+	CompleteCommand(Storage* store_, Parser* parser_);
+	~CompleteCommand();
+
+	string Execute(string) override;
+};
+
+class FreeCommand : public Command{
+public:
+	FreeCommand();
+	FreeCommand(Storage* store_, Parser* parser_);
+	~FreeCommand();
+
+	string Execute(string) override;
+};
+
+class LoadCommand : public Command{
+public:
+	LoadCommand();
+	LoadCommand(Storage* store_, Parser* parser_);
+	~LoadCommand();
+
+	string Execute(string) override;
+};
+
+class UndoCommand : public Command{
+public:
+	UndoCommand();
+	UndoCommand(Storage* store_, Parser* parser_);
+	~UndoCommand();
+
+	string Execute(string) override;
+};
+
+class ArchivedCommand : public Command{
+public:
+	ArchivedCommand();
+	ArchivedCommand(Storage* store_, Parser* parser_);
+	~ArchivedCommand();
+
+	string Execute(string) override;
+};
+
+class HelpCommand : public Command{
+public:
+	HelpCommand();
+	HelpCommand(Storage* store_, Parser* parser_);
+	~HelpCommand();
+	string Execute(string) override;
+};
+
+class Invalid_cmdCommand : public Command{
+public:
+	Invalid_cmdCommand();
+	Invalid_cmdCommand(Storage* store_, Parser* parser_);
+	~Invalid_cmdCommand();
+
+	string Execute(string) override;
+};
+
+	// End of segment: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\Command.h
 
 
 
@@ -257,7 +484,7 @@ const string Logic::_FEEDBACK_EDIT = "Task edited.";
 const string Logic::_FEEDBACK_SEARCH = "Displaying search results.";
 const string Logic::_FEEDBACK_UNDO = "Undo previous command.";
 const string Logic::_FEEDBACK_INVALID_COMMAND = "Invalid command entered.";
-const string Logic::_MESSAGE_WELCOME = "Welcome to I_Schedule.";
+const string Logic::_MESSAGE_WELCOME = "Welcome. Type help to get started.";
 ostringstream Logic::fout; //floating task display stream
 ostringstream Logic::tout; //timed task display stream
 ostringstream Logic::dout; //deadline task display stream
@@ -268,11 +495,12 @@ Logic::Logic()
 	parser = new Parser();
 	storage = new Storage();
 	status << _MESSAGE_WELCOME + " " + storage->status.str();
-	string test = storage->GetFloatingList();
-	fout << storage->GetFloatingList();
-	dout << storage->GetDeadlineList();
 	tout << storage->GetTimedList();
+	dout << storage->GetDeadlineList();
+	fout << storage->GetFloatingList();
 	mout << storage->ToString();
+	storage->status.clear();
+	storage->status.str("");
 	logfile << "Logic created";
 }
 
@@ -280,10 +508,10 @@ Logic::Logic(string input){
 	parser = new Parser();
 	storage = new Storage(input);
 	status << _MESSAGE_WELCOME;
-	fout << storage->GetFloatingList();
-	dout << storage->GetDeadlineList();
+
 	tout << storage->GetTimedList();
-	mout << storage->ToString();
+	dout << storage->GetDeadlineList();
+	fout << storage->GetFloatingList();
 	logfile << "Logic created";
 }
 
@@ -291,178 +519,162 @@ Logic::~Logic()
 {
 }
 
-string Logic::Run(string input){
-	string feedback = Execute(input);
-	status << feedback;
-	fout << storage->GetFloatingList(); 
-	dout << storage->GetDeadlineList(); 
-	tout << storage->GetTimedList(); 
-	return feedback;
+
+void Logic::Run(string input){
+	Execute(input);
+	return;
 }
 
 string Logic::Execute(string input){
 	Smartstring::COMMAND cmd = parser->IdentifyCommand(input);
 	string remainder = parser->RemoveCommand(input);
-	string feedback;
-	switch (cmd){
+	Command* cmd_e = GetCommand(cmd);
+	string mainDisplay = cmd_e->Execute(remainder); 
+	tout << storage->GetTimedList();
+	dout << storage->GetDeadlineList();
+	fout << storage->GetFloatingList();
+	mout << mainDisplay;
+	status << storage->status.str();
+	storage->status.clear();
+	storage->status.str("");
+	return "";
+}
+
+Command* Logic::GetCommand(Smartstring::COMMAND command){
+	Command* cmd_o = new Command();
+	switch (command){
 		case (Smartstring::COMMAND::ADD) : {
-			feedback = Add(remainder);
+			cmd_o = new AddCommand(storage, parser);
 			break;
 		}
 		case (Smartstring::COMMAND::DELETE) : {
-			feedback = Delete(remainder);
+			cmd_o = new DeleteCommand(storage, parser);
 			break;
 		}
 		case (Smartstring::COMMAND::DISPLAY) : {
-			feedback = Display();
+			cmd_o = new DisplayCommand(storage, parser);
 			break;
 		}
 		case(Smartstring::COMMAND::EDIT) : {
-			feedback = Edit(remainder);
+			cmd_o = new EditCommand(storage, parser);
 			break;
 		}
 		case (Smartstring::COMMAND::SEARCH) : {
-			feedback = Search(remainder);
+			cmd_o = new SearchCommand(storage, parser);
 			break;
 		}
 		case (Smartstring::COMMAND::CLEAR) : {
-			feedback = Clear();
+			cmd_o = new ClearCommand(storage, parser);
 			break;
 		}
 		case (Smartstring::COMMAND::COMPLETE) : {
-			feedback = Complete(remainder);
+			cmd_o = new CompleteCommand(storage, parser);
 			break;
 		}
 		case (Smartstring::COMMAND::SAVE) : {
-			feedback = Save(remainder);
+			cmd_o = new SaveCommand(storage, parser);
 			break;
 		}
-		case (Smartstring::COMMAND::EMPTYSLOTS) : {
-			feedback = EmptySlots(remainder);
+		case (Smartstring::COMMAND::FREE) : {
+			cmd_o = new FreeCommand(storage, parser);
 			break;
 		}
 		case (Smartstring::COMMAND::UNDO) : {
-			 feedback = Undo();
-			 break;
+			cmd_o = new UndoCommand(storage, parser);
+			break;
 		}
 		case (Smartstring::COMMAND::LOAD) : {
-			feedback = Load(remainder);
+			cmd_o = new LoadCommand(storage, parser);
 			break;
 		}
-		case(Smartstring::COMMAND::INVALID_CMD) : {
-			feedback = Invalid();
+		case (Smartstring::COMMAND::ARCHIVED) : {
+			cmd_o = new ArchivedCommand(storage, parser);
 			break;
+		}
+		
+		case (Smartstring::COMMAND::HELP) : {
+			cmd_o = new HelpCommand(storage, parser);
+			break;
+		}
+		case(Smartstring::COMMAND::INVALID_CMD) : {       
+			cmd_o = new Command(storage, parser);
+			break;
+		}
+		default: {
+			logfile << "Command Bug";
+			assert(false);
 		}
 	}
-	return feedback;
+	return cmd_o;
 }
 
-string Logic::Add(string taskInput){
-	vector<string> taskinfo = parser->IdentifyTaskFields(taskInput);
-	Task* task = new Task(taskinfo);
-	string feedback = storage->Add(task);
-	mout << task->ToString();
-	return feedback;
-}
-
-string Logic::Complete(string input){
-	Smartstring listname;
-	istringstream in(input);
-	int position;
-	in >> listname;
-	in >> position;
-
-	//Complete function
-	string feedback = storage->Complete(position, listname.ListType());
-	mout << storage->ToString();
-
-	return feedback;
-}
-
-
-string Logic::Delete(string taskInput){
-	Smartstring listname;
-	istringstream in(taskInput);
-	int position;
-	in >> listname;
-	in >> position;
-	//delete from list function
-	string feedback = storage->DeleteFromList(position, listname.ListType());
-	mout << storage->ToString();
-
-	//original delete function
-	/*int position = atoi(taskInput.c_str());
-	string feedback = storage->Delete(position);*/
-	return feedback;
-}
-
-string Logic::Display(){
-	mout << storage->DayView();
-	/*mout << storage->ToString();*/
-	return _FEEDBACK_DISPLAY;
-}
-
-string Logic::Edit(string taskInput){
-
-	Smartstring listname;
-	Smartstring info;
-	Smartstring::FIELD field;
-	string remainder;
-	int position;
-
-	istringstream in(taskInput);
-	in >> listname;
-	in >> position;
-	getline(in, remainder);
-	vector<string> newinfo = parser->IdentifyTaskFields(remainder);
-	
-	string feedback = storage->Edit(position, listname.ListType(), newinfo);
-	//Edit function
-	mout << storage->ToString();
-	return feedback;
-}
-string Logic::Search(string taskInput){
-	mout << storage->Search(taskInput);
-	return _FEEDBACK_SEARCH;
-}
-
-string Logic::CloseSearch(string input){
-	mout << storage->ToString(storage->NearSearch(input));
-	return _FEEDBACK_SEARCH;
-}
-
-string Logic::Save(string input){
-	string feedback = storage->SaveAs(input);
-	return feedback;
-}
-
-string Logic::EmptySlots(string input){
-	string feedback = "empty slots";
-	mout << storage->SearchEmptySlots(input);
-	return feedback;
-}
-
-string Logic::Invalid(){
-	mout << storage->ToString();
-	return _FEEDBACK_INVALID_COMMAND;
-}
-
-string Logic::Clear(){
-	string feedback = storage->Clear();
-	return feedback;
-}
-
-string Logic::Undo(){
-	string feedback = storage->Undo();
-	mout << storage->ToString();
-	return feedback;
-}
-
-string Logic::Load(string input){
-	string feedback = storage->Load(input);
-	return feedback;
+//@auhtor A0119491B
+string Logic::QuickSearch(string input){
+	Command* cmd = GetCommand(Smartstring::SEARCH);
+	mout << cmd->Execute(input);
+	return "";
 }
 	// End of segment: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\Logic.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\Logic.h
+	 */
+
+#pragma once
+#include <string>
+#include "Parser.h"
+#include "Storage.h"
+#include "Smartstring.h"
+#include "Logger.h";
+#include "Command.h"
+
+using namespace std;
+using namespace logging;
+
+class Logic
+{
+public:
+	Logic();
+	Logic(string input);
+	Logic(string input, ostringstream deadlinestrm, ostringstream floatstrm, ostringstream timedstrm);
+	~Logic();
+	bool exit = false;
+	Parser* parser;
+	Storage* storage;
+	Command* command;
+
+	//methods
+	void Run(string input);
+	string Execute(string input);
+	Command* GetCommand(Smartstring::COMMAND command);
+	string QuickSearch(string input);
+	/*void UpdateDisplays();*/
+
+
+	//display streams
+	static ostringstream fout; //floating task display stream
+	static ostringstream tout; //timed task display stream
+	static ostringstream dout; //deadline task display stream
+	static ostringstream mout; //main display stream
+	static ostringstream status; //status bar display stream
+
+private:
+	static const string _FEEDBACK_ERROR_INVALID_INDEX;
+	static const string _FEEDBACK_DISPLAY;
+	static const string _FEEDBACK_EDIT;
+	static const string _FEEDBACK_SEARCH;
+	static const string _FEEDBACK_UNDO;
+	static const string _FEEDBACK_INVALID_COMMAND;
+	static const string _MESSAGE_WELCOME;
+
+};
+
+
+	// End of segment: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\Logic.h
 
 
 
@@ -472,19 +684,24 @@ string Logic::Load(string input){
 	 * origin: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\Storage.cpp
 	 */
 
-string Storage::Delete(int position){
-	string feedback = "";
-	try{
-		lastList = taskList;
-		feedback = Remove(position);
+void Storage::Undo(){
+	if (!lastList.empty()){
+		RestoreFromUndoVectors();
 		Rewrite();
 		Update();
-		return feedback;
+		UpdateStatus(_FEEDBACK_UNDO_COMPLETE);
 	}
-	catch (out_of_range){
-		return _FEEDBACK_DELETE_FAILURE;
+	else{
+		UpdateStatus(_FEEDBACK_NO_UNDO);
 	}
+	return;
 }
+
+
+
+//====================================================================
+//Power Search
+//====================================================================
 
 	// End of segment: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\Storage.cpp
 
@@ -493,16 +710,86 @@ string Storage::Delete(int position){
 
 
 	/**
-	 * origin: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\Task.cpp
+	 * origin: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_ScheduleLibraryTest\Libtest.cpp
 	 */
 
-bool Task::isTimed(){
-	bool timed = false;
-	if (enddate != "" && startdate != "")
-		timed = true;
-	return timed;
-}
-	// End of segment: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\Task.cpp
+		TEST_METHOD(LOGIC_BASIC_ADDITION_DELETION_CLEAR){
+			Logic* logic = new Logic();
+			logic->mout.clear();
+			logic->mout.str("");
+			logic->storage->Reset();
+			string file = logic->storage->GetFileName();
+
+			// test the output for adding one task
+			string myinput01 = "add homework from: 07/04/2015 till: 08/04/2015 p: 1";
+			string expected01 = "Description: homework\nStart: 07/04/2015\nEnd: 08/04/2015\nPriority: 1\nStatus: Incomplete";
+			logic->Run(myinput01);
+			string output01 = logic->mout.str();
+			Assert::AreEqual(expected01, output01);
+
+			// test the output for adding another task
+			string myinput02 = "add exam from: 23/04/2015 till: 05/05/2015 p: 1";
+			string expected02 = string("Description: homework\nStart: 07/04/2015\nEnd: 08/04/2015\nPriority: 1\nStatus: Incomplete")
+				+ "Description: exam\nStart: 23/04/2015\nEnd: 05/05/2015\nPriority: 1\nStatus: Incomplete";
+			logic->Run(myinput02);
+			string output02 = logic->mout.str();
+			Assert::AreEqual(expected02, output02);
+
+			// test delete
+			string myinput03 = "delete 1";
+			string expected03 = string("Description: homework\nStart: 07/04/2015\nEnd: 08/04/2015\nPriority: 1\nStatus: Incomplete")
+				+ "Description: exam\nStart: 23/04/2015\nEnd: 05/05/2015\nPriority: 1\nStatus: Incomplete"
+				+ "\\b 1: \\b0 [23 April][5 May] exam";
+			logic->Run(myinput03);
+			string output03 = logic->mout.str();
+			Assert::AreEqual(expected03, output03);
+
+			// test clear
+			string myinput04 = "clear";
+			string expected04 = string("Description: homework\nStart: 07/04/2015\nEnd: 08/04/2015\nPriority: 1\nStatus: Incomplete")
+				+ "Description: exam\nStart: 23/04/2015\nEnd: 05/05/2015\nPriority: 1\nStatus: Incomplete"
+				+ "\\b 1: \\b0 [23 April][5 May] exam";
+			logic->Run(myinput04);
+			string output04 = logic->mout.str();
+			Assert::AreEqual(expected04, output04);
+		}
+
+	// End of segment: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_ScheduleLibraryTest\Libtest.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_ScheduleLibraryTest\Libtest.cpp
+	 */
+
+		TEST_METHOD(LOGIC_EDITION){
+			Logic* logic = new Logic();
+			logic->mout.clear();
+			logic->mout.str("");
+			logic->storage->Reset();
+			string file = logic->storage->GetFileName();
+
+			// test the output for adding one task
+			string myinput01 = "add homework";
+			string expected01 = "Description: homework\nStart: \nEnd: \nPriority: \nStatus: Incomplete";
+			logic->Run(myinput01);
+			string output01 = logic->mout.str();
+			Assert::AreEqual(expected01, output01);
+
+			// test the output for editing one task
+			string myinput02 = "edit 1: finish CS2103T";
+			string expected02 = string("Description: homework\nStart: \nEnd: \nPriority: \nStatus: Incomplete")
+				+ "\\b 1: \\b0 : finish CS2103T";
+			logic->Run(myinput02);
+			string output02 = logic->mout.str();
+			Assert::AreEqual(expected02, output02);
+
+		}
+
+		
+	// End of segment: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_ScheduleLibraryTest\Libtest.cpp
 
 
 
