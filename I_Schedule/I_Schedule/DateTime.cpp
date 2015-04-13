@@ -61,21 +61,20 @@ vector<string> DateTime::timeType;
 
 //@author A0094213M
 DateTime::DateTime(){
-	Initialize();
 	isDateSet = false;
 	isTimeSet = false;
-	
+	Initialize();
 }
 
+//@author A0094213M
 DateTime::DateTime(string input){
 	unformattedDateTime = input;
-	Initialize();
-	SetDefaults();
-	SetStandards();
 	isValidFormat = true;
 	isDateSet = false;
 	isTimeSet = false;
-
+	Initialize();
+	SetDefaults();
+	SetStandards();
 }
 
 
@@ -90,13 +89,13 @@ string DateTime::Standardized(){
 string DateTime::GetInfo(){
 	ostringstream info;
 
-	info << "Date: " << setw(2) << setfill('0') 
+	info << "Date: " << setw(2) << setfill('0')
 		<< _day << "/" << setw(2) << setfill('0')
 		<< _month << "/" << setw(2) << setfill('0')
 		<< _year << endl;
 
-	info << "Time: " << setw(2) << setfill('0') 
-		<< _hours << ":" << setw(2) << setfill('0') 
+	info << "Time: " << setw(2) << setfill('0')
+		<< _hours << ":" << setw(2) << setfill('0')
 		<< _mins;
 
 	return info.str();
@@ -113,7 +112,7 @@ string DateTime::GetDate(){
 	else{
 		return "";
 	}
-	
+
 }
 
 string DateTime::GetTime(){
@@ -128,9 +127,17 @@ string DateTime::GetTime(){
 	}
 }
 
+//string DateTime::GetTomorrowDate(DateTime* dt){
+//	struct tm * tomorrow;
+//	tomorrow->tm_hour = dt->_hours;
+//	tomorrow->tm_mday = dt->_day;
+//	tomorrow->tm_mon = dt->_month - 1;
+//	tomorrow->tm_min = dt->_mins;
+//	tomorrow->tm_year = dt->_year - 1900;
+//}
+
 bool DateTime::IsEarlierThan(DateTime dt){
 	bool isEarlier = false;
-
 	if (_year < dt._year){
 		isEarlier = true;
 	}
@@ -183,40 +190,41 @@ void DateTime::SetStandards(){
 	}
 	else{
 		switch (size){
-			case 0:{
-				isValidFormat = false;
-				break;
-			}
-			case 1:{
-				//this case assumes only either date or time has been entered
-				formattedDateTime = StandardizeSingle(tokens[0]);
-				break;
-			}
+		case 0:{
+			isValidFormat = false;
+			break;
+		}
+		case 1:{
+			//this case assumes only either date or time has been entered
+			formattedDateTime = StandardizeSingle(tokens[0]);
+			break;
+		}
 
-			case 3:{
-				formattedDateTime = StandardizeTriple(tokens);
-				break;
-			}
+		case 3:{
+			formattedDateTime = StandardizeTriple(tokens);
+			break;
+		}
 
-			default: {
-				isValidFormat = false;
-				break;
-			}
+		default: {
+			isValidFormat = false;
+			break;
+		}
 		}
 	}
 }
 
 string DateTime::StandardizeSingle(string input){
 	string output;
-	if (IsValidDayDate(input)){
-		output = StandardizeDayDate(input);
+	string single = input;
+	if (IsValidDayDate(single)){
+		output = StandardizeDayDate(single);
 	}
 	else{
-		if (IsValidTime(input)){
-			output = StandardizeTime(input);
+		if (IsValidTime(single)){
+			output = StandardizeTime(single);
 		}
 		else{
-			output = input;
+			output = single;
 			isValidFormat = false;
 		}
 	}
@@ -249,7 +257,7 @@ string DateTime::StandardizeTriple(vector<string> input){
 
 	}
 	else{
-		if (input[1] == "on" || input[1] == "by"){
+		if (input[1] == "on"){
 			//on implex time prefix and day suffix. i.e. "5pm on friday" and not "friday on 5pm"
 			if (IsValidDayDate(input[2])){
 				date = StandardizeDayDate(input[2]);
@@ -266,11 +274,8 @@ string DateTime::StandardizeTriple(vector<string> input){
 				isValidFormat = false;
 			}
 		}
-
-		output = time + " on " + date;
-
 	}
-
+	output = time + " on " + date;
 	return output;
 }
 
@@ -326,7 +331,7 @@ string DateTime::StandardizeDate(string input){
 
 string DateTime::StandardizeDay(string input){
 	string output;
-	
+
 	//when input is a day
 	time_t now = time(0);
 	int offset;
@@ -383,7 +388,7 @@ string DateTime::StandardizeTime(string input){
 		hour = stoi(hour_s.c_str());
 		//getting mins
 		int length = result.length();
-		string min_s = result.substr(found+1, length - 1);
+		string min_s = result.substr(found + 1, length - 1);
 		mins = stoi(min_s.c_str());
 	}
 	else{
@@ -518,7 +523,7 @@ bool DateTime::IsValidTime(string input){
 			isValid = true;
 		}
 	}
-	
+
 	return isValid;
 }
 
@@ -555,58 +560,58 @@ DateTime::DAY DateTime::GetDayEnum(string input){
 
 string DateTime::GetMonthName(int input){
 	switch (input){
-		case 1:{
-			return _MONTH_JANUARY;
-			break;
-		}
-		case 2:{
-			return _MONTH_FEBRUARY;
-			break;
-		}
-		case 3:{
-			return _MONTH_MARCH;
-			break;
-		}
-		case 4:{
-			return _MONTH_APRIL;
-			break;
-		}
-		case 5:{
-			return _MONTH_MAY;
-			break;
-		}
-		case 6:{
-			return _MONTH_JUNE;
-			break;
-		}
-		case 7:{
-			return _MONTH_JULY;
-			break;
-		}
-		case 8:{
-			return _MONTH_AUGUST;
-			break;
-		}
-		case 9:{
-			return _MONTH_SEPTEMBER;
-			break;
-		}
-		case 10:{
-			return _MONTH_OCTOBER;
-			break;
-		}
-		case 11:{
-			return _MONTH_NOVEMBER;
-			break;
-		}
-		case 12:{
-			return _MONTH_DECEMBER;
-			break;
-		}
+	case 1:{
+		return _MONTH_JANUARY;
+		break;
+	}
+	case 2:{
+		return _MONTH_FEBRUARY;
+		break;
+	}
+	case 3:{
+		return _MONTH_MARCH;
+		break;
+	}
+	case 4:{
+		return _MONTH_APRIL;
+		break;
+	}
+	case 5:{
+		return _MONTH_MAY;
+		break;
+	}
+	case 6:{
+		return _MONTH_JUNE;
+		break;
+	}
+	case 7:{
+		return _MONTH_JULY;
+		break;
+	}
+	case 8:{
+		return _MONTH_AUGUST;
+		break;
+	}
+	case 9:{
+		return _MONTH_SEPTEMBER;
+		break;
+	}
+	case 10:{
+		return _MONTH_OCTOBER;
+		break;
+	}
+	case 11:{
+		return _MONTH_NOVEMBER;
+		break;
+	}
+	case 12:{
+		return _MONTH_DECEMBER;
+		break;
+	}
 
-		default:{
-			return _MONTH_JANUARY;
-		}
+	default:{
+		return _MONTH_JANUARY;
+	}
 
 
 	}
@@ -663,30 +668,30 @@ DateTime::DAY DateTime::GetToday(){
 	localtime_s(&timeinfo, &now);
 	int day = timeinfo.tm_wday;
 	switch (day){
-		case DAY::SUNDAY:{
-			return DAY::SUNDAY;
-		}
-		case DAY::MONDAY:{
-			return DAY::MONDAY;
-		}
-		case DAY::TUESDAY:{
-			return DAY::TUESDAY;
-		}
-		case DAY::WEDNESDAY:{
-			return DAY::WEDNESDAY;
-		}
-		case DAY::THURSDAY:{
-			return DAY::THURSDAY;
-		}
-		case DAY::FRIDAY:{
-			return DAY::FRIDAY;
-		}
-		case DAY::SATURDAY:{
-			return DAY::SATURDAY;
-		}
-		default:{
-			return DAY::INVALID;
-		}
+	case DAY::SUNDAY:{
+		return DAY::SUNDAY;
+	}
+	case DAY::MONDAY:{
+		return DAY::MONDAY;
+	}
+	case DAY::TUESDAY:{
+		return DAY::TUESDAY;
+	}
+	case DAY::WEDNESDAY:{
+		return DAY::WEDNESDAY;
+	}
+	case DAY::THURSDAY:{
+		return DAY::THURSDAY;
+	}
+	case DAY::FRIDAY:{
+		return DAY::FRIDAY;
+	}
+	case DAY::SATURDAY:{
+		return DAY::SATURDAY;
+	}
+	default:{
+		return DAY::INVALID;
+	}
 	}
 	assert(false && "in DateTime::GetToday function");
 }
@@ -697,30 +702,30 @@ DateTime::DAY DateTime::GetTomorrow(){
 	localtime_s(&timeinfo, &now);
 	int day = timeinfo.tm_wday;
 	switch (day){
-		case DAY::SUNDAY:{
-			return DAY::MONDAY;
-		}
-		case DAY::MONDAY:{
-			return DAY::TUESDAY;
-		}
-		case DAY::TUESDAY:{
-			return DAY::WEDNESDAY;
-		}
-		case DAY::WEDNESDAY:{
-			return DAY::THURSDAY;
-		}
-		case DAY::THURSDAY:{
-			return DAY::FRIDAY;
-		}
-		case DAY::FRIDAY:{
-			return DAY::SATURDAY;
-		}
-		case DAY::SATURDAY:{
-			return DAY::SUNDAY;
-		}
-		default:{
-			return DAY::INVALID;
-		}
+	case DAY::SUNDAY:{
+		return DAY::MONDAY;
+	}
+	case DAY::MONDAY:{
+		return DAY::TUESDAY;
+	}
+	case DAY::TUESDAY:{
+		return DAY::WEDNESDAY;
+	}
+	case DAY::WEDNESDAY:{
+		return DAY::THURSDAY;
+	}
+	case DAY::THURSDAY:{
+		return DAY::FRIDAY;
+	}
+	case DAY::FRIDAY:{
+		return DAY::SATURDAY;
+	}
+	case DAY::SATURDAY:{
+		return DAY::SUNDAY;
+	}
+	default:{
+		return DAY::INVALID;
+	}
 	}
 	assert(false && "in DateTime::GetTomorrow function");
 }
