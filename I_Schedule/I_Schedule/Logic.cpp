@@ -126,6 +126,7 @@ Command* Logic::GetCommand(Smartstring::COMMAND command){
 	return cmd_o;
 }
 
+//@auhtor A0119491B
 string Logic::QuickSearch(string input){
 	Command* cmd = GetCommand(Smartstring::SEARCH);
 	mout << cmd->Execute(input);

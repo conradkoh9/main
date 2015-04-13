@@ -37,6 +37,8 @@ void UI_Controller::Run(string input){
 	ClearStreams();
 	return;
 }
+
+//@author A0119491B
 void UI_Controller::QuickSearch(string input){
 	if (!input.empty()){
 		logic->QuickSearch(input);
