@@ -706,8 +706,8 @@ void Storage::SortListsByTime(vector <Task*> &V){
 				datetime2 = dt2;
 			}
 			else if (dt1 == "" && dt2 == ""){
-				dt1 = V[i]->GetEndDate();
-				dt2 = V[j]->GetEndDate();
+				dt1 = V[i]->GetEndDateTime();
+				dt2 = V[j]->GetEndDateTime();
 				datetime1 = dt1;
 				datetime2 = dt2;
 			}
