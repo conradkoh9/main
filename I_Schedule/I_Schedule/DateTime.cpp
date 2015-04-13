@@ -102,17 +102,38 @@ string DateTime::GetInfo(){
 }
 
 string DateTime::GetDate(){
-	if (isDateSet){
-		ostringstream date;
-		int db = _month;
-		string month = GetMonthName(_month);
-		date << _day << " " << month;
-		return date.str();
-	}
-	else{
-		return "";
-	}
+	//version 1: this version is in error because if the date is not set it will return empty
+	//if (isDateSet){
+	//	ostringstream date;
+	//	int db = _month;
+	//	string month = GetMonthName(_month);
+	//	date << _day << " " << month;
+	//	return date.str();
+	//}
+	//else{
+	//	return "";
+	//}
 
+	//version 2: this version is in error because if the date is returned in this manner, 17 April 2015 is the same as 17 April 2016
+	//created new function for this
+	//ostringstream date;
+	//int db = _month;
+	//string month = GetMonthName(_month);
+	//date << _day << " " << month;
+	//return date.str();
+
+	//version 3
+	ostringstream date;
+	date << _day << "/" << _month << "/" << _year;
+	return date.str();
+}
+
+string DateTime::GetDateWithoutYear(){
+	ostringstream date;
+	int db = _month;
+	string month = GetMonthName(_month);
+	date << _day << " " << month;
+	return date.str();
 }
 
 string DateTime::GetTime(){

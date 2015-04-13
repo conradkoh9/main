@@ -59,15 +59,24 @@ Task::Task(vector<string> input){
 	}
 	//end set default enddate if timed task
 
-	startdate = standardStartdt->GetDate();
+	startdate = standardStartdt->GetDateWithoutYear();
 	starttime = standardStartdt->GetTime();
-	enddate = standardEnddt->GetDate();
+	enddate = standardEnddt->GetDateWithoutYear();
 	endtime = standardEnddt->GetTime();
 
 	if (status == ""){
 		status = _STATUS_INCOMPLETE;
 	}
 
+	//this takes care of the cases here the user inputs start at 5pm and end at 6pm but doesn't specify the date
+	if (standardStartdt->isTimeSet && !standardStartdt->isDateSet){
+		startdate = standardStartdt->GetDateWithoutYear();
+		startDateTime = standardStartdt->GetTime() + " on " + standardStartdt->GetDate();
+	}
+	if (standardEnddt->isTimeSet && !standardEnddt->isDateSet){
+		enddate = startdate;
+		endDateTime = standardEnddt->GetTime() + " on " + standardStartdt->GetDate();
+	}
 }
 
 Task::Task(Task* task){
@@ -138,7 +147,7 @@ string Task::SetStartDateTime(string dt){
 	startDateTime = dt;
 	standardStartdt = new DateTime(startDateTime);
 	startDateTime = standardStartdt->Standardized();
-	startdate = standardStartdt->GetDate();
+	startdate = standardStartdt->GetDateWithoutYear();
 	starttime = standardStartdt->GetTime();
 	return _FEEDBACK_STARTDATE_SET;
 }
@@ -148,7 +157,7 @@ string Task::SetEndDateTime(string dt){
 	endDateTime = dt;
 	standardEnddt = new DateTime(endDateTime);
 	endDateTime = standardEnddt->Standardized();
-	enddate = standardEnddt->GetDate();
+	enddate = standardEnddt->GetDateWithoutYear();
 	endtime = standardEnddt->GetTime();
 	return _FEEDBACK_ENDDATE_SET;
 }

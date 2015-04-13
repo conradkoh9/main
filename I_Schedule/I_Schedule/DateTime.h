@@ -94,6 +94,7 @@ public:
 	string Standardized();
 	string GetInfo();
 	string GetDate();
+	string GetDateWithoutYear();
 	string GetTime();
 	int GetSeconds();
 	bool IsEarlierThan(DateTime dt);
