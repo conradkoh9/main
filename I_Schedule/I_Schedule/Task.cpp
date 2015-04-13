@@ -291,6 +291,57 @@ string Task::ToFloatingString(){
 string Task::ToTimedString(){
 	ostringstream out;
 
+	ostringstream startstrm;
+	ostringstream endstrm;
+
+	// generate startdate block
+	startstrm << "[";
+	if (standardStartdt->isValidFormat){
+
+		if (standardStartdt->isTimeSet){
+			startstrm << startdate << "," << starttime;
+		}
+		else{
+			startstrm << startdate;
+		}
+
+	}
+	else{
+		startstrm << _rtfcolorredprefix << standardStartdt->Standardized() << _rtfcolorredsuffix;
+	}
+	startstrm << "]";
+	//generate enddate block
+	endstrm << "[";
+	if (standardEnddt->isValidFormat && standardStartdt->IsEarlierThan(*standardEnddt)){
+
+		if (standardEnddt->isTimeSet){
+			endstrm << enddate << "," << endtime;
+		}
+		else{
+			endstrm << enddate;
+		}
+
+	}
+	else{
+		//this section covers all the cases in the else block
+		if (standardStartdt->isValidFormat){
+			if (standardStartdt->isTimeSet){
+				endstrm << _rtfcolorredprefix << startdate << "," << starttime << _rtfcolorredsuffix;
+			}
+			else{
+				endstrm << _rtfcolorredprefix << startdate << _rtfcolorredsuffix;
+			}
+			
+		}
+		else{
+			endstrm << _rtfcolorredprefix << standardStartdt->Standardized() << _rtfcolorredsuffix;
+		}
+	}
+	endstrm << "] ";
+	//generate description
+
+	out << startstrm.str() << endstrm.str() << description;
+/*
 	if (standardEnddt->IsEarlierThan(*standardStartdt)){
 
 		out << "[" << startdate;
@@ -321,7 +372,7 @@ string Task::ToTimedString(){
 		out << description;
 
 	}
-
+*/
 	return out.str();
 }
 
