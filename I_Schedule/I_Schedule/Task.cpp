@@ -339,7 +339,7 @@ string Task::ToTimedString(){
 			
 		}
 		else{
-			endstrm << _rtfcolorredprefix << standardStartdt->Standardized() << _rtfcolorredsuffix;
+			endstrm << _rtfcolorredprefix << standardEnddt->Standardized() << _rtfcolorredsuffix;
 		}
 	}
 	endstrm << "] ";
