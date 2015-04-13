@@ -461,7 +461,7 @@ bool Task::isContainDescription(string input){
 bool Task::isNearMatch(string input, string des){
 	bool match = false;
 	size_t difference;
-	size_t tolarent_diff = 3;
+	size_t tolarent_diff = 2;
 
 	for (int i = 0; i < numberOfFields; ++i){
 		if (!match){
