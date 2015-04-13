@@ -521,6 +521,20 @@ namespace I_ScheduleLibraryTest{
 			dt1 = DateTime(date1);
 			dt2 = DateTime(date2);
 			Assert::IsTrue(dt1.IsEarlierThan(dt2));
+
+			//testing case
+			//@author A0094213M
+			date1 = "07/07/2015";
+			date2 = "06/08/2014";
+			dt1 = DateTime(date1);
+			dt2 = DateTime(date2);
+			Assert::IsFalse(dt1.IsEarlierThan(dt2));
+			//testing case
+			date1 = "01/09/2014 at 6pm";
+			date2 = "06/08/2014 at 7pm";
+			dt1 = DateTime(date1);
+			dt2 = DateTime(date2);
+			Assert::IsFalse(dt1.IsEarlierThan(dt2));
 		}
 
 		TEST_METHOD(DATETIME_ISVALIDFORMAT){

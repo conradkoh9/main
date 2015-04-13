@@ -138,22 +138,23 @@ string DateTime::GetTime(){
 
 bool DateTime::IsEarlierThan(DateTime dt){
 	bool isEarlier = false;
+
 	if (_year < dt._year){
 		isEarlier = true;
 	}
-	else{
+	else if (_year == dt._year){
 		if (_month < dt._month){
 			isEarlier = true;
 		}
-		else{
+		else if (_month == dt._month){
 			if (_day < dt._day){
 				isEarlier = true;
 			}
-			else{
+			else if (_day == dt._day){
 				if (_hours < dt._hours){
 					isEarlier = true;
 				}
-				else{
+				else if (_hours == dt._hours){
 					if (_mins < dt._mins){
 						isEarlier = true;
 					}
@@ -276,6 +277,7 @@ string DateTime::StandardizeTriple(vector<string> input){
 			}
 		}
 	}
+
 	output = time + " on " + date;
 	return output;
 }
