@@ -314,6 +314,7 @@ string Task::ToTimedString(){
 		startstrm << _rtfcolorredprefix << standardStartdt->Standardized() << _rtfcolorredsuffix;
 	}
 	startstrm << "]";
+
 	//generate enddate block
 	endstrm << "[";
 	if (standardEnddt->isValidFormat && standardStartdt->IsEarlierThan(*standardEnddt)){
@@ -342,41 +343,10 @@ string Task::ToTimedString(){
 		}
 	}
 	endstrm << "] ";
+
 	//generate description
-
 	out << startstrm.str() << endstrm.str() << description;
-/*
-	if (standardEnddt->IsEarlierThan(*standardStartdt)){
 
-		out << "[" << startdate;
-		if (standardStartdt->isTimeSet){
-			out << "," << starttime;
-		}
-		out << "]";
-		out << "[" << _rtfcolorredprefix << enddate << _rtfcolorredsuffix;
-		if (standardEnddt->isTimeSet){
-			out << "," << _rtfcolorredprefix << endtime << _rtfcolorredsuffix;
-		}
-		out << "] ";
-		out << description;
-
-	}
-	else{
-
-		out << "[" << startdate;
-		if (standardStartdt->isTimeSet){
-			out << "," << starttime;
-		}
-		out << "]";
-		out << "[" << enddate;
-		if (standardEnddt->isTimeSet){
-			out << "," << endtime;
-		}
-		out << "] ";
-		out << description;
-
-	}
-*/
 	return out.str();
 }
 
