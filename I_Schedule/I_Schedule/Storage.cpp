@@ -613,6 +613,7 @@ void Storage::UpdateUndoVectors(){
 	return;
 }
 
+//@author A0099303A
 void Storage::RestoreFromUndoVectors(){
 	taskList = lastList;
 	archiveList = lastArchiveList;
@@ -798,7 +799,7 @@ string Storage::Erase(Task* taskptr){
 //====================================================================
 //Edit methods
 //====================================================================
-
+//@author A0099303A
 Task* Storage::EditToNewTask(Task task, vector<string> newinfo){
 	Task* newTask = new Task();
 	*newTask = task;
@@ -847,6 +848,7 @@ string Storage::WriteToFile(){
 		break;
 	}
 	default : {
+		UpdateStatus(_FEEDBACK_INVALID_FILE_FORMAT);
 		return _FEEDBACK_INVALID_FILE_FORMAT;
 		break;
 	}
@@ -1052,8 +1054,10 @@ string Storage::LoadTXTContent(){
 	}
 
 	catch (out_of_range){
+		logfile << _FEEDBACK_LOAD_FAILURE;
 		return _FEEDBACK_LOAD_FAILURE;
 	}
+	logfile << _FEEDBACK_LOAD_SUCCESS;
 	return _FEEDBACK_LOAD_SUCCESS;
 }
 
@@ -1113,8 +1117,10 @@ string Storage::LoadTXTArchiveContent(){
 	}
 
 	catch (out_of_range){
+		logfile << _FEEDBACK_LOAD_FAILURE;
 		return _FEEDBACK_LOAD_FAILURE;
 	}
+	logfile << _FEEDBACK_LOAD_SUCCESS;
 	return _FEEDBACK_LOAD_SUCCESS;
 }
 

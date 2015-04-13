@@ -226,6 +226,7 @@ private:
 	//Indentification of list methods
 	Smartstring::LIST IdentifyListFromIndex(int index);
 
+	//@author A0099303A
 	//exceptions
 	class InvalidIndex : public exception{
 	} invalid_index;
