@@ -297,21 +297,74 @@ namespace I_ScheduleLibraryTest{
 			
 		}
 
-		//@author A0099303A
-		TEST_METHOD(LOGIC){
+		//@author A0119513L
+		TEST_METHOD(LOGIC_BASIC_ADDITION_DELETION_CLEAR){
 			Logic* logic = new Logic();
 			logic->mout.clear();
 			logic->mout.str("");
 			logic->storage->Reset();
 			string file = logic->storage->GetFileName();
-			string myinput = "add homework from: 07/04/2015 till: 08/04/2015 p: 1";
-			string expected = "Description: homework\nStart: 07/04/2015\nEnd: 08/04/2015\nPriority: 1\nStatus: Incomplete";
-			logic->Run(myinput);
-			string output = logic->mout.str();
 
-			Assert::AreEqual(expected, output);
+			// test the output for adding one task
+			string myinput01 = "add homework from: 07/04/2015 till: 08/04/2015 p: 1";
+			string expected01 = "Description: homework\nStart: 07/04/2015\nEnd: 08/04/2015\nPriority: 1\nStatus: Incomplete";
+			logic->Run(myinput01);
+			string output01 = logic->mout.str();
+			Assert::AreEqual(expected01, output01);
+
+			// test the output for adding another task
+			string myinput02 = "add exam from: 23/04/2015 till: 05/05/2015 p: 1";
+			string expected02 = string("Description: homework\nStart: 07/04/2015\nEnd: 08/04/2015\nPriority: 1\nStatus: Incomplete")
+				+ "Description: exam\nStart: 23/04/2015\nEnd: 05/05/2015\nPriority: 1\nStatus: Incomplete";
+			logic->Run(myinput02);
+			string output02 = logic->mout.str();
+			Assert::AreEqual(expected02, output02);
+
+			// test delete
+			string myinput03 = "delete 1";
+			string expected03 = string("Description: homework\nStart: 07/04/2015\nEnd: 08/04/2015\nPriority: 1\nStatus: Incomplete")
+				+ "Description: exam\nStart: 23/04/2015\nEnd: 05/05/2015\nPriority: 1\nStatus: Incomplete"
+				+ "\\b 1: \\b0 [23 April][5 May] exam";
+			logic->Run(myinput03);
+			string output03 = logic->mout.str();
+			Assert::AreEqual(expected03, output03);
+
+			// test clear
+			string myinput04 = "clear";
+			string expected04 = string("Description: homework\nStart: 07/04/2015\nEnd: 08/04/2015\nPriority: 1\nStatus: Incomplete")
+				+ "Description: exam\nStart: 23/04/2015\nEnd: 05/05/2015\nPriority: 1\nStatus: Incomplete"
+				+ "\\b 1: \\b0 [23 April][5 May] exam";
+			logic->Run(myinput04);
+			string output04 = logic->mout.str();
+			Assert::AreEqual(expected04, output04);
 		}
 
+		//@author A0119513L
+		TEST_METHOD(LOGIC_EDITION){
+			Logic* logic = new Logic();
+			logic->mout.clear();
+			logic->mout.str("");
+			logic->storage->Reset();
+			string file = logic->storage->GetFileName();
+
+			// test the output for adding one task
+			string myinput01 = "add homework";
+			string expected01 = "Description: homework\nStart: \nEnd: \nPriority: \nStatus: Incomplete";
+			logic->Run(myinput01);
+			string output01 = logic->mout.str();
+			Assert::AreEqual(expected01, output01);
+
+			// test the output for editing one task
+			string myinput02 = "edit 1: finish CS2103T";
+			string expected02 = string("Description: homework\nStart: \nEnd: \nPriority: \nStatus: Incomplete")
+				+ "\\b 1: \\b0 : finish CS2103T";
+			logic->Run(myinput02);
+			string output02 = logic->mout.str();
+			Assert::AreEqual(expected02, output02);
+
+		}
+
+		
 		//@author A0099303A
 		TEST_METHOD(SMARTSTRING_TOKENIZE){
 			//testing the partition inpult length > 0
