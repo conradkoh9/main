@@ -1,7 +1,16 @@
 //@author A0094213M
 #include "Smartstring.h"
 #include <iostream>
+//note: static fields always need to be redeclared in cpp file
 
+//adding commands or keywords here
+//IMPORTANT: PLEASE ADD COMMANDS IN ALPHABETICAL ORDER AND FOLLOW THE ORDERING IN ALL FILES
+//1. add a static string in header
+//2. define command or keyword in the list of const strings
+//3. push the string into commands and keywords vectors respectively in Initialize() function
+//4. change Command and Field functions for commands and keywords respectively
+//5. check the enum within smartstring to check if it matches the cases
+//6. add to the current test cases in Libtest
 
 const string Smartstring::COMMAND_ARCHIVED = "archived";
 const string Smartstring::COMMAND_ADD = "add";
@@ -15,6 +24,7 @@ const string Smartstring::COMMAND_LOAD = "load";
 const string Smartstring::COMMAND_UNDO = "undo";
 const string Smartstring::COMMAND_SAVE = "save";
 const string Smartstring::COMMAND_SEARCH = "search";
+const string Smartstring::COMMAND_HELP = "help";
 
 const string Smartstring::KEYWORD_ENDDATE_1 = "date:";
 const string Smartstring::KEYWORD_ENDDATE_2 = "by:";
@@ -75,7 +85,6 @@ Smartstring::~Smartstring()
 {
 }
 
-//this method identifies the type of command user put in 
 Smartstring::COMMAND Smartstring::Command(){
 	if (information == COMMAND_ARCHIVED){
 		return Smartstring::COMMAND::ARCHIVED;
@@ -124,11 +133,14 @@ Smartstring::COMMAND Smartstring::Command(){
 		return Smartstring::COMMAND::SAVE;
 	}
 
+	if (information == COMMAND_HELP){
+		return Smartstring::COMMAND::HELP;
+	}
+
 	assert(!IsCommand()); //takes care of the case when we add cases to field but did not update static list commands[];
 	return Smartstring::COMMAND::INVALID_CMD;
 }
 
-//this method identifies the keywords that help to recoginize date and time
 Smartstring::FIELD Smartstring::Field(){
 	if (information == KEYWORD_STARTDATE_1 || information == KEYWORD_STARTDATE_2
 		|| information == KEYWORD_STARTDATE_3 || information == KEYWORD_STARTDATE_4
@@ -156,7 +168,7 @@ Smartstring::FIELD Smartstring::Field(){
 		return Smartstring::FIELD::DESCRIPTION;
 	}
 
-	assert(!IsKeyword());
+	assert(!IsKeyword()); //takes care of the case when we add cases to field but did not update static list keywords[];
 	return Smartstring::FIELD::INVALID_FLD;
 }
 
@@ -174,6 +186,7 @@ void Smartstring::Initialize(){
 		commands.push_back(COMMAND_UNDO);
 		commands.push_back(COMMAND_SAVE);
 		commands.push_back(COMMAND_SEARCH);
+		commands.push_back(COMMAND_HELP);
 
 
 		keywords.push_back(KEYWORD_ENDDATE_1);

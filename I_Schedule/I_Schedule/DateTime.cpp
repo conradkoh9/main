@@ -81,273 +81,6 @@ DateTime::DateTime(string input){
 DateTime::~DateTime(){
 }
 
-
-void DateTime::SetDefaultDateTime(){
-	time_t current = time(0);
-	struct tm timeinfo;
-	localtime_s(&timeinfo, &current);
-	_day = timeinfo.tm_mday;
-	_month = timeinfo.tm_mon + 1;
-	_year = timeinfo.tm_year + 1900;
-	_hours = 0;
-	_mins = 0;
-}
-
-void DateTime::SetStandards(){
-	formattedDateTime = unformattedDateTime;
-	string dbg = unformattedDateTime;
-	string date;
-	string time;
-	Smartstring input_s(unformattedDateTime);
-	vector<string> tokens = input_s.Tokenize(" ");
-	int size = tokens.size();
-
-	try{
-		if (size > 3){
-			isValidFormat = false;
-		}
-		else{
-			switch (size){
-			case 0:{
-				isValidFormat = false;
-				break;
-			}
-			case 1:{
-				//this case assumes only either date or time has been entered
-				formattedDateTime = StandardizeSingle(tokens[0]);
-				break;
-			}
-
-			case 3:{
-				formattedDateTime = StandardizeTriple(tokens);
-				break;
-			}
-
-			default: {
-				isValidFormat = false;
-				break;
-			}
-			}
-		}
-	}
-	catch (out_of_range){
-		cout << "exception occurs: size out of range" << endl;
-
-	}
-}
-
-string DateTime::StandardizeSingle(string input){
-	string standard;
-	string single = input;
-
-	assert(single != "");
-
-	if (IsValidDayDate(single)){
-		standard = StandardizeDayDate(single);
-	}
-	else{
-		if (IsValidTime(single)){
-			standard = StandardizeTime(single);
-		}
-		else{
-			standard = single;
-			isValidFormat = false;
-		}
-	}
-	return standard;
-}
-
-string DateTime::StandardizeTriple(vector<string> input){
-	string standard;
-	string date;
-	string time;
-
-	if (input[1] == "at"){
-		//assumption: date before "at" and time after "at"  for example: friday at 5pm
-		assert(IsValidTime(input[2]));
-
-		if (IsValidDayDate(input[0])){
-			date = StandardizeDayDate(input[0]);
-
-		}
-		else{
-			date = input[0];
-			isValidFormat = false;
-		}
-
-		if (IsValidTime(input[2])){
-			time = StandardizeTime(input[2]);
-		}
-		else{
-			time = input[2];
-			isValidFormat = false;
-		}
-
-	}
-	else{
-		if (input[1] == "on" || input[1] == "by"){
-
-			if (IsValidDayDate(input[2])){
-				date = StandardizeDayDate(input[2]);
-			}
-			else{
-				date = input[2];
-				isValidFormat = false;
-			}
-			if (IsValidTime(input[0])){
-				time = StandardizeTime(input[0]);
-			}
-			else{
-				time = input[0];
-				isValidFormat = false;
-			}
-		}
-	}
-
-	standard = time + " on " + date;
-	return standard;
-}
-
-
-string DateTime::StandardizeDayDate(string input){
-	string standard = input;
-
-	if (IsValidDay(input)){
-		standard = StandardizeDay(input);
-	}
-	if (IsValidDate(input)){
-		standard = StandardizeDate(input);
-	}
-
-	return standard;
-}
-
-string DateTime::StandardizeDate(string input){
-	string standard;
-	Smartstring input_s(input);
-	vector<string> tokens = input_s.Tokenize("/");
-
-	while (tokens.size() < 3){
-		tokens.push_back("");
-	}
-	assert(tokens.size() == 3);
-
-	int day = atoi(tokens[0].c_str());
-	int month = atoi(tokens[1].c_str());
-	if (month > 12 || day > 12){
-		int temp = month;
-		month = day;
-		day = temp;
-	}
-
-	_day = day;
-	_month = month;
-	_year = atoi(tokens[2].c_str());
-	isDateSet = true;
-	ostringstream month_s;
-	month_s << setw(2) << setfill('0') << month;
-	ostringstream day_s;
-	day_s << setw(2) << setfill('0') << day;
-
-	standard = day_s.str() + "/" + month_s.str() + "/" + tokens[2];
-	return standard;
-}
-
-string DateTime::StandardizeDay(string input){
-	string standard;
-	string today;
-	time_t now = time(0);
-	int offset;
-	DAY startday, endday;
-
-
-	endday = GetDayEnum(input);
-	today = GetDayFromTime(now);
-	startday = GetDayEnum(today);
-
-	if (endday != DAY::INVALID && startday != DAY::INVALID){
-		int offset_in_days = CalculateOffset(startday, endday);
-		time_t timeresult = OffsetByDay(now, offset_in_days);
-		standard = GetStandardDate(timeresult);
-
-		struct tm timeinfo;
-		localtime_s(&timeinfo, &timeresult);
-		_day = timeinfo.tm_mday;
-		_month = timeinfo.tm_mon + 1;
-		_year = timeinfo.tm_year + 1900;
-		isDateSet = true;
-	}
-	else{
-		standard = input;
-	}
-
-	return standard;
-}
-
-string DateTime::StandardizeTime(string input){
-	assert(input != "");
-	string standard;
-	string result = input;
-	string period = "am";
-	int found;
-	int hour;
-	int mins;
-
-
-	found = input.find("pm");
-	if (found != string::npos){
-		period = "pm";
-		result = input.substr(0, found);
-	}
-	found = result.find("am");
-	if (found != string::npos){
-		period = "am";
-		result = result.substr(0, found);
-	}
-
-
-	found = result.find_first_of(":");
-	if (found != string::npos){
-		string hour_s = result.substr(0, found);
-		hour = stoi(hour_s.c_str());
-		int length = result.length();
-		string min_s = result.substr(found + 1, length - 1);
-		mins = stoi(min_s.c_str());
-	}
-	else{
-		if (result.length() <= 2){
-			hour = atoi(result.c_str());
-			mins = 0;
-		}
-	}
-	//if the input has hour exceeding 12, change it to time with pm
-	if (hour > 12){
-		hour = hour % 12;
-		period = "pm";
-	}
-
-	//store time info in private variables 
-	if (period == "pm"){
-		_hours = hour % 12 + 12;
-		_mins = mins % 60;
-	}
-	else{
-		_hours = hour % 24;
-		_mins = mins % 60;
-	}
-
-	isTimeSet = true;
-
-
-	ostringstream minout;
-	minout << setw(2) << setfill('0') << mins;
-	ostringstream hourout;
-	hourout << setw(2) << setfill('0') << hour;
-
-	standard = hourout.str() + ":" + minout.str() + period;
-	return standard;
-}
-
 string DateTime::Standardized(){
 	return formattedDateTime;
 }
@@ -369,6 +102,27 @@ string DateTime::GetInfo(){
 }
 
 string DateTime::GetDate(){
+	//version 1: this version is in error because if the date is not set it will return empty
+	//if (isDateSet){
+	//	ostringstream date;
+	//	int db = _month;
+	//	string month = GetMonthName(_month);
+	//	date << _day << " " << month;
+	//	return date.str();
+	//}
+	//else{
+	//	return "";
+	//}
+
+	//version 2: this version is in error because if the date is returned in this manner, 17 April 2015 is the same as 17 April 2016
+	//created new function for this
+	//ostringstream date;
+	//int db = _month;
+	//string month = GetMonthName(_month);
+	//date << _day << " " << month;
+	//return date.str();
+
+	//version 3
 	ostringstream date;
 	date << _day << "/" << _month << "/" << _year;
 	return date.str();
@@ -394,6 +148,14 @@ string DateTime::GetTime(){
 	}
 }
 
+//string DateTime::GetTomorrowDate(DateTime* dt){
+//	struct tm * tomorrow;
+//	tomorrow->tm_hour = dt->_hours;
+//	tomorrow->tm_mday = dt->_day;
+//	tomorrow->tm_mon = dt->_month - 1;
+//	tomorrow->tm_min = dt->_mins;
+//	tomorrow->tm_year = dt->_year - 1900;
+//}
 
 bool DateTime::IsEarlierThan(DateTime dt){
 	bool isEarlier = false;
@@ -425,6 +187,274 @@ bool DateTime::IsEarlierThan(DateTime dt){
 	return isEarlier;
 }
 
+void DateTime::SetDefaultDateTime(){
+	time_t current = time(0);
+	struct tm timeinfo;
+	localtime_s(&timeinfo, &current);
+	_day = timeinfo.tm_mday;
+	_month = timeinfo.tm_mon + 1;
+	_year = timeinfo.tm_year + 1900;
+	_hours = 0;
+	_mins = 0;
+}
+
+void DateTime::SetStandards(){
+	formattedDateTime = unformattedDateTime;
+	string dbg = unformattedDateTime;
+	string date;
+	string time;
+	Smartstring input_s(unformattedDateTime);
+	vector<string> tokens = input_s.Tokenize(" ");
+	int size = tokens.size();
+
+	if (size > 3){
+		isValidFormat = false;
+	}
+	else{
+		switch (size){
+		case 0:{
+			isValidFormat = false;
+			break;
+		}
+		case 1:{
+			//this case assumes only either date or time has been entered
+			formattedDateTime = StandardizeSingle(tokens[0]);
+			break;
+		}
+
+		case 3:{
+			formattedDateTime = StandardizeTriple(tokens);
+			break;
+		}
+
+		default: {
+			isValidFormat = false;
+			break;
+		}
+		}
+	}
+}
+
+string DateTime::StandardizeSingle(string input){
+	string standard;
+	string single = input;
+	assert(single != "");
+
+	if (IsValidDayDate(single)){
+		standard = StandardizeDayDate(single);
+	}
+	else{
+		if (IsValidTime(single)){
+			standard = StandardizeTime(single);
+		}
+		else{
+			standard = single;
+			isValidFormat = false;
+		}
+	}
+	return standard;
+}
+
+string DateTime::StandardizeTriple(vector<string> input){
+	string standard;
+	string date;
+	string time;
+
+	if (input[1] == "at"){
+		//at implies day prefix and time suffix. i.e. "thursday at 5pm" and not "5pm at thursday"
+		if (IsValidDayDate(input[0])){
+			date = StandardizeDayDate(input[0]);
+
+		}
+		else{
+			date = input[0];
+			isValidFormat = false;
+		}
+
+		if (IsValidTime(input[2])){
+			time = StandardizeTime(input[2]);
+		}
+		else{
+			time = input[2];
+			isValidFormat = false;
+		}
+
+	}
+	else{
+		if (input[1] == "on" || input[1] == "by"){
+			//on implex time prefix and day suffix. i.e. "5pm on friday" and not "friday on 5pm"
+			if (IsValidDayDate(input[2])){
+				date = StandardizeDayDate(input[2]);
+			}
+			else{
+				date = input[2];
+				isValidFormat = false;
+			}
+			if (IsValidTime(input[0])){
+				time = StandardizeTime(input[0]);
+			}
+			else{
+				time = input[0];
+				isValidFormat = false;
+			}
+		}
+	}
+
+	standard = time + " on " + date;
+	return standard;
+}
+
+
+string DateTime::StandardizeDayDate(string input){
+	string standard = input;
+	if (IsValidDay(input)){
+		standard = StandardizeDay(input);
+	}
+	else{
+		if (IsValidDate(input)){
+			standard = StandardizeDate(input);
+		}
+	}
+	return standard;
+}
+
+string DateTime::StandardizeDate(string input){
+	string output;
+	Smartstring input_s(input);
+	vector<string> tokens = input_s.Tokenize("/");
+
+	while (tokens.size() < 3){
+		tokens.push_back("");
+	}
+
+	assert(tokens.size() == 3);
+	//check if the ordering of month and date is explicitly wrong
+	int day = atoi(tokens[0].c_str());
+	int month = atoi(tokens[1].c_str());
+	if (month > 12){
+		if (day > 12){
+			//both day and month exceed 12, do nothing
+		}
+		else{
+			//only one exceeds 12
+			int temp = month;
+			month = day;
+			day = temp;
+		}
+	}
+
+	//setting the day month and year values in DateTime object
+	_day = day;
+	_month = month;
+	_year = atoi(tokens[2].c_str());
+	isDateSet = true;
+
+	ostringstream monthout;
+	monthout << setw(2) << setfill('0') << month;
+	ostringstream dayout;
+	dayout << setw(2) << setfill('0') << day;
+
+	output = dayout.str() + "/" + monthout.str() + "/" + tokens[2];
+	return output;
+}
+
+string DateTime::StandardizeDay(string input){
+	string output;
+
+	//when input is a day
+	time_t now = time(0);
+	int offset;
+
+	DAY endday = GetDayEnum(input); //need to check if output is valid
+	string today = GetDayFromTime(now);
+	DAY startday = GetDayEnum(today); //need to check if output is valid
+	if (endday != DAY::INVALID && startday != DAY::INVALID){
+		int offset_in_days = CalculateOffset(startday, endday);
+		time_t timeresult = OffsetByDay(now, offset_in_days);
+		output = GetStandardDate(timeresult);
+
+		//set Day, month, year valies in DateTime object
+		struct tm timeinfo;
+		localtime_s(&timeinfo, &timeresult);
+		_day = timeinfo.tm_mday;
+		_month = timeinfo.tm_mon + 1;
+		_year = timeinfo.tm_year + 1900;
+		isDateSet = true;
+	}
+	else{
+		output = input;
+	}
+	return output;
+}
+
+string DateTime::StandardizeTime(string input){
+	assert(input != "");
+	string output;
+	string result = input;
+	string period = "am";
+	int found;
+	int hour;
+	int mins;
+
+	//remove pm and am keywords
+	found = input.find("pm");
+	if (found != string::npos){
+		period = "pm";
+		result = input.substr(0, found);
+	}
+	found = result.find("am");
+	if (found != string::npos){
+		period = "am";
+		result = result.substr(0, found);
+	}
+	//end remove pm and am keywords
+
+	//check if time format specifies minutes
+	found = result.find_first_of(":");
+	if (found != string::npos){
+		//getting hour
+		string hour_s = result.substr(0, found);
+		hour = stoi(hour_s.c_str());
+		//getting mins
+		int length = result.length();
+		string min_s = result.substr(found + 1, length - 1);
+		mins = stoi(min_s.c_str());
+	}
+	else{
+		//attempt to convert string to hour in case: 5pm as input
+		//note that this converts invalid strings to 0 so the time will display as 00:00 if it is invalid which may seem like a valid time
+		if (result.length() <= 2){
+			hour = atoi(result.c_str());
+			mins = 0;
+		}
+	}
+
+	if (hour > 12){
+		//if the hour is in 24 hour format
+		hour = hour % 12;
+		period = "pm";
+	}
+
+	//set standardized hours, mins and seconds
+	if (period == "pm"){
+		_hours = hour % 12 + 12;
+		_mins = mins % 60;
+	}
+	else{
+		_hours = hour % 24;
+		_mins = mins % 60;
+	}
+	isTimeSet = true;
+
+
+	ostringstream minout;
+	minout << setw(2) << setfill('0') << mins;
+	ostringstream hourout;
+	hourout << setw(2) << setfill('0') << hour;
+
+	output = hourout.str() + ":" + minout.str() + period;
+	return output;
+}
 
 string DateTime::TwentyFourHourFormat(){
 	string output;
@@ -450,18 +480,18 @@ bool DateTime::IsValidDayDate(string input){
 bool DateTime::IsValidDate(string input){
 	assert(input != "");
 	string dbg = input;
-	int endIdx = 0;
+	int found = 0;
 	int startIdx = 0;
 	int count = 0;
 	bool isValid = false;
-
-	while (endIdx != string::npos){
-		endIdx = input.find_first_of("/", startIdx);
-		if (endIdx != string::npos){
+	while (found != string::npos){
+		found = input.find_first_of("/", startIdx);
+		if (found != string::npos){
 			count++;
 		}
-		startIdx = endIdx + 1;
+		startIdx = found + 1;
 	}
+
 
 	if (count == 2){
 		isValid = true;
@@ -471,10 +501,9 @@ bool DateTime::IsValidDate(string input){
 }
 
 bool DateTime::IsValidDay(string input){
-	int found;
 
 	for (int i = 0; i < numberOfDateType; i++){
-		found = input.find(dateType[i]);
+		size_t found = input.find(dateType[i]);
 
 		if (found != string::npos){
 			return true;
@@ -488,16 +517,12 @@ bool DateTime::IsValidDay(string input){
 bool DateTime::IsValidTime(string input){
 	assert(input != "");
 	string dbg = input;
-	string result = input;
-	string hour_s;
-	string min_s;
 	bool isValid = false;
+	string result = input;
 	int hour;
 	int mins;
-	int found;
-	int length;
 
-	found = input.find("pm");
+	int found = input.find("pm");
 	if (found != string::npos){
 		result = input.substr(0, found);
 	}
@@ -508,11 +533,12 @@ bool DateTime::IsValidTime(string input){
 
 	found = result.find_first_of(":");
 	if (found != string::npos){
-		hour_s = result.substr(0, found);
+		//getting hour
+		string hour_s = result.substr(0, found);
 		hour = atoi(hour_s.c_str());
 		//getting min
-		length = result.length();
-		min_s = result.substr(found, length - 1);
+		int length = result.length();
+		string min_s = result.substr(found, length - 1);
 		mins = atoi(min_s.c_str());
 		if (hour >= 0 && hour < 24 && mins >= 0 && mins < 60){
 			isValid = true;
@@ -531,32 +557,25 @@ bool DateTime::IsValidTime(string input){
 }
 
 DateTime::DAY DateTime::GetDayEnum(string input){
-	if (input == DATETYPE_SUNDAY1 || input == DATETYPE_SUNDAY2
-		|| input == DATETYPE_SUNDAY3 || input == DATETYPE_SUNDAY4){
+	if (input == DATETYPE_SUNDAY1 || input == DATETYPE_SUNDAY2 || input == DATETYPE_SUNDAY3 || input == DATETYPE_SUNDAY4){
 		return DAY::SUNDAY;
 	}
-	if (input == DATETYPE_MONDAY1 || input == DATETYPE_MONDAY2
-		|| input == DATETYPE_MONDAY3 || input == DATETYPE_MONDAY4){
+	if (input == DATETYPE_MONDAY1 || input == DATETYPE_MONDAY2 || input == DATETYPE_MONDAY3 || input == DATETYPE_MONDAY4){
 		return DAY::MONDAY;
 	}
-	if (input == DATETYPE_TUESDAY1 || input == DATETYPE_TUESDAY2
-		|| input == DATETYPE_TUESDAY3 || input == DATETYPE_TUESDAY4){
+	if (input == DATETYPE_TUESDAY1 || input == DATETYPE_TUESDAY2 || input == DATETYPE_TUESDAY3 || input == DATETYPE_TUESDAY4){
 		return DAY::TUESDAY;
 	}
-	if (input == DATETYPE_WEDNESDAY1 || input == DATETYPE_WEDNESDAY2
-		|| input == DATETYPE_WEDNESDAY3 || input == DATETYPE_WEDNESDAY4){
+	if (input == DATETYPE_WEDNESDAY1 || input == DATETYPE_WEDNESDAY2 || input == DATETYPE_WEDNESDAY3 || input == DATETYPE_WEDNESDAY4){
 		return DAY::WEDNESDAY;
 	}
-	if (input == DATETYPE_THURSDAY1 || input == DATETYPE_THURSDAY2
-		|| input == DATETYPE_THURSDAY3 || input == DATETYPE_THURSDAY4){
+	if (input == DATETYPE_THURSDAY1 || input == DATETYPE_THURSDAY2 || input == DATETYPE_THURSDAY3 || input == DATETYPE_THURSDAY4){
 		return DAY::THURSDAY;
 	}
-	if (input == DATETYPE_FRIDAY1 || input == DATETYPE_FRIDAY2
-		|| input == DATETYPE_FRIDAY3 || input == DATETYPE_FRIDAY4){
+	if (input == DATETYPE_FRIDAY1 || input == DATETYPE_FRIDAY2 || input == DATETYPE_FRIDAY3 || input == DATETYPE_FRIDAY4){
 		return DAY::FRIDAY;
 	}
-	if (input == DATETYPE_SATURDAY1 || input == DATETYPE_SATURDAY2
-		|| input == DATETYPE_SATURDAY3 || input == DATETYPE_SATURDAY4){
+	if (input == DATETYPE_SATURDAY1 || input == DATETYPE_SATURDAY2 || input == DATETYPE_SATURDAY3 || input == DATETYPE_SATURDAY4){
 		return DAY::SATURDAY;
 	}
 	if (input == DATETYPE_TODAY1){
@@ -568,80 +587,70 @@ DateTime::DAY DateTime::GetDayEnum(string input){
 	return DAY::INVALID;
 }
 
-//@author A0094213M
 string DateTime::GetMonthName(int input){
-	if (input < 1 || input>12){
-		throw std::invalid_argument("received value out of range");
+	switch (input){
+	case 1:{
+		return _MONTH_JANUARY;
+		break;
+	}
+	case 2:{
+		return _MONTH_FEBRUARY;
+		break;
+	}
+	case 3:{
+		return _MONTH_MARCH;
+		break;
+	}
+	case 4:{
+		return _MONTH_APRIL;
+		break;
+	}
+	case 5:{
+		return _MONTH_MAY;
+		break;
+	}
+	case 6:{
+		return _MONTH_JUNE;
+		break;
+	}
+	case 7:{
+		return _MONTH_JULY;
+		break;
+	}
+	case 8:{
+		return _MONTH_AUGUST;
+		break;
+	}
+	case 9:{
+		return _MONTH_SEPTEMBER;
+		break;
+	}
+	case 10:{
+		return _MONTH_OCTOBER;
+		break;
+	}
+	case 11:{
+		return _MONTH_NOVEMBER;
+		break;
+	}
+	case 12:{
+		return _MONTH_DECEMBER;
+		break;
 	}
 
-
-	try{
-		switch (input){
-		case 1:{
-			return _MONTH_JANUARY;
-			break;
-		}
-		case 2:{
-			return _MONTH_FEBRUARY;
-			break;
-		}
-		case 3:{
-			return _MONTH_MARCH;
-			break;
-		}
-		case 4:{
-			return _MONTH_APRIL;
-			break;
-		}
-		case 5:{
-			return _MONTH_MAY;
-			break;
-		}
-		case 6:{
-			return _MONTH_JUNE;
-			break;
-		}
-		case 7:{
-			return _MONTH_JULY;
-			break;
-		}
-		case 8:{
-			return _MONTH_AUGUST;
-			break;
-		}
-		case 9:{
-			return _MONTH_SEPTEMBER;
-			break;
-		}
-		case 10:{
-			return _MONTH_OCTOBER;
-			break;
-		}
-		case 11:{
-			return _MONTH_NOVEMBER;
-			break;
-		}
-		case 12:{
-			return _MONTH_DECEMBER;
-			break;
-		}
-
-		default:{
-			return _MONTH_JANUARY;
-		}
-		}
+	default:{
+		return _MONTH_JANUARY;
 	}
-	catch (const std::invalid_argument& e){
-		cout << "exception occur" << endl;
 
 
 	}
 }
-//@author A0099303A
+
 int DateTime::CalculateOffset(DAY startday, DAY endday){
 	int result;
 
 	if (startday > endday){
+		//this means that we have crossed a saturday, and the enum is reset
 		result = endday - startday + 7;
 	}
 	else{
@@ -674,7 +683,7 @@ string DateTime::GetStandardTime(time_t time){
 	strftime(output, 80, "%I:%M%p", &timeinfo);
 	return output;
 }
-//@author A0099303A
+
 time_t DateTime::OffsetByDay(time_t timeReference, time_t offset_in_days){
 	time_t output;
 	time_t offset_in_seconds = offset_in_days * 24 * 60 * 60;
@@ -682,7 +691,6 @@ time_t DateTime::OffsetByDay(time_t timeReference, time_t offset_in_days){
 	return output;
 }
 
-//@author A0094213M
 DateTime::DAY DateTime::GetToday(){
 	time_t now = time(0);
 	struct tm timeinfo;
@@ -752,11 +760,13 @@ DateTime::DAY DateTime::GetTomorrow(){
 }
 
 string DateTime::Now(){
-	time_t now = time(0);
-	struct tm timeinfo;
-	localtime_s(&timeinfo, &now);
+	time_t now = time(0); //raw time -> this is generally implemented as an integer offset from 00:00hours, jan1, 2970 UTC. This leads me to the assumption
+	//that you can use (time_t time + 60) to offset by 1 minute, (time_t time + 3600) to offset by 1 hour etc
+	struct tm timeinfo; //this struct is defined by the system
+	localtime_s(&timeinfo, &now); //converts the raw time into a struct
 	char output[80];
-	strftime(output, 80, "%I:%M%p", &timeinfo);
+	strftime(output, 80, "%I:%M%p", &timeinfo); //to refer to more ways to access time format, refer to http://cplusplus.com/reference/ctime/strftime/
+	//under strftime, yellow boxes indicate certain formats that are not supported on visual studio
 	return output;
 }
 
@@ -770,14 +780,47 @@ string DateTime::Today(){
 }
 
 string DateTime::Tomorrow(){
-	time_t currentTime = time(0);
-	time_t tomorrow = currentTime + 24 * 60 * 60;
+	time_t now = time(0);
+	time_t tomorrow = now + 24 * 60 * 60;
 	struct tm timeinfo;
 	localtime_s(&timeinfo, &tomorrow);
 	char output[80];
 	strftime(output, 80, "%d/%m/%Y", &timeinfo);
 	return output;
 }
+
+
+
+
+
+bool DateTime::isDateType(string input){
+	string userDateTime = input;
+
+	for (int i = 0; i < numberOfDateType; i++){
+		size_t found = userDateTime.find(dateType[i]);
+
+		if (found != string::npos){
+			return true;
+		}
+	}
+
+	return false;
+}
+
+bool DateTime::isTimeType(string input){
+	string userDateTime = input;
+
+	for (int i = 0; i < numberOfTimeType; i++){
+		size_t found = userDateTime.find(timeType[i]);
+
+		if (found != string::npos){
+			return true;
+		}
+	}
+
+	return false;
+}
+
 
 bool DateTime::CompareDateTime(string input1, string input2){
 	bool isGreater = true;
@@ -902,7 +945,7 @@ bool DateTime::CompareDate(string date1, string date2){
 
 	return isGreater;
 }
-//@author A0094213M
+
 bool DateTime::CompareTime(string time1, string time2){
 	int hour1, hour2;
 	int min1, min2;
@@ -939,7 +982,7 @@ bool DateTime::CompareTime(string time1, string time2){
 
 	return isGreater;
 }
-//@author A0099303A
+
 DateTime* DateTime::GetDefaultEndDate(){
 	DateTime* dt = new DateTime();
 	*dt = *this;
@@ -947,7 +990,6 @@ DateTime* DateTime::GetDefaultEndDate(){
 	return dt;
 }
 
-//@author A0094213M
 void DateTime::Initialize(){
 	if (!isInitialized){
 

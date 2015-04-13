@@ -297,74 +297,21 @@ namespace I_ScheduleLibraryTest{
 			
 		}
 
-		//@author A0119513L
-		TEST_METHOD(LOGIC_BASIC_ADDITION_DELETION_CLEAR){
+		//@author A0099303A
+		TEST_METHOD(LOGIC){
 			Logic* logic = new Logic();
 			logic->mout.clear();
 			logic->mout.str("");
 			logic->storage->Reset();
 			string file = logic->storage->GetFileName();
+			string myinput = "add homework from: 07/04/2015 till: 08/04/2015 p: 1";
+			string expected = "Description: homework\nStart: 07/04/2015\nEnd: 08/04/2015\nPriority: 1\nStatus: Incomplete";
+			logic->Run(myinput);
+			string output = logic->mout.str();
 
-			// test the output for adding one task
-			string myinput01 = "add homework from: 07/04/2015 till: 08/04/2015 p: 1";
-			string expected01 = "Description: homework\nStart: 07/04/2015\nEnd: 08/04/2015\nPriority: 1\nStatus: Incomplete";
-			logic->Run(myinput01);
-			string output01 = logic->mout.str();
-			Assert::AreEqual(expected01, output01);
-
-			// test the output for adding another task
-			string myinput02 = "add exam from: 23/04/2015 till: 05/05/2015 p: 1";
-			string expected02 = string("Description: homework\nStart: 07/04/2015\nEnd: 08/04/2015\nPriority: 1\nStatus: Incomplete")
-				+ "Description: exam\nStart: 23/04/2015\nEnd: 05/05/2015\nPriority: 1\nStatus: Incomplete";
-			logic->Run(myinput02);
-			string output02 = logic->mout.str();
-			Assert::AreEqual(expected02, output02);
-
-			// test delete
-			string myinput03 = "delete 1";
-			string expected03 = string("Description: homework\nStart: 07/04/2015\nEnd: 08/04/2015\nPriority: 1\nStatus: Incomplete")
-				+ "Description: exam\nStart: 23/04/2015\nEnd: 05/05/2015\nPriority: 1\nStatus: Incomplete"
-				+ "\\b 1: \\b0 [23 April][5 May] exam";
-			logic->Run(myinput03);
-			string output03 = logic->mout.str();
-			Assert::AreEqual(expected03, output03);
-
-			// test clear
-			string myinput04 = "clear";
-			string expected04 = string("Description: homework\nStart: 07/04/2015\nEnd: 08/04/2015\nPriority: 1\nStatus: Incomplete")
-				+ "Description: exam\nStart: 23/04/2015\nEnd: 05/05/2015\nPriority: 1\nStatus: Incomplete"
-				+ "\\b 1: \\b0 [23 April][5 May] exam";
-			logic->Run(myinput04);
-			string output04 = logic->mout.str();
-			Assert::AreEqual(expected04, output04);
+			Assert::AreEqual(expected, output);
 		}
 
-		//@author A0119513L
-		TEST_METHOD(LOGIC_EDITION){
-			Logic* logic = new Logic();
-			logic->mout.clear();
-			logic->mout.str("");
-			logic->storage->Reset();
-			string file = logic->storage->GetFileName();
-
-			// test the output for adding one task
-			string myinput01 = "add homework";
-			string expected01 = "Description: homework\nStart: \nEnd: \nPriority: \nStatus: Incomplete";
-			logic->Run(myinput01);
-			string output01 = logic->mout.str();
-			Assert::AreEqual(expected01, output01);
-
-			// test the output for editing one task
-			string myinput02 = "edit 1: finish CS2103T";
-			string expected02 = string("Description: homework\nStart: \nEnd: \nPriority: \nStatus: Incomplete")
-				+ "\\b 1: \\b0 : finish CS2103T";
-			logic->Run(myinput02);
-			string output02 = logic->mout.str();
-			Assert::AreEqual(expected02, output02);
-
-		}
-
-		
 		//@author A0099303A
 		TEST_METHOD(SMARTSTRING_TOKENIZE){
 			//testing the partition inpult length > 0
@@ -629,7 +576,7 @@ namespace I_ScheduleLibraryTest{
 			Assert::AreEqual(isCommand_Expected, isCommand_Actual);
 		}
 
-		//@author A0094213M
+
 		TEST_METHOD(SMARTSTRING_ISKEYWORD){
 			bool isKeyword_Expected;
 			bool isKeyword_Actual;
@@ -649,7 +596,44 @@ namespace I_ScheduleLibraryTest{
 			Assert::AreEqual(isKeyword_Expected, isKeyword_Actual);
 	
 		}
-		//@author A0094213M
+
+		TEST_METHOD(LOGIC_EDIT){
+			Logic* logic = new Logic();
+			Storage* storage = new Storage("Storage_Edit.txt");
+			storage->Clear();
+			Task* task = new Task();
+			task->SetDescription("do homework");
+			task->SetEndDateTime("tomorrow");
+			task->SetStartDateTime("today");
+			task->SetPriority("1");
+			storage->Add(task);
+
+			Task* task2 = new Task();
+			task2->SetDescription("do homework 2");
+			task2->SetEndDateTime("tomorrow2");
+			task2->SetStartDateTime("today2");
+			task2->SetPriority("2");
+			storage->Add(task2);
+
+			//case index error1
+			string expected = "Invalid index.";
+			//Assert::AreEqual(expected, logic->Edit("timed: -1 description: meet my clients"));
+
+			//case index error2
+			//		Assert::AreEqual(expected, logic->Edit("timed: 4 description: meet my clients"));
+
+			//case edit the description
+			//string feedback;
+			//feedback = "meet my clients today tomorrow2 12";
+			//Assert::AreEqual(feedback, logic->Edit("1 description: meet my clients"));
+
+			//case change saved to storage
+			/*string update;
+			update = "meet my clients today tomorrow2 12";
+			Assert::AreEqual(update, logic->Display("2 description: meet my clients"));
+			*/
+		}
+		
 		TEST_METHOD(DATETIME_COMPAREDATE){
 			bool expected;
 			bool actual;
