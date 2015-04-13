@@ -82,9 +82,6 @@ DeleteCommand::~DeleteCommand(){
 string DeleteCommand::Execute(string taskInput){
 	logfile << "Execute delete command";
 	int position = atoi(taskInput.c_str());
-	if (position <= 0) {
-		throw "Position must be positive!";
-	}
 	storage->Delete(position);
 	return storage->ToString();
 }

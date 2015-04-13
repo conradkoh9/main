@@ -119,8 +119,8 @@ void Storage::Delete(int position){
 		Update();
 		UpdateStatus(feedback);
 	}
-	catch (out_of_range){
-		status << _FEEDBACK_DELETE_FAILURE;
+	catch (InvalidIndex){
+		UpdateStatus(_FEEDBACK_DELETE_FAILURE);
 	}
 	return;
 }
