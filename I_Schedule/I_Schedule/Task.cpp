@@ -24,7 +24,7 @@ const string Task::_rtfcolorredprefix = "\\cf2 ";
 const string Task::_rtfcolorredsuffix = "\\cf0 ";
 
 const int Task::numberOfFields = Smartstring::NUMBER_OF_FIELDS;
-
+//@author A0099303A
 Task::Task()
 {
 	startDateTime = "";
@@ -38,7 +38,7 @@ Task::Task()
 	endtime = "";
 	status = _STATUS_INCOMPLETE;
 }
-
+//@author A0099303A
 Task::Task(vector<string> input){
 
 	description = input[Smartstring::FIELD::DESCRIPTION];
@@ -78,7 +78,7 @@ Task::Task(vector<string> input){
 		endDateTime = standardEnddt->GetTime() + " on " + standardStartdt->GetDate();
 	}
 }
-
+//@author A0099303A
 Task::Task(Task* task){
 	startDateTime = "";
 	startdate = "";
@@ -107,7 +107,7 @@ Task::Task(Task* task){
 Task::~Task()
 {
 }
-
+//@author A0099303A
 string Task::Edit(vector<string> newinfo){
 	for (int i = 0; i < newinfo.size(); ++i){
 		if (newinfo[i] != ""){
@@ -137,6 +137,7 @@ string Task::Edit(vector<string> newinfo){
 	return ToString();
 }
 
+//@author A0119491B
 string Task::SetDescription(string input){
 	description = input;
 	return _FEEDBACK_DESCRIPTION_SET;
@@ -162,11 +163,13 @@ string Task::SetEndDateTime(string dt){
 	return _FEEDBACK_ENDDATE_SET;
 }
 
+//@author A0119491B
 string Task::SetPriority(string input){
 	priority = input;
 	return _FEEDBACK_PRIORITY_SET;
 }
 
+//@author A0119491B
 string Task::SetStatus(string input){
 	status = input;
 	return _FEEDBACK_STATUS_SET;
@@ -235,7 +238,7 @@ string Task::GetStatus(){
 	return status;
 }
 
-
+//@author A0099303A
 string Task::ToString(){
 	ostringstream out;
 	out << FIELD_DESCRIPTION << description << endl;
@@ -245,7 +248,7 @@ string Task::ToString(){
 	out << FIELD_STATUS << status;
 	return out.str();
 }
-
+//@author A0099303A
 string Task::ToShortString(){
 	string output = "";
 	TASKTYPE tasktype = GetType();
@@ -281,13 +284,14 @@ string Task::ToDeadlineString(){
 	out << description;
 	return out.str();
 }
-
+//@author A0099303A
 string Task::ToFloatingString(){
 	ostringstream out;
 	out << description;
 	return out.str();
 }
 
+//@author A0099303A
 string Task::ToTimedString(){
 	ostringstream out;
 
@@ -376,6 +380,7 @@ string Task::ToTimedString(){
 	return out.str();
 }
 
+//@author A0099303A
 string Task::ToTXTString(){
 	//this to string method is used in storage to write to txt files
 	ostringstream out;
@@ -387,6 +392,7 @@ string Task::ToTXTString(){
 	return out.str();
 }
 
+//@author A0099303A
 string Task::ToCSVString(){
 	ostringstream out;
 	out << "\"" << description << "\",";
@@ -397,6 +403,7 @@ string Task::ToCSVString(){
 	return out.str();
 }
 
+//@author A0099303A
 string Task::ToDatelessString(){
 	string output = "";
 	TASKTYPE tasktype = GetType();
@@ -421,18 +428,21 @@ string Task::ToDatelessString(){
 	return output;
 }
 
+//@author A0099303A
 string Task::ToDatelessDeadlineString(){
 	ostringstream out;
 	out << description;
 	return out.str();
 }
 
+//@author A0099303A
 string Task::ToDatelessFloatingString(){
 	ostringstream out;
 	out << description;
 	return out.str();
 }
 
+//@author A0099303A
 string Task::ToDatelessTimedString(){
 
 	ostringstream out;
@@ -446,7 +456,7 @@ string Task::ToDatelessTimedString(){
 }
 
 
-
+//@author A0099303A
 ostream& operator<<(ostream& out, Task& task){
 	out << task.ToString();
 	return out;

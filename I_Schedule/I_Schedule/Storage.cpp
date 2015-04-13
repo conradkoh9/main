@@ -311,7 +311,7 @@ string Storage::Undo(){
 //Power Search
 //====================================================================
 
-//@author a0119491B
+//@author A0119491B
 string Storage::Search(string input){
 	vector<Task*> PowerSearch_Result;
 	try{
@@ -443,12 +443,12 @@ string Storage::GetEmptySlots(){
 	for (int i = 0; i < time_intervals; i++)
 	{
 		assert(daycalendar[i] != "");
-		startindex = i;
-		next = i;
-		while (daycalendar[next] == "empty" && i != 47){ // find empty slots
+		startindex = i; 
+		next = i; 
+		while (daycalendar[next] == "empty" && i != 47){
 			next++;
 			assert(daycalendar[next] != "");
-		}
+		} //get the end index of empty slots
 
 		endindex = next;
 		if (i != next){

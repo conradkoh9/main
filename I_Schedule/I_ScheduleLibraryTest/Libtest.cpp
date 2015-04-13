@@ -106,7 +106,7 @@ namespace I_ScheduleLibraryTest{
 			Assert::AreEqual(expected[0], result);
 
 			//Testing search by priority
-			input[Smartstring::FIELD::PRIORITY] = "1";
+			input[Smartstring::FIELD::PRIORITY] = "priority 1";
 			result = storage->Search(input[Smartstring::FIELD::PRIORITY]);
 			Assert::AreEqual(expected[0], result);
 
