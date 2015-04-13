@@ -20,6 +20,9 @@ const string Task::_FEEDBACK_STANDARD_END_DATE_SET = "STAMDARD FORMAT OF END DAT
 const string Task::_STATUS_COMPLETE = "Complete";
 const string Task::_STATUS_INCOMPLETE = "Incomplete";
 
+const string Task::_rtfcolorredprefix = "\\cf2 ";
+const string Task::_rtfcolorredsuffix = "\\cf0 ";
+
 const int Task::numberOfFields = Smartstring::NUMBER_OF_FIELDS;
 
 Task::Task()
@@ -278,18 +281,37 @@ string Task::ToFloatingString(){
 
 string Task::ToTimedString(){
 	ostringstream out;
-	out << "[" << startdate;
-	if (standardStartdt->isTimeSet){
-		out << "," << starttime;
+
+	if (standardEnddt->IsEarlierThan(*standardStartdt)){
+
+		out << "[" << startdate;
+		if (standardStartdt->isTimeSet){
+			out << "," << starttime;
+		}
+		out << "]";
+		out << "[" << _rtfcolorredprefix << enddate << _rtfcolorredsuffix;
+		if (standardEnddt->isTimeSet){
+			out << "," << _rtfcolorredprefix << endtime << _rtfcolorredsuffix;
+		}
+		out << "] ";
+		out << description;
 
 	}
-	out << "]";
-	out << "[" << enddate;
-	if (standardEnddt->isTimeSet){
-		out << "," << endtime;
+	else{
+
+		out << "[" << startdate;
+		if (standardStartdt->isTimeSet){
+			out << "," << starttime;
+		}
+		out << "]";
+		out << "[" << enddate;
+		if (standardEnddt->isTimeSet){
+			out << "," << endtime;
+		}
+		out << "] ";
+		out << description;
+
 	}
-	out << "] ";
-	out << description;
 
 	return out.str();
 }

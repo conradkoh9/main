@@ -51,6 +51,9 @@ public:
 	static const string _STATUS_COMPLETE;
 	static const string _STATUS_INCOMPLETE;
 
+	static const string _rtfcolorredprefix;
+	static const string _rtfcolorredsuffix;
+
 	static const int numberOfFields;
 
 	string Edit(vector<string> newinfo);

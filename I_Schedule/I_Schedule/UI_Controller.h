@@ -23,7 +23,11 @@ public:
 	void QuickSearch(string input);
 
 private:
-	static const string _rtfheadercolor;
+	static const string _rtfheaderStartBlock;
+	static const string _rtfheaderColorBlock;
+	static const string _rtfheaderGeneratorBlock;
+	static const string _rtfheaderFontBlock;
+	static string _rtfheadercolor;
 	static const string _rtfheaderbw;
 	static const string _rtffooter;
 	static const string _rtfnewline;
