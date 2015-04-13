@@ -401,25 +401,40 @@ void Storage::SetSleepingTime(){
 //@author A0119491B
 void Storage::SetOccupiedSlots(){
 	for (int i = 0; i < daytask.size(); i++){
-		string startDateTime = daytask[i]->GetStartDateTime();
-		string endDateTime = daytask[i]->GetEndDate();
-		size_t StartPos = 0, sPos = 2, ePos = 2;
-		string startTime, endTime;
-		int start_time, end_time;
-		startTime = startDateTime.substr(StartPos, sPos); //17:00pm 07/04/2015    This is to get integer 17
-		endTime = endDateTime.substr(StartPos, ePos);
-		start_time = atoi(startTime.c_str());
-		end_time = atoi(endTime.c_str());
+		string startTime = daytask[i]->GetStartTime();
+		string endTime = daytask[i]->GetEndTime();
+		int indexStart, indexEnd;
 
-		int indexStart = 2 * start_time;
-		int indexEnd = 2 * end_time;
-
-		for (int i = indexStart; i < indexEnd; i++){
-			daycalendar[i] = "busy";
+		if (startTime != "" && endTime != ""){
+			indexStart = GetSlotIndex(startTime);
+			indexEnd = GetSlotIndex(endTime);
+			SetBusySlots(indexStart, indexEnd);
 		}
 	}
 }
 
+//@author A0119491B
+int Storage::GetSlotIndex(string time){
+	int hourPos = 0, minPos = 3, leghth = 2;
+	string hourInt, minInt;
+	int hour, min, index;
+	hourInt = time.substr(hourPos, leghth);
+	minInt = time.substr(minPos, leghth);
+	hour = atoi(hourInt.c_str());
+	min = atoi(minInt.c_str());
+	if (min > 0){
+		min = 1;
+	}
+	index = 2 * hour + min;
+	return index;
+}
+
+//@author A0119491B
+void Storage::SetBusySlots(int indexStart, int indexEnd){
+	for (int i = indexStart; i < indexEnd; i++){
+		daycalendar[i] = "busy";
+	}
+}
 //@auhtor A0119491B
 string Storage::GetEmptySlots(){
 	int startindex = 0, endindex = 0, time_intervals = 48, starthr, endhr;

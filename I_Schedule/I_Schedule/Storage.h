@@ -73,6 +73,8 @@ public:
 	void SetSleepingTime();
 	void SetOccupiedSlots();
 	string GetEmptySlots();
+	int GetSlotIndex(string);
+	void SetBusySlots(int, int);
 	
 	//STATS
 	int Size();
