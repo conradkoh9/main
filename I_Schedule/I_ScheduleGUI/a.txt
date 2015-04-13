@@ -1,5 +1,0 @@
-Description: homework
-Start: 05:00pm on 13/04/2015
-End: 18:00 on 13/4/2015
-Priority: 
-Status: Incomplete

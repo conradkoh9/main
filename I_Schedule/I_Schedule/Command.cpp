@@ -253,5 +253,5 @@ ArchivedCommand::~ArchivedCommand(){
 }
 
 string ArchivedCommand::Execute(string input){
-	return storage->ArchiveToString();
+	return storage->GetArchive();
 }

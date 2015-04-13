@@ -46,7 +46,7 @@ public:
 	~Storage();
 
 	//METHODS
-	//FUNCTIONS
+	//Core Functionality
 	void Add(Task* task);
 	void DeleteFromList(int position, Smartstring::LIST list);
 	void Delete(int position);
@@ -89,7 +89,7 @@ public:
 	string DayView();
 
 	//ToString methods
-	string ArchiveToString();
+	string GetArchive();
 	string ToString();
 	string ToString(vector<Task*> V, int firstIdx);
 	string ToString(vector<string> v);
@@ -213,6 +213,10 @@ private:
 	Task* GetTimedTask(int position);
 	Task* GetFloatingTask(int position);
 	Task* GetDeadlineTask(int position);
+
+	//Get methods
+	string ArchiveToString();
+	string GetFormattedTaskList();
 
 	//Replace methods
 	void ReplaceTask(Task* existing, Task* replacer);

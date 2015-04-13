@@ -49,8 +49,12 @@ const string Storage::_rtftab = "    ";
 const string Storage::_rtfcolorblueprefix = "\\cf1 ";
 const string Storage::_rtfcolorbluesuffix = "\\cf0 ";
 
-//@author A0099303A
 //PUBLIC =================================================================================================
+//@author A0099303A
+
+//====================================================================
+//Core Functionality
+//====================================================================
 Storage::Storage(){
 	Load();
 	status << _FEEDBACK_STARTUP << _filename;
@@ -73,7 +77,7 @@ void Storage::Add(Task* task){
 	UpdateStatus(feedback);
 	return;
 }
-//TO DELETE
+
 //@author A0099303A
 void Storage::DeleteFromList(int position, Smartstring::LIST list){
 	UpdateUndoVectors();
@@ -82,13 +86,13 @@ void Storage::DeleteFromList(int position, Smartstring::LIST list){
 		Erase(toDelete);
 		Rewrite();
 		Update();
-		//return _FEEDBACK_DELETE_SUCCESS;
+		UpdateStatus(_FEEDBACK_DELETE_SUCCESS);
 	}
 	catch (InvalidIndex){
-		/*return _FEEDBACK_INVALID_INDEX;*/
+		UpdateStatus(_FEEDBACK_INVALID_INDEX);
 	}
 	catch (InvalidList){
-		/*return _FEEDBACK_INVALID_LIST;*/
+		UpdateStatus(_FEEDBACK_INVALID_LIST);
 	}
 	return;
 }
@@ -208,12 +212,11 @@ void Storage::Load(string filename){
 	return;
 }
 
-//TO DELETE
+
 //@author A0099303A
 void Storage::Save(){
-	string feedback;
 	Rewrite();
-	feedback = SaveSessionData();
+	SaveSessionData();
 	UpdateStatus(_FEEDBACK_SESSION_SAVE_SUCCESS);
 	return;
 }
@@ -493,54 +496,21 @@ string Storage::GetFloatingList(){
 
 
 
-//@author unknown
+//@author A0099303A
 //====================================================================
 //ToString methods
 //====================================================================
-string Storage::ArchiveToString(){
+string Storage::GetArchive(){
 	Update();
-	ostringstream out;
-	int index = 0;
-	vector<Task*>::iterator iter;
-	if (archiveList.size() != 0){
-		for (iter = archiveList.begin(); iter != archiveList.end(); ++iter){
-			++index;
-			if (iter + 1 != archiveList.end()){
-				out << _rtfboldtagstart << index << ": " << _rtfboldtagend << (*iter)->ToShortString() << endl;
-			}
-			else{
-				out << _rtfboldtagstart << index << ": " << _rtfboldtagend << (*iter)->ToShortString();
-			}
-		}
-		string dbg = status.str();
-		status << _FEEDBACK_VIEW_ARCHIVE;
-		return out.str();
-	}
-	else{
-		status << _FEEDBACK_ARCHIVE_EMPTY;
-		return "";
-	}
-	
-
+	return ArchiveToString();
 }
 
 string Storage::ToString(){
 	Update();
-	ostringstream out;
-	int index = 0;
-	vector<Task*>::iterator iter;
-	for (iter = taskList.begin(); iter != taskList.end(); ++iter){
-		++index;
-		if (iter + 1 != taskList.end()){
-			out << _rtfboldtagstart << index << ": " << _rtfboldtagend << (*iter)->ToShortString() << endl;
-		}
-		else{
-			out << _rtfboldtagstart << index << ": " << _rtfboldtagend << (*iter)->ToShortString();
-		}
-	}
-	return out.str();
+	return GetFormattedTaskList();
 }
 
+//@author unknown
 string Storage::ToString(vector<Task*> V, int index){
 	ostringstream out;
 	vector<Task*>::iterator iter;
@@ -1283,6 +1253,50 @@ void Storage::ReplaceTask(Task* taskptr, Task* replacer){
 	}
 
 	return;
+}
+//====================================================================
+//Get Archive Methods
+//====================================================================
+
+string Storage::ArchiveToString(){
+	ostringstream out;
+	int index = 0;
+	vector<Task*>::iterator iter;
+	if (archiveList.size() != 0){
+		for (iter = archiveList.begin(); iter != archiveList.end(); ++iter){
+			++index;
+			if (iter + 1 != archiveList.end()){
+				out << _rtfboldtagstart << index << ": " << _rtfboldtagend << (*iter)->ToShortString() << endl;
+			}
+			else{
+				out << _rtfboldtagstart << index << ": " << _rtfboldtagend << (*iter)->ToShortString();
+			}
+		}
+		status << _FEEDBACK_VIEW_ARCHIVE;
+		return out.str();
+	}
+	else{
+		status << _FEEDBACK_ARCHIVE_EMPTY;
+		return "";
+	}
+
+
+}
+
+string Storage::GetFormattedTaskList(){
+	ostringstream out;
+	int index = 0;
+	vector<Task*>::iterator iter;
+	for (iter = taskList.begin(); iter != taskList.end(); ++iter){
+		++index;
+		if (iter + 1 != taskList.end()){
+			out << _rtfboldtagstart << index << ": " << _rtfboldtagend << (*iter)->ToShortString() << endl;
+		}
+		else{
+			out << _rtfboldtagstart << index << ": " << _rtfboldtagend << (*iter)->ToShortString();
+		}
+	}
+	return out.str();
 }
 
 //====================================================================
