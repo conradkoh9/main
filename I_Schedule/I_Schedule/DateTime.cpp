@@ -73,7 +73,7 @@ DateTime::DateTime(string input){
 	isDateSet = false;
 	isTimeSet = false;
 	Initialize();
-	SetDefaults();
+	SetDefaultDateTime();
 	SetStandards();
 }
 
@@ -166,10 +166,10 @@ bool DateTime::IsEarlierThan(DateTime dt){
 	return isEarlier;
 }
 
-void DateTime::SetDefaults(){
-	time_t now = time(0);
+void DateTime::SetDefaultDateTime(){
+	time_t current = time(0);
 	struct tm timeinfo;
-	localtime_s(&timeinfo, &now);
+	localtime_s(&timeinfo, &current);
 	_day = timeinfo.tm_mday;
 	_month = timeinfo.tm_mon + 1;
 	_year = timeinfo.tm_year + 1900;
@@ -215,30 +215,30 @@ void DateTime::SetStandards(){
 }
 
 string DateTime::StandardizeSingle(string input){
-	string output;
+	string standard;
 	string single = input;
+	assert(single != "");
 
 	if (IsValidDayDate(single)){
-		output = StandardizeDayDate(single);
+		standard = StandardizeDayDate(single);
 	}
 	else{
 		if (IsValidTime(single)){
-			output = StandardizeTime(single);
+			standard = StandardizeTime(single);
 		}
 		else{
-			output = single;
+			standard = single;
 			isValidFormat = false;
 		}
 	}
-	return output;
+	return standard;
 }
 
 string DateTime::StandardizeTriple(vector<string> input){
-	string output;
-	string prefix;
-	string suffix;
+	string standard;
 	string date;
 	string time;
+
 	if (input[1] == "at"){
 		//at implies day prefix and time suffix. i.e. "thursday at 5pm" and not "5pm at thursday"
 		if (IsValidDayDate(input[0])){
@@ -249,6 +249,7 @@ string DateTime::StandardizeTriple(vector<string> input){
 			date = input[0];
 			isValidFormat = false;
 		}
+
 		if (IsValidTime(input[2])){
 			time = StandardizeTime(input[2]);
 		}
@@ -259,7 +260,7 @@ string DateTime::StandardizeTriple(vector<string> input){
 
 	}
 	else{
-		if (input[1] == "on"||input[1] == "by"){
+		if (input[1] == "on" || input[1] == "by"){
 			//on implex time prefix and day suffix. i.e. "5pm on friday" and not "friday on 5pm"
 			if (IsValidDayDate(input[2])){
 				date = StandardizeDayDate(input[2]);
@@ -278,29 +279,33 @@ string DateTime::StandardizeTriple(vector<string> input){
 		}
 	}
 
-	output = time + " on " + date;
-	return output;
+	standard = time + " on " + date;
+	return standard;
 }
 
 
 string DateTime::StandardizeDayDate(string input){
-	string output = input;
+	string standard = input;
 	if (IsValidDay(input)){
-		output = StandardizeDay(input);
+		standard = StandardizeDay(input);
 	}
 	else{
 		if (IsValidDate(input)){
-			output = StandardizeDate(input);
+			standard = StandardizeDate(input);
 		}
 	}
-	return output;
+	return standard;
 }
 
 string DateTime::StandardizeDate(string input){
-	//this function assumes there are 2 / delimiters
 	string output;
 	Smartstring input_s(input);
 	vector<string> tokens = input_s.Tokenize("/");
+
+	while (tokens.size() < 3){
+		tokens.push_back("");
+	}
+
 	assert(tokens.size() == 3);
 	//check if the ordering of month and date is explicitly wrong
 	int day = atoi(tokens[0].c_str());
@@ -764,42 +769,7 @@ string DateTime::Tomorrow(){
 }
 
 
-string DateTime::ConvertDateTime(string input){
-	string task_date;
-	string task_time;
-	string output;
 
-	GetType(input); //this method is used to classify the input info into Date and Time for conversion 
-	task_date = ConvertDate(); //convert user's date to the proper one
-	task_time = ConvertTime();  //convert time to proper one 
-
-	output = task_date + task_time;
-
-	return output;
-}
-
-
-string DateTime::GetType(string input){
-	string day;
-	string time;
-	string description;
-
-	description = input;
-
-	if (isDateType(description)){
-
-	}
-
-	if (isTimeType(description)){
-
-	}
-
-
-
-	string feedback = "";
-	return feedback;
-
-}
 
 
 bool DateTime::isDateType(string input){
@@ -830,19 +800,6 @@ bool DateTime::isTimeType(string input){
 	return false;
 }
 
-string DateTime::ConvertDate(){
-
-	//make use of today() function, compare and add more days to get the supposed date 
-	string feedback = "";
-	return feedback;
-}
-
-string DateTime::ConvertTime(){
-
-	//this function is simply change the format e.g if they key in 2pm, here we change it to 0200pm
-	string feedback = "";
-	return feedback;
-}
 
 bool DateTime::CompareDateTime(string input1, string input2){
 	bool isGreater = true;

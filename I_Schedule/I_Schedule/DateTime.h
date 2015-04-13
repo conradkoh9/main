@@ -74,7 +74,7 @@ private:
 	static const string TIMETYPE_AM;
 	static const string TIMETYPE_PM;
 
-	
+
 public:
 	DateTime();
 	DateTime(string);
@@ -103,7 +103,7 @@ public:
 	DateTime* GetDefaultEndDate();
 
 private:
-	void SetDefaults();
+	void SetDefaultDateTime();
 	void SetStandards();
 	void SetSeconds();
 
@@ -126,7 +126,7 @@ private:
 	string GetMonthName(int input); //converts month to string
 	int CalculateOffset(DAY startday, DAY endday); //Gets the offset for the next occurance of endday based on startday.
 
-	string GetDayFromTime(time_t time); 
+	string GetDayFromTime(time_t time);
 	string GetStandardDate(time_t time);
 	string GetStandardTime(time_t time);
 	time_t OffsetByDay(time_t startday, time_t offset_in_days); //given a startday and number of days to offset by, converts to a time_t value
@@ -155,8 +155,8 @@ private:
 	int _year;
 	int _hours;
 	int _mins;
-	string _period; 
+	string _period;
 
-	
+
 };
 
