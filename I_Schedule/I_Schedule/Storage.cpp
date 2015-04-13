@@ -65,244 +65,212 @@ Storage::~Storage(){
 }
 
 //@author A0099303A
-string Storage::Add(Task* task){
-	int s = archiveList.size();
-	lastList = taskList;
-	lastArchiveList = archiveList;
-	taskList.push_back(task);
+void Storage::Add(Task* task){
+	UpdateUndoVectors();
+	string feedback = AddToTaskVector(task);
 	Update();
 	Rewrite();
-	string feedback = _FEEDBACK_ADD_SUCCESS;
-	status << feedback;
-	return feedback;
+	UpdateStatus(feedback);
+	return;
 }
-
+//TO DELETE
 //@author A0099303A
-string Storage::DeleteFromList(int position, Smartstring::LIST list){
-	lastList = taskList;
-	lastArchiveList = archiveList;
+void Storage::DeleteFromList(int position, Smartstring::LIST list){
+	UpdateUndoVectors();
 	try{
 		Task* toDelete = GetTaskPtr(position, list);
 		Erase(toDelete);
 		Rewrite();
 		Update();
-		return _FEEDBACK_DELETE_SUCCESS;
+		//return _FEEDBACK_DELETE_SUCCESS;
 	}
 	catch (InvalidIndex){
-		return _FEEDBACK_INVALID_INDEX;
+		/*return _FEEDBACK_INVALID_INDEX;*/
 	}
 	catch (InvalidList){
-		return _FEEDBACK_INVALID_LIST;
+		/*return _FEEDBACK_INVALID_LIST;*/
 	}
+	return;
 }
 
 
 //@author A0099303A
-string Storage::Delete(int position){
+void Storage::Delete(int position){
 
 	//Smartstring::LIST list = IdentifyListFromIndex(position);
-	string feedback = "";
 	try{
-		lastList = taskList;
-		lastArchiveList = archiveList;
-		feedback = Remove(position);
+		UpdateUndoVectors();
+		string feedback = Remove(position);
 		Rewrite();
 		Update();
-		status << feedback;
-		return feedback;
+		UpdateStatus(feedback);
 	}
 	catch (out_of_range){
 		status << _FEEDBACK_DELETE_FAILURE;
-		return _FEEDBACK_DELETE_FAILURE;
 	}
+	return;
 }
 
 //@author A0099303A
-string Storage::Edit(int position, vector<string> newinfo){
-	lastList = taskList;
-	lastArchiveList = archiveList;
+void Storage::Edit(int position, vector<string> newinfo){
+	UpdateUndoVectors();
 	try{
 		Task* taskptr = GetTaskPtr(position);
-		Task* newTask = new Task();
-		*newTask = *taskptr;
-		newTask->Edit(newinfo);
+		Task* newTask = EditToNewTask(*taskptr, newinfo);
 		ReplaceTask(taskptr, newTask);
 		Rewrite();
 		Update();
-
-		string feedback = _FEEDBACK_EDIT_SUCCESS;
-		status << feedback;
-		return feedback;
+		UpdateStatus(_FEEDBACK_EDIT_SUCCESS);
+		return;
 	}
 
 	catch (InvalidIndex){
-		status << _FEEDBACK_INVALID_INDEX;
-		return _FEEDBACK_INVALID_INDEX;
+		UpdateStatus(_FEEDBACK_INVALID_INDEX);
 	}
 	catch (InvalidList){
-		status << _FEEDBACK_INVALID_LIST;
-		return _FEEDBACK_INVALID_LIST;
+		UpdateStatus(_FEEDBACK_INVALID_LIST);
 	}
+	return;
 }
 
 //@author A0099303A
-string Storage::Complete(int position){
+void Storage::Complete(int position){
 
-	string feedback;
 	try{
-		lastList = taskList;
-		lastArchiveList = archiveList;
+		UpdateUndoVectors();
 		Task* toremove = GetTaskPtr(position);
-		feedback = MarkComplete(toremove);
+		string feedback = MarkComplete(toremove);
 		Archive(toremove);
 		Rewrite();
 		Update();
+		UpdateStatus(feedback);
 	}
 	catch (InvalidIndex){
-		status << _FEEDBACK_INVALID_INDEX;
-		return _FEEDBACK_INVALID_INDEX;
+		UpdateStatus(_FEEDBACK_INVALID_INDEX);
 	}
-	status << feedback;
-	return feedback;
+	return;
 }
 
 //@author A0099303A
-string Storage::Load(){
-	logfile << LoadSessionData(); //change active file
+void Storage::Load(){
+	LoadSessionData(); //change active file
 	FILETYPE filetype = IdentifyFileType(_filename);
-	string feedback;
 	try{
 		if (filetype != FILETYPE::INVALID){
-			logfile << "load called.";
 			ClearVectors();
 			ClearUndoVectors();
-			logfile << LoadRawFileContent();
+			LoadRawFileContent();
 			LoadRawArchiveContent();
-			int db = _archivecontent.size();
-			int a = 0;
-			feedback = LoadTaskList();
+			LoadTaskList();
 			LoadArchiveList();
-			logfile << feedback;
 			Update();
-			logfile << "end of load.";
+			UpdateStatus(_FEEDBACK_LOAD_SUCCESS);
 
 		}
 		else{
-			logfile << _FEEDBACK_FILETYPE_INVALID;
-			status << _FEEDBACK_FILETYPE_INVALID;
+			UpdateStatus(_FEEDBACK_FILETYPE_INVALID);
 			throw load_failure;
 		}
 	}
 	
 	catch (LoadFailure){
-		logfile << DefaultSession();
-		status << _FEEDBACK_LOAD_FAILURE;
-		feedback = _FEEDBACK_LOAD_FAILURE;
+		DefaultSession();
+		UpdateStatus(_FEEDBACK_LOAD_FAILURE);
 	}
-	return feedback;
+	return;
 
 }
 
 //@author A0099303A
-string Storage::Load(string filename){
+void Storage::Load(string filename){
 
 	FILETYPE filetype = IdentifyFileType(filename);
 	string feedback;
 	try{
 		if (filetype != FILETYPE::INVALID){
-			_filename = filename;
-			logfile << "load called.";
+			UpdateFileName(filename);
 			ClearVectors();
 			ClearUndoVectors();
-			logfile << LoadRawFileContent();
-			feedback = LoadTaskList();
-			logfile << feedback;
+			LoadRawFileContent();
+			LoadTaskList();
 			Update();
-			logfile << "end of load.";
-
+			UpdateStatus(_FEEDBACK_LOAD_SUCCESS);
 		}
 		else{
-			logfile << _FEEDBACK_FILETYPE_INVALID;
+			UpdateStatus(_FEEDBACK_FILETYPE_INVALID);
 		}
 	}
 
 	catch (LoadFailure){
-		logfile << DefaultSession();
-		status << feedback;
-		feedback = _FEEDBACK_LOAD_FAILURE;
+		DefaultSession();
+		UpdateStatus(_FEEDBACK_LOAD_FAILURE);
 	}
-	status << feedback;
-	return feedback;
+	return;
 }
 
-
+//TO DELETE
 //@author A0099303A
-string Storage::Save(){
+void Storage::Save(){
 	string feedback;
-	feedback = Rewrite();
+	Rewrite();
 	feedback = SaveSessionData();
-	status << feedback;
-	return feedback;
+	UpdateStatus(_FEEDBACK_SESSION_SAVE_SUCCESS);
+	return;
 }
 
 //@author A0099303A
-string Storage::SaveAs(string newFileName){
+void Storage::SaveAs(string newFileName){
 	FILETYPE filetype = IdentifyFileType(newFileName);
 	if (filetype!= FILETYPE::INVALID){
-		_filename = newFileName;
-		string feedback = Rewrite();
-		feedback = SaveSessionData();
-		status << feedback;
-		return feedback;
-		
+		UpdateFileName(newFileName);
+		Rewrite();
+		SaveSessionData();
+		UpdateStatus(_FEEDBACK_SESSION_SAVE_SUCCESS);		
 	}
 	else{
-		status << _FEEDBACK_FILETYPE_INVALID;
-		return _FEEDBACK_FILETYPE_INVALID;
+		UpdateStatus(_FEEDBACK_FILETYPE_INVALID);
 	}
+	return;
 }
 
 //@author A0099303A
-string Storage::Rewrite(){
+void Storage::Rewrite(){
 	ClearFile();
 	WriteToArchive();
-	string feedback = WriteToFile();
-	return feedback;
+	WriteToFile();
+	return;
 }
 
 //@author A0099303A
-string Storage::Reset(){
-	_filename = _FILENAME_DEFAULT;
+void Storage::Reset(){
+	UpdateFileName(_FILENAME_DEFAULT);
 	Clear();
-	return _FEEDBACK_RESET;
+	UpdateStatus(_FEEDBACK_RESET);
+	return;
 }
 
 //@author A0099303A
-string Storage::Clear(){
-	lastList = taskList;
-	lastArchiveList = archiveList;
+void Storage::Clear(){
+	UpdateUndoVectors();
 	ClearFile();
 	ClearVectors();
 	Update();
-	status << _FEEDBACK_CLEAR_SUCCESS;
-	return _FEEDBACK_CLEAR_SUCCESS;
+	UpdateStatus(_FEEDBACK_CLEAR_SUCCESS);
+	return;
 }
 
 //@author A0119513L
-string Storage::Undo(){
+void Storage::Undo(){
 	if (!lastList.empty()){
-		taskList = lastList;
-		archiveList = lastArchiveList;
+		RestoreFromUndoVectors();
 		Rewrite();
 		Update();
-		status << _FEEDBACK_UNDO_COMPLETE;
-		return _FEEDBACK_UNDO_COMPLETE;
+		UpdateStatus(_FEEDBACK_UNDO_COMPLETE);
 	}
 	else{
-		status << _FEEDBACK_NO_UNDO;
-		return _FEEDBACK_NO_UNDO;
+		UpdateStatus(_FEEDBACK_NO_UNDO);
 	}
-	
+	return;
 }
 
 
@@ -658,6 +626,27 @@ void Storage::Update(){
 	return;
 }
 
+void Storage::UpdateStatus(string status_m){
+	status << status_m;
+	return;
+}
+
+//====================================================================
+//Undo Methods
+//====================================================================
+//@author A0099303A
+
+void Storage::UpdateUndoVectors(){
+	lastList = taskList;
+	lastArchiveList = archiveList;
+	return;
+}
+
+void Storage::RestoreFromUndoVectors(){
+	taskList = lastList;
+	archiveList = lastArchiveList;
+	return;
+}
 
 //@author Ziqi
 //====================================================================
@@ -758,6 +747,15 @@ void Storage::SortTaskList(){
 	}
 
 }
+//@author A0099303A
+//====================================================================
+//Clear Methods
+//====================================================================
+
+string Storage::AddToTaskVector(Task* taskptr){
+	taskList.push_back(taskptr);
+	return _FEEDBACK_ADD_SUCCESS;
+}
 
 //@author A0099303A
 //====================================================================
@@ -824,9 +822,28 @@ string Storage::Erase(Task* taskptr){
 	}
 	return _FEEDBACK_DELETE_SUCCESS;
 }
+
+
+//====================================================================
+//Edit methods
+//====================================================================
+
+Task* Storage::EditToNewTask(Task task, vector<string> newinfo){
+	Task* newTask = new Task();
+	*newTask = task;
+	newTask->Edit(newinfo);
+	return newTask;
+}
+
 //====================================================================
 //Save methods
 //====================================================================
+//@author A0099303A
+void Storage::UpdateFileName(string newFileName){
+	_filename = newFileName;
+	return;
+}
+
 //@author A0099303A
 string Storage::SaveSessionData(){
 	ofstream of;

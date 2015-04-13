@@ -40,7 +40,7 @@ AddCommand::~AddCommand(){
 string AddCommand::Execute(string taskInput){
 		vector<string> taskinfo = parser->IdentifyTaskFields(taskInput);
 		Task* task = new Task(taskinfo);
-		string feedback = storage->Add(task);
+		storage->Add(task);
 		return task->ToString();
 }
 
@@ -139,7 +139,7 @@ SaveCommand::~SaveCommand(){
 }
 
 string SaveCommand::Execute(string input){
-		string feedback = storage->SaveAs(input);
+		storage->SaveAs(input);
 		return storage->ToString();
 }
 
@@ -177,7 +177,7 @@ string CompleteCommand::Execute(string input){
 		istringstream in(input);
 		int position;
 		in >> position;
-		string feedback = storage->Complete(position);
+		storage->Complete(position);
 		return storage->ToString();
 }
 
@@ -213,7 +213,7 @@ LoadCommand::~LoadCommand(){
 }
 
 string LoadCommand::Execute(string input){
-		string feedback = storage->Load(input);
+		storage->Load(input);
 		return storage->ToString();
 }
 

@@ -47,21 +47,21 @@ public:
 
 	//METHODS
 	//FUNCTIONS
-	string Add(Task* task);
-	string DeleteFromList(int position, Smartstring::LIST list);
-	string Delete(int position);
-	string Edit(int position, vector<string> newinfo);
-	string Complete(int position);
-	string Load();
-	string Load(string filename);
+	void Add(Task* task);
+	void DeleteFromList(int position, Smartstring::LIST list);
+	void Delete(int position);
+	void Edit(int position, vector<string> newinfo);
+	void Complete(int position);
+	void Load();
+	void Load(string filename);
 
-	string Save();
-	string SaveAs(string newFileName);
-	string Rewrite();
+	void Save();
+	void SaveAs(string newFileName);
+	void Rewrite();
 
-	string Reset();
-	string Clear();
-	string Undo();
+	void Reset();
+	void Clear();
+	void Undo();
 
 	//Power Search Method
 	string Search(string input);
@@ -156,15 +156,23 @@ private:
 
 	//Update methods
 	void Update(); //Updates all the vectors with the new information
+	void UpdateStatus(string status_m);
 
-	//filter methods
+	//Undo methods
+	void UpdateUndoVectors();
+	void RestoreFromUndoVectors();
+
+	//Filter methods
 	string FilterTask();
 	void SortListsByTime(vector<Task*> &V);
 	void InitializeLists();
 	string SortAllLists();
 	void SortTaskList();
 
-	//clear methods
+	//Add methods
+	string AddToTaskVector(Task* tasptr);
+
+	//Clear methods
 	void ClearFile();
 	void ClearFilteredLists();
 	void ClearVectors();
@@ -172,7 +180,11 @@ private:
 	string Remove(int position);
 	string Erase(Task* taskptr);
 
+	//Edit methods
+	Task* EditToNewTask(Task task, vector<string> newinfo);
+
 	//Save methods
+	void UpdateFileName(string newFileName);
 	string SaveSessionData();
 	string WriteToFile(); 
 	string WriteToTXT(); //writes tasks to TXT readable format
