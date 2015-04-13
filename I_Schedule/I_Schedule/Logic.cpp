@@ -122,6 +122,10 @@ Command* Logic::GetCommand(Smartstring::COMMAND command){
 			cmd_o = new Command(storage, parser);
 			break;
 		}
+		default: {
+			logfile << "Command Bug";
+			assert(false);
+		}
 	}
 	return cmd_o;
 }

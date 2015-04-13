@@ -21,6 +21,7 @@ Command::~Command(){
 }
 
 string Command::Execute(string){   //default is invalid command
+	logfile << "Invalid command";
 	return _FEEDBACK_INVALID_COMMAND;
 }
 
@@ -38,10 +39,11 @@ AddCommand::~AddCommand(){
 }
 
 string AddCommand::Execute(string taskInput){
-		vector<string> taskinfo = parser->IdentifyTaskFields(taskInput);
-		Task* task = new Task(taskinfo);
-		storage->Add(task);
-		return task->ToString();
+	logfile << "Execute add command";
+	vector<string> taskinfo = parser->IdentifyTaskFields(taskInput);
+	Task* task = new Task(taskinfo);
+	storage->Add(task);
+	return task->ToString();
 }
 
 //Clear Command
@@ -58,6 +60,7 @@ ClearCommand::~ClearCommand(){
 }
 
 string ClearCommand::Execute(string all){
+	logfile << "Execute clear command";
 	storage->Clear();
 	return storage->ToString();
 }
@@ -77,9 +80,13 @@ DeleteCommand::~DeleteCommand(){
 }
 
 string DeleteCommand::Execute(string taskInput){
-		int position = atoi(taskInput.c_str());
-		storage->Delete(position);
-		return storage->ToString();
+	logfile << "Execute delete command";
+	int position = atoi(taskInput.c_str());
+	if (position <= 0) {
+		throw "Position must be positive!";
+	}
+	storage->Delete(position);
+	return storage->ToString();
 }
 
 
@@ -97,7 +104,8 @@ DisplayCommand::~DisplayCommand(){
 }
 
 string DisplayCommand::Execute(string all){
-		return storage->DayView();
+	logfile << "Execute display command";
+	return storage->DayView();
 }
 
 //Edit Command
@@ -114,15 +122,19 @@ EditCommand::~EditCommand(){
 }
 
 string EditCommand::Execute(string taskInput){
-		string remainder;
-		int position;
+	logfile << "Execute edit command";
+	string remainder;
+	int position;
 
-		istringstream in(taskInput);
-		in >> position;
-		getline(in, remainder);
-		vector<string> newinfo = parser->IdentifyTaskFields(remainder);
-		storage->Edit(position, newinfo);
-		return storage->ToString();
+	istringstream in(taskInput);
+	in >> position;
+	if (position <= 0) {
+		throw "Position must be positive!";
+	}
+	getline(in, remainder);
+	vector<string> newinfo = parser->IdentifyTaskFields(remainder);
+	storage->Edit(position, newinfo);
+	return storage->ToString();
 }
 
 //Save Command
@@ -139,8 +151,9 @@ SaveCommand::~SaveCommand(){
 }
 
 string SaveCommand::Execute(string input){
-		storage->SaveAs(input);
-		return storage->ToString();
+	logfile << "Execute save command";
+	storage->SaveAs(input);
+	return storage->ToString();
 }
 
 //Search Command
@@ -157,7 +170,8 @@ SearchCommand::~SearchCommand(){
 }
 
 string SearchCommand::Execute(string taskInput){
-		return storage->Search(taskInput);
+	logfile << "Execute search command";
+	return storage->Search(taskInput);
 }
 
 //Complete Command
@@ -174,11 +188,12 @@ CompleteCommand::~CompleteCommand(){
 }
 
 string CompleteCommand::Execute(string input){
-		istringstream in(input);
-		int position;
-		in >> position;
-		storage->Complete(position);
-		return storage->ToString();
+	logfile << "Execute complete command";
+	istringstream in(input);
+	int position;
+	in >> position;
+	storage->Complete(position);
+	return storage->ToString();
 }
 
 //Free Command
@@ -195,8 +210,9 @@ FreeCommand::~FreeCommand(){
 }
 
 string FreeCommand::Execute(string input){
-		string feedback = storage->SearchEmptySlots(input);
-		return feedback;
+	logfile << "Execute free command";
+	string feedback = storage->SearchEmptySlots(input);
+	return feedback;
 }
 
 //Load Command
@@ -213,8 +229,9 @@ LoadCommand::~LoadCommand(){
 }
 
 string LoadCommand::Execute(string input){
-		storage->Load(input);
-		return storage->ToString();
+	logfile << "Execute load command";
+	storage->Load(input);
+	return storage->ToString();
 }
 
 
@@ -233,6 +250,7 @@ UndoCommand::~UndoCommand(){
 }
 
 string UndoCommand::Execute(string undo){
+	logfile << "Execute undo command";
 	storage->Undo();
 	return storage->ToString();
 }
@@ -253,5 +271,6 @@ ArchivedCommand::~ArchivedCommand(){
 }
 
 string ArchivedCommand::Execute(string input){
+	logfile << "Execute achived command";
 	return storage->GetArchive();
 }
