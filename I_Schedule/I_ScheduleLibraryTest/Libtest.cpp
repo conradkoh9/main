@@ -87,7 +87,7 @@ namespace I_ScheduleLibraryTest{
 			vector<Task*> RESULT;
 			vector<string> input(10);
 			string expected[2], result;
-			expected[0] = "\\b 1: \\b0 [07/04/2015][08/04/2015] homework";
+			expected[0] = "\\b 1: \\b0 [7 April][8 April] homework";
 			expected[1] = "No results found.";
 
 			//Testing search by description
