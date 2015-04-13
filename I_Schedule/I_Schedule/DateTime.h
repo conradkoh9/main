@@ -6,9 +6,9 @@
 #include <time.h>
 #include <cassert>
 #include <iomanip>
+#include <exception>
 #include "Smartstring.h"
 #include "assert.h"
-#include <exception>
 #include "Logger.h"
 
 using namespace std;
@@ -74,18 +74,13 @@ private:
 	static const string TIMETYPE_AM;
 	static const string TIMETYPE_PM;
 
-	// my idea here is I have to search for the key words for day and time so 
-	// as to separate the info into date and time type
-
+	
 public:
 	DateTime();
 	DateTime(string);
 	~DateTime();
 
-	//==========================================================
-	//Methods suggested by Conrad
-	//Note: these methods are currently used in
-	//==========================================================
+
 public:
 	//Variables
 	string unformattedDateTime;
@@ -102,6 +97,11 @@ public:
 	string GetTime();
 	int GetSeconds();
 	bool IsEarlierThan(DateTime dt);
+	bool CompareDateTime(string, string);
+	bool CompareDate(string, string);
+	bool CompareTime(string, string);
+	DateTime* GetDefaultEndDate();
+
 private:
 	void SetDefaults();
 	void SetStandards();
@@ -115,8 +115,7 @@ private:
 	string StandardizeDay(string input); //Standardize input assuming that it is a day
 	string StandardizeTime(string input);
 	string TwentyFourHourFormat();
-	bool CompareDate(string, string);
-	bool CompareTime(string, string);
+
 	bool IsValidDayDate(string input); //Check if input is a valid day or date
 	bool IsValidDate(string input); //Check if input is a valid date
 	bool IsValidDay(string input); //Check if input is a valid day
@@ -134,14 +133,8 @@ private:
 	DAY GetToday();
 	DAY GetTomorrow();
 
-	//==========================================================
-	//End section Methods suggested by Conrad
-	//==========================================================
 
 
-	//==========================================================
-	//Methods
-	//==========================================================
 public:
 	string Now();
 	string Today();
@@ -151,10 +144,10 @@ public:
 	string ConvertTime();
 	string GetType(string);
 	void Initialize();
-	bool CompareDateTime(string, string);
+
 	bool isDateType(string);
 	bool isTimeType(string);
-	DateTime* GetDefaultEndDate();  //Ziqi needs it
+
 
 private:
 	int _day;
@@ -162,8 +155,7 @@ private:
 	int _year;
 	int _hours;
 	int _mins;
-	//int _seconds;
-	string _state; //this name needs to be redefined 
+	string _period; 
 
 	
 };

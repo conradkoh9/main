@@ -609,7 +609,7 @@ namespace I_ScheduleLibraryTest{
 
 			//case index error1
 			string expected = "Invalid index.";
-			//			Assert::AreEqual(expected, logic->Edit("timed: -1 description: meet my clients"));
+			//Assert::AreEqual(expected, logic->Edit("timed: -1 description: meet my clients"));
 
 			//case index error2
 			//		Assert::AreEqual(expected, logic->Edit("timed: 4 description: meet my clients"));
@@ -625,6 +625,19 @@ namespace I_ScheduleLibraryTest{
 			Assert::AreEqual(update, logic->Display("2 description: meet my clients"));
 			*/
 		}
+		
+		TEST_METHOD(DATETIME_COMPAREDATE){
+			bool expected;
+			bool actual;
+
+			DateTime test1;
+
+			//test for same day 
+			Assert::AreEqual(true, test1.CompareDate("10/6/2015", "10/5/2015"));
+			//same day and month
+			Assert::AreEqual(true, test1.CompareDate("10/6/2015", "10/6/2013"));
+		}
+
 
 	};
 }

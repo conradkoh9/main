@@ -66,7 +66,6 @@ DateTime::DateTime(){
 	Initialize();
 }
 
-//@author A0094213M
 DateTime::DateTime(string input){
 	unformattedDateTime = input;
 	isValidFormat = true;
@@ -138,6 +137,7 @@ string DateTime::GetTime(){
 
 bool DateTime::IsEarlierThan(DateTime dt){
 	bool isEarlier = false;
+
 	if (_year < dt._year){
 		isEarlier = true;
 	}
