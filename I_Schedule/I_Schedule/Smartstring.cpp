@@ -12,19 +12,18 @@
 //5. check the enum within smartstring to check if it matches the cases
 //6. add to the current test cases in Libtest
 
+const string Smartstring::COMMAND_ARCHIVED = "archived";
 const string Smartstring::COMMAND_ADD = "add";
 const string Smartstring::COMMAND_CLEAR = "clear";
+const string Smartstring::COMMAND_COMPLETE = "complete";
 const string Smartstring::COMMAND_DELETE = "delete";
 const string Smartstring::COMMAND_DISPLAY = "display";
 const string Smartstring::COMMAND_EDIT = "edit";
+const string Smartstring::COMMAND_EMPTYSLOTS = "free";
+const string Smartstring::COMMAND_LOAD = "load";
+const string Smartstring::COMMAND_UNDO = "undo";
 const string Smartstring::COMMAND_SAVE = "save";
 const string Smartstring::COMMAND_SEARCH = "search";
-const string Smartstring::COMMAND_COMPLETE = "complete";
-const string Smartstring::COMMAND_EMPTYSLOTS = "free";
-const string Smartstring::COMMAND_UNDO = "undo";
-const string Smartstring::COMMAND_LOAD = "load";
-const string Smartstring::COMMAND_ARCHIVED = "archived";
-
 
 const string Smartstring::KEYWORD_ENDDATE_1 = "date:";
 const string Smartstring::KEYWORD_ENDDATE_2 = "by:";
@@ -55,23 +54,24 @@ const string Smartstring::KEYWORD_FLOAT_1 = "float:";
 
 const string Smartstring::FEEDBACK_ADD_SUCCESSULLY = "add the entry successfully";
 const string Smartstring::FEEDBACK_DELETE_SUCCESSFULLY = "delete the entry successfully";
-const string Smartstring::FEEDBACK_DELETE_FAIL= "fail to delete the entry";
-const string Smartstring::FEEDBACK_EDIT_SUCCESSFULLY="edit the entry successfully";
-const string Smartstring::FEEDBACK_EDIT_FAIL="fail to edit the entry";
-const string Smartstring::FEEDBACK_SEARCH_FAIL="cannot find";
+const string Smartstring::FEEDBACK_DELETE_FAIL = "fail to delete the entry";
+const string Smartstring::FEEDBACK_EDIT_SUCCESSFULLY = "edit the entry successfully";
+const string Smartstring::FEEDBACK_EDIT_FAIL = "fail to edit the entry";
+const string Smartstring::FEEDBACK_SEARCH_FAIL = "cannot find";
 
 
-bool Smartstring::classInitialized = false;
+bool Smartstring::isInitialized = false;
 int Smartstring::numberOfCommands;
 int Smartstring::numberOfKeywords;
 const int Smartstring::NUMBER_OF_FIELDS = 5;
 vector<string> Smartstring::commands;
 vector<string> Smartstring::keywords;
 
+//@author A0094213M
 Smartstring::Smartstring(){
 	information = "";
 	Initialize();
-	
+
 }
 
 
@@ -80,19 +80,108 @@ Smartstring::Smartstring(string input){
 	Initialize();
 }
 
+Smartstring::~Smartstring()
+{
+}
+
+Smartstring::COMMAND Smartstring::Command(){
+	if (information == COMMAND_ARCHIVED){
+		return Smartstring::COMMAND::ARCHIVED;
+	}
+
+	if (information == COMMAND_ADD){
+		return Smartstring::COMMAND::ADD;
+	}
+
+	if (information == COMMAND_CLEAR){
+		return Smartstring::COMMAND::CLEAR;
+	}
+
+	if (information == COMMAND_COMPLETE){
+		return Smartstring::COMMAND::COMPLETE;
+	}
+
+	if (information == COMMAND_DELETE){
+		return Smartstring::COMMAND::DELETE;
+	}
+
+	if (information == COMMAND_DISPLAY){
+		return Smartstring::COMMAND::DISPLAY;
+	}
+	if (information == COMMAND_EDIT){
+		return Smartstring::COMMAND::EDIT;
+	}
+
+	if (information == COMMAND_EMPTYSLOTS){
+		return Smartstring::COMMAND::FREE;
+	}
+
+	if (information == COMMAND_LOAD){
+		return Smartstring::COMMAND::LOAD;
+	}
+
+	if (information == COMMAND_UNDO){
+		return Smartstring::COMMAND::UNDO;
+	}
+
+	if (information == COMMAND_SEARCH){
+		return Smartstring::COMMAND::SEARCH;
+	}
+
+	if (information == COMMAND_SAVE){
+		return Smartstring::COMMAND::SAVE;
+	}
+
+	assert(!IsCommand()); //takes care of the case when we add cases to field but did not update static list commands[];
+	return Smartstring::COMMAND::INVALID_CMD;
+}
+
+Smartstring::FIELD Smartstring::Field(){
+	if (information == KEYWORD_STARTDATE_1 || information == KEYWORD_STARTDATE_2
+		|| information == KEYWORD_STARTDATE_3 || information == KEYWORD_STARTDATE_4
+		|| information == KEYWORD_STARTDATE_5 || information == KEYWORD_STARTDATE_6
+		|| information == KEYWORD_STARTDATE_7){
+
+		return Smartstring::FIELD::STARTDATE;
+	}
+
+	if (information == KEYWORD_PRIORITY_1 || information == KEYWORD_PRIORITY_2){
+		return Smartstring::FIELD::PRIORITY;
+	}
+
+	if (information == KEYWORD_ENDDATE_1 || information == KEYWORD_ENDDATE_2
+		|| information == KEYWORD_ENDDATE_3 || information == KEYWORD_ENDDATE_4
+		|| information == KEYWORD_ENDDATE_5 || information == KEYWORD_ENDDATE_6
+		|| information == KEYWORD_ENDDATE_7 || information == KEYWORD_ENDDATE_8
+		|| information == KEYWORD_ENDDATE_9 || information == KEYWORD_ENDDATE_10
+		|| information == KEYWORD_ENDDATE_11 || information == KEYWORD_ENDDATE_12){
+
+		return Smartstring::FIELD::ENDDATE;
+	}
+
+	if (information == KEYWORD_DESCRIPTION_1){
+		return Smartstring::FIELD::DESCRIPTION;
+	}
+
+	assert(!IsKeyword()); //takes care of the case when we add cases to field but did not update static list keywords[];
+	return Smartstring::FIELD::INVALID_FLD;
+}
+
 void Smartstring::Initialize(){
-	if (!classInitialized){
+	if (!isInitialized){
+		commands.push_back(COMMAND_ARCHIVED);
 		commands.push_back(COMMAND_ADD);
 		commands.push_back(COMMAND_CLEAR);
+		commands.push_back(COMMAND_COMPLETE);
 		commands.push_back(COMMAND_DELETE);
 		commands.push_back(COMMAND_DISPLAY);
 		commands.push_back(COMMAND_EDIT);
+		commands.push_back(COMMAND_EMPTYSLOTS);
+		commands.push_back(COMMAND_LOAD);
+		commands.push_back(COMMAND_UNDO);
 		commands.push_back(COMMAND_SAVE);
 		commands.push_back(COMMAND_SEARCH);
-		commands.push_back(COMMAND_COMPLETE);
-		commands.push_back(COMMAND_UNDO);
-		commands.push_back(COMMAND_LOAD);
-		commands.push_back(COMMAND_ARCHIVED);
+
 
 		keywords.push_back(KEYWORD_ENDDATE_1);
 		keywords.push_back(KEYWORD_ENDDATE_2);
@@ -116,98 +205,42 @@ void Smartstring::Initialize(){
 		keywords.push_back(KEYWORD_STARTDATE_6);
 		keywords.push_back(KEYWORD_STARTDATE_7);
 		keywords.push_back(KEYWORD_DESCRIPTION_1);
+
 		numberOfCommands = commands.size();
 		numberOfKeywords = keywords.size();
-		classInitialized = true;
+		isInitialized = true;
+
+		assert(numberOfCommands != 0);
+		assert(numberOfKeywords != 0);
 	}
-		
+
 	return;
 }
 
 
-Smartstring::~Smartstring()
-{
-}
-
 bool Smartstring::IsCommand(){
+	bool isCommand = false;
+
 	for (int i = 0; i < numberOfCommands; ++i){
 		if (information == commands[i]){
-			return true;
+			isCommand = true;
 		}
 	}
-	
-	return false;
+
+	return isCommand;
 }
 
 bool Smartstring::IsKeyword(){
+	bool isKeyword = false;
 	for (int i = 0; i < numberOfKeywords; ++i){
 		if (information == keywords[i]){
-			return true;
+			isKeyword = true;
 		}
 	}
 
-	return false;
+	return isKeyword;
 }
 
-Smartstring::COMMAND Smartstring::Command(){
-	if (information == COMMAND_ADD){
-		return Smartstring::COMMAND::ADD;
-	}
-	if (information == COMMAND_DELETE){
-		return Smartstring::COMMAND::DELETE;
-	}
-	if (information == COMMAND_DISPLAY){
-		return Smartstring::COMMAND::DISPLAY;
-	}
-	if (information == COMMAND_EDIT){
-		return Smartstring::COMMAND::EDIT;
-	}
-	if (information == COMMAND_SEARCH){
-		return Smartstring::COMMAND::SEARCH;
-	}
-	if (information == COMMAND_CLEAR){
-		return Smartstring::COMMAND::CLEAR;
-	}
-	if (information == COMMAND_SAVE){
-		return Smartstring::COMMAND::SAVE;
-	}
-	if (information == COMMAND_COMPLETE){
-		return Smartstring::COMMAND::COMPLETE;
-	}
-	if (information == COMMAND_EMPTYSLOTS){
-		return Smartstring::COMMAND::FREE;
-	}
-	if (information == COMMAND_UNDO){
-		return Smartstring::COMMAND::UNDO;
-	}
-	if (information == COMMAND_LOAD){
-		return Smartstring::COMMAND::LOAD;
-	}
-	if (information == COMMAND_ARCHIVED){
-		return Smartstring::COMMAND::ARCHIVED;
-	}
-
-	assert(!IsCommand()); //takes care of the case when we add cases to field but did not update static list commands[];
-	return Smartstring::COMMAND::INVALID_CMD;
-}
-
-Smartstring::FIELD Smartstring::Field(){
-	if (information == KEYWORD_STARTDATE_1 || information == KEYWORD_STARTDATE_2 || information == KEYWORD_STARTDATE_3 || information == KEYWORD_STARTDATE_4 || information == KEYWORD_STARTDATE_5 || information == KEYWORD_STARTDATE_6 || information == KEYWORD_STARTDATE_7){
-		return Smartstring::FIELD::STARTDATE;
-	}
-	if (information == KEYWORD_PRIORITY_1 || information == KEYWORD_PRIORITY_2){
-		return Smartstring::FIELD::PRIORITY;
-	}
-	if (information == KEYWORD_ENDDATE_1 || information == KEYWORD_ENDDATE_2 || information == KEYWORD_ENDDATE_3 || information == KEYWORD_ENDDATE_4 || information == KEYWORD_ENDDATE_5 || information == KEYWORD_ENDDATE_6 || information == KEYWORD_ENDDATE_7 || information == KEYWORD_ENDDATE_8 || information == KEYWORD_ENDDATE_9 || information == KEYWORD_ENDDATE_10 || information == KEYWORD_ENDDATE_11 || information == KEYWORD_ENDDATE_12){
-		return Smartstring::FIELD::ENDDATE;
-	}
-	if (information == KEYWORD_DESCRIPTION_1){
-		return Smartstring::FIELD::DESCRIPTION;
-	}
-	
-	assert(!IsKeyword()); //takes care of the case when we add cases to field but did not update static list keywords[];
-	return Smartstring::FIELD::INVALID_FLD;
-}
 
 Smartstring::LIST Smartstring::ListType(){
 	if (information == KEYWORD_TIMED_1){
@@ -223,51 +256,61 @@ Smartstring::LIST Smartstring::ListType(){
 }
 
 
+
 string Smartstring::ToString(){
 	return information;
 }
 
 vector<string> Smartstring::Tokenize(string delimiters){
-	int found = 0;
 	int startIdx = 0;
+	int endIdx = 0;
+	string piece;
 	vector<string> tokens;
-	while (found != string::npos){
-		found = information.find_first_of(delimiters.c_str(), startIdx);
-		int length = found - startIdx;
-		string result = information.substr(startIdx, length);
-		if (result.length() != 0){
-			tokens.push_back(result);
+
+	while (endIdx != string::npos){
+		endIdx = information.find_first_of(delimiters.c_str(), startIdx);
+		piece = information.substr(startIdx, endIdx - startIdx);
+
+		if (piece.length() != 0){
+			assert(piece.length() != 0);
+			tokens.push_back(piece);
 		}
-		startIdx = found + 1;
+		startIdx = endIdx + 1;
 	}
 	return tokens;
 }
 
 vector<string> Smartstring::ContainedTokenize(string delimiters){
-	int found = 0;
 	string input = information;
+	string piece;
+	int found = 0;
 	int startFrame = 0;
 	int endFrame = 0;
 	int startIdx = 0;
 	int endIdx = 0;
 	vector<string> tokens;
+
 	while (startFrame != string::npos && endFrame != string::npos){
 		startFrame = input.find_first_of(delimiters.c_str(), startIdx);
+
 		if (startFrame != string::npos){
 			endFrame = input.find_first_of(delimiters.c_str(), startFrame + 1);
 			if (endFrame != string::npos){
 				int length = endFrame - startFrame - 1;
-				string result = input.substr(startFrame + 1, length);
-				tokens.push_back(result);
+				piece = input.substr(startFrame + 1, length);
+				tokens.push_back(piece);
 			}
 		}
+
 		startIdx = endFrame + 1;
 	}
+
 	return tokens;
 }
 
 
 //operator overloading
+//@author A0099303A
 ostream& operator<<(ostream& os, Smartstring& ss){
 	os << ss.information;
 	return os;

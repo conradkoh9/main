@@ -1,7 +1,7 @@
 //@author A0094213M
 #pragma once
-#include <string>
 #include <sstream>
+#include <string>
 #include <vector>
 #include <cassert>
 #include <exception>
@@ -12,34 +12,34 @@
 using namespace std;
 class Smartstring
 {
-private: 
-	
+private:
+
 public:
 	string information;
-	enum COMMAND { ADD, CLEAR, DELETE, DISPLAY, EDIT, SAVE, SEARCH, COMPLETE, FREE, LOAD, UNDO, ARCHIVED, INVALID_CMD };
+	enum COMMAND { ARCHIVED, ADD, CLEAR, COMPLETE, DELETE, DISPLAY, EDIT, FREE, LOAD, UNDO, SAVE, SEARCH, INVALID_CMD };
 	enum FIELD { DESCRIPTION, STARTDATE, ENDDATE, PRIORITY, STATUS, INVALID_FLD };
 	enum LIST{ TIMED, DEADLINE, FLOAT, DEFAULT };
 
-	static bool classInitialized;
+	static bool isInitialized;
 	static int numberOfCommands;
 	static int numberOfKeywords;
-	
+	static const int NUMBER_OF_FIELDS;
+
 	static vector<string> commands;
 	static vector<string> keywords;
+
+	static const string COMMAND_ARCHIVED;
 	static const string COMMAND_ADD;
 	static const string COMMAND_CLEAR;
+	static const string COMMAND_COMPLETE;
 	static const string COMMAND_DELETE;
 	static const string COMMAND_DISPLAY;
 	static const string COMMAND_EDIT;
+	static const string COMMAND_EMPTYSLOTS;
+	static const string COMMAND_LOAD;
+	static const string COMMAND_UNDO;
 	static const string COMMAND_SAVE;
 	static const string COMMAND_SEARCH;
-	static const string COMMAND_COMPLETE;
-	static const string COMMAND_EMPTYSLOTS;
-	static const string COMMAND_UNDO;
-	static const string COMMAND_LOAD;
-	static const string COMMAND_ARCHIVED;
-	static const int NUMBER_OF_FIELDS;
-
 
 	static const string KEYWORD_ENDDATE_1;
 	static const string KEYWORD_ENDDATE_2;
@@ -77,15 +77,14 @@ public:
 	Smartstring();
 	Smartstring(string input);
 	~Smartstring();
-	//methods
 
-	void Initialize();
+	//methods
 	COMMAND Command();
 	FIELD Field();
-	LIST ListType();
+	void Initialize();
 	bool IsCommand();
 	bool IsKeyword();
-
+	LIST ListType();
 	string ToString();
 	vector<string> Tokenize(string delimiters);
 	vector<string> ContainedTokenize(string delimiters);
@@ -97,7 +96,7 @@ public:
 	friend string& operator+ (Smartstring& ss, string& input);
 	friend string& operator+ (const char* s, Smartstring &ss);
 	friend string& operator+ (Smartstring &ss, const char* s);
-	
+
 
 };
 

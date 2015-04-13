@@ -318,44 +318,6 @@ namespace I_ScheduleLibraryTest{
 			Assert::AreEqual(expected, output);
 		}
 
-		//@author unknown
-		TEST_METHOD(LOGIC_EDIT){
-			Logic* logic = new Logic();
-			Storage* storage = new Storage("Storage_Edit.txt");
-			storage->Clear();
-			Task* task = new Task();
-			task->SetDescription("do homework");
-			task->SetEndDateTime("tomorrow");
-			task->SetStartDateTime("today");
-			task->SetPriority("1");
-			storage->Add(task);
-
-			Task* task2 = new Task();
-			task2->SetDescription("do homework 2");
-			task2->SetEndDateTime("tomorrow2");
-			task2->SetStartDateTime("today2");
-			task2->SetPriority("2");
-			storage->Add(task2);
-
-			//case index error1
-			string expected = "Invalid index.";
-//			Assert::AreEqual(expected, logic->Edit("timed: -1 description: meet my clients"));
-
-			//case index error2
-	//		Assert::AreEqual(expected, logic->Edit("timed: 4 description: meet my clients"));
-
-			//case edit the description
-			//string feedback;
-			//feedback = "meet my clients today tomorrow2 12";
-			//Assert::AreEqual(feedback, logic->Edit("1 description: meet my clients"));
-
-			//case change saved to storage
-			/*string update;
-			update = "meet my clients today tomorrow2 12";
-			Assert::AreEqual(update, logic->Display("2 description: meet my clients"));
-			*/
-		}
-
 		//@author A0099303A
 		TEST_METHOD(SMARTSTRING_TOKENIZE){
 			//testing the partition inpult length > 0
@@ -624,10 +586,44 @@ namespace I_ScheduleLibraryTest{
 			isKeyword_Actual = test2.IsKeyword();
 
 			Assert::AreEqual(isKeyword_Expected, isKeyword_Actual);
+	
+		}
 
-		
-		
-		
+		TEST_METHOD(LOGIC_EDIT){
+			Logic* logic = new Logic();
+			Storage* storage = new Storage("Storage_Edit.txt");
+			storage->Clear();
+			Task* task = new Task();
+			task->SetDescription("do homework");
+			task->SetEndDateTime("tomorrow");
+			task->SetStartDateTime("today");
+			task->SetPriority("1");
+			storage->Add(task);
+
+			Task* task2 = new Task();
+			task2->SetDescription("do homework 2");
+			task2->SetEndDateTime("tomorrow2");
+			task2->SetStartDateTime("today2");
+			task2->SetPriority("2");
+			storage->Add(task2);
+
+			//case index error1
+			string expected = "Invalid index.";
+			//			Assert::AreEqual(expected, logic->Edit("timed: -1 description: meet my clients"));
+
+			//case index error2
+			//		Assert::AreEqual(expected, logic->Edit("timed: 4 description: meet my clients"));
+
+			//case edit the description
+			//string feedback;
+			//feedback = "meet my clients today tomorrow2 12";
+			//Assert::AreEqual(feedback, logic->Edit("1 description: meet my clients"));
+
+			//case change saved to storage
+			/*string update;
+			update = "meet my clients today tomorrow2 12";
+			Assert::AreEqual(update, logic->Display("2 description: meet my clients"));
+			*/
 		}
 
 	};
