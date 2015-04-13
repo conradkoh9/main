@@ -61,19 +61,21 @@ vector<string> DateTime::timeType;
 
 //@author A0094213M
 DateTime::DateTime(){
+	Initialize();
 	isDateSet = false;
 	isTimeSet = false;
-	Initialize();
+	
 }
 
 DateTime::DateTime(string input){
 	unformattedDateTime = input;
-	isValidFormat = true;
-	isDateSet = false;
-	isTimeSet = false;
 	Initialize();
 	SetDefaults();
 	SetStandards();
+	isValidFormat = true;
+	isDateSet = false;
+	isTimeSet = false;
+
 }
 
 
@@ -125,15 +127,6 @@ string DateTime::GetTime(){
 		return "";
 	}
 }
-
-//string DateTime::GetTomorrowDate(DateTime* dt){
-//	struct tm * tomorrow;
-//	tomorrow->tm_hour = dt->_hours;
-//	tomorrow->tm_mday = dt->_day;
-//	tomorrow->tm_mon = dt->_month - 1;
-//	tomorrow->tm_min = dt->_mins;
-//	tomorrow->tm_year = dt->_year - 1900;
-//}
 
 bool DateTime::IsEarlierThan(DateTime dt){
 	bool isEarlier = false;
@@ -256,7 +249,7 @@ string DateTime::StandardizeTriple(vector<string> input){
 
 	}
 	else{
-		if (input[1] == "on"){
+		if (input[1] == "on" || input[1] == "by"){
 			//on implex time prefix and day suffix. i.e. "5pm on friday" and not "friday on 5pm"
 			if (IsValidDayDate(input[2])){
 				date = StandardizeDayDate(input[2]);
@@ -273,8 +266,11 @@ string DateTime::StandardizeTriple(vector<string> input){
 				isValidFormat = false;
 			}
 		}
+
+		output = time + " on " + date;
+
 	}
-	output = time + " on " + date;
+
 	return output;
 }
 
