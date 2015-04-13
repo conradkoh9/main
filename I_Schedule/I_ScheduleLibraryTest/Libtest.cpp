@@ -61,7 +61,7 @@ namespace I_ScheduleLibraryTest{
 			string floatingTask = storage->GetFloatingList();
 			string expected[2];
 
-			expected[0] = "\\b 1: \\b0 [13 April,00:00][16 April,00:00] do homework";
+			expected[0] = "\\b 1: \\b0 [13 April][16 April] do homework";
 			expected[1] = "";
 			Assert::AreEqual(expected[0], timedTask);
 			Assert::AreEqual(expected[1], deadlinedTask);
