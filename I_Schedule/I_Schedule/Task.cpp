@@ -24,7 +24,7 @@ const string Task::_rtfcolorredprefix = "\\cf2 ";
 const string Task::_rtfcolorredsuffix = "\\cf0 ";
 
 const int Task::numberOfFields = Smartstring::NUMBER_OF_FIELDS;
-//@author A0099303A
+//@author A0119491B
 Task::Task()
 {
 	startDateTime = "";
@@ -78,7 +78,7 @@ Task::Task(vector<string> input){
 		endDateTime = standardEnddt->GetTime() + " on " + standardStartdt->GetDate();
 	}
 }
-//@author A0099303A
+//@author A119491B
 Task::Task(Task* task){
 	startDateTime = "";
 	startdate = "";

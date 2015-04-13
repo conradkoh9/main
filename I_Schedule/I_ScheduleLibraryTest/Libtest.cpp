@@ -88,7 +88,7 @@ namespace I_ScheduleLibraryTest{
 			vector<string> input(10);
 			string expected[2], result;
 			expected[0] = "\\b 1: \\b0 [7 April][8 April] homework";
-			expected[1] = "No results found.";
+			expected[1] = "No results found. ";
 
 			//Testing search by description
 			input[Smartstring::FIELD::DESCRIPTION] = "homework";
@@ -114,12 +114,6 @@ namespace I_ScheduleLibraryTest{
 			input[Smartstring::FIELD::DESCRIPTION] = "shopping";
 			result = storage->Search(input[Smartstring::FIELD::DESCRIPTION]);
 			Assert::AreEqual(expected[1], result);
-
-			////Testing Close Search
-			//input[Smartstring::FIELD::DESCRIPTION] = "howork";
-			//RESULT = storage->NearSearch(input[Smartstring::FIELD::DESCRIPTION]);
-			//result = storage->ToString(RESULT);
-			//Assert::AreEqual(expected[0], result);
 
 		}
 
