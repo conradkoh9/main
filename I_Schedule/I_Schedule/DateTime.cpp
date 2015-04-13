@@ -105,8 +105,8 @@ string DateTime::GetDate(){
 	if (isDateSet){
 		ostringstream date;
 		int db = _month;
-		string month_s = GetMonthName(_month);
-		date << _day << " " << month_s;
+		string month = GetMonthName(_month);
+		date << _day << " " << month;
 		return date.str();
 	}
 	else{
@@ -117,10 +117,10 @@ string DateTime::GetDate(){
 
 string DateTime::GetTime(){
 	if (isTimeSet){
-		ostringstream out;
-		out << setw(2) << setfill('0') << _hours << ":" << setw(2) << setfill('0') << _mins;
-		string dbg = out.str();
-		return out.str();
+		ostringstream time;
+		time << setw(2) << setfill('0') << _hours << ":" << setw(2) << setfill('0') << _mins;
+		string dbg = time.str();
+		return time.str();
 	}
 	else{
 		return "";
@@ -216,6 +216,7 @@ void DateTime::SetStandards(){
 string DateTime::StandardizeSingle(string input){
 	string output;
 	string single = input;
+
 	if (IsValidDayDate(single)){
 		output = StandardizeDayDate(single);
 	}
@@ -257,7 +258,7 @@ string DateTime::StandardizeTriple(vector<string> input){
 
 	}
 	else{
-		if (input[1] == "on"){
+		if (input[1] == "on"||input[1] == "by"){
 			//on implex time prefix and day suffix. i.e. "5pm on friday" and not "friday on 5pm"
 			if (IsValidDayDate(input[2])){
 				date = StandardizeDayDate(input[2]);
