@@ -89,6 +89,7 @@ public:
 	string DayView();
 
 	//ToString methods
+	string Help();
 	string GetArchive();
 	string ToString();
 	string ToString(vector<Task*> V, int firstIdx);
@@ -136,7 +137,15 @@ private:
 	static const string _FEEDBACK_UNDO_COMPLETE;
 	static const string _FEEDBACK_NO_UNDO;
 	static const string _LOG_MESSAGE_FILENAME_CHANGED;
-
+	static const string _MESSAGE_HELP_ADD;
+	static const string _MESSAGE_HELP_DELETE;
+	static const string _MESSAGE_HELP_COMPLETE;
+	static const string _MESSAGE_HELP_DISPLAY;
+	static const string _MESSAGE_HELP_EDIT;
+	static const string _MESSAGE_HELP_UNDO;
+	static const string _MESSAGE_HELP_LOAD;
+	static const string _MESSAGE_HELP_SAVEAS;
+	static const string _MESSAGE_HELP_ARCHIVE;
 	//formatting variables
 	static const string _rtfboldtagstart;
 	static const string _rtfboldtagend;

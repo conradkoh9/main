@@ -49,6 +49,15 @@ const string Storage::_rtffontsizesuffix = "\\fs18 ";
 const string Storage::_rtftab = "    ";
 const string Storage::_rtfcolorblueprefix = "\\cf1 ";
 const string Storage::_rtfcolorbluesuffix = "\\cf0 ";
+const string Storage::_MESSAGE_HELP_ADD = "\\cf1 Add: \\b0\\cf0 \"\\b\\cf1 add \\b0\\cf0 <task description> \\b\\cf1 s:\\b0\\cf0 <startdate> \\b\\cf1 at\\b0\\cf0 <starttime> \\b\\cf1 e:\\b0\\cf0 <enddate> \\b\\cf1 at\\b0\\cf0 <endtime>\"";
+const string Storage::_MESSAGE_HELP_DELETE = "\\b\\cf1 Delete: \\b0\\cf0 \"\\b\\cf1 delete \\b0\\cf0 <task index>\"";
+const string Storage::_MESSAGE_HELP_COMPLETE = "\\b\\cf1 Mark complete: \\b0\\cf0 \" \\b\\cf1 complete \\b0\\cf0 <task index>\"";
+const string Storage::_MESSAGE_HELP_DISPLAY = "\\b\\cf1 View timed tasks: \\b0\\cf0 \"\\b\\cf1 display \\b0\\cf0\"";
+const string Storage::_MESSAGE_HELP_EDIT = "\\b\\cf1 Edit: \\b0\\cf0 \"\\b\\cf1 edit \\b0\\cf0 <task index> \\b\\cf1 s:\\b0\\cf0 <startdate> \\b\\cf1 e:\\b0\\cf0 <enddate>\", similar to adding";
+const string Storage::_MESSAGE_HELP_UNDO = "\\b\\cf1 Undo: \\b0\\cf0 \"undo\"";
+const string Storage::_MESSAGE_HELP_LOAD = "\\b\\cf1 Load: \\b0\\cf0 \"\\b\\cf1 load \\b0\\cf0 <filename>.txt.\" Note that only TXT file formats are supported.";
+const string Storage::_MESSAGE_HELP_SAVEAS = "\\b\\cf1 Save: \\b0\\cf0 \"\\b\\cf1 save \\b0\\cf0 <filename>.txt\"";
+const string Storage::_MESSAGE_HELP_ARCHIVE = "\\b\\cf1 View compeleted: \\b0\\cf0 \"\\b\\cf1 archived\\b0\\cf0\"";
 
 //PUBLIC =================================================================================================
 //@author A0099303A
@@ -501,6 +510,20 @@ string Storage::GetFloatingList(){
 //====================================================================
 //ToString methods
 //====================================================================
+
+string Storage::Help(){
+	ostringstream out;
+	out << _MESSAGE_HELP_ADD << endl << endl;
+	out << _MESSAGE_HELP_DELETE << endl << endl;
+	out << _MESSAGE_HELP_COMPLETE << endl << endl;
+	out << _MESSAGE_HELP_EDIT << endl << endl;
+	out << _MESSAGE_HELP_UNDO << endl << endl;
+	out << _MESSAGE_HELP_LOAD << endl << endl;
+	out << _MESSAGE_HELP_SAVEAS << endl << endl;
+	out << _MESSAGE_HELP_ARCHIVE << endl << endl;
+	out << _MESSAGE_HELP_DISPLAY << endl << endl;
+	return out.str();
+}
 string Storage::GetArchive(){
 	Update();
 	return ArchiveToString();

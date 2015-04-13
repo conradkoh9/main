@@ -255,3 +255,16 @@ ArchivedCommand::~ArchivedCommand(){
 string ArchivedCommand::Execute(string input){
 	return storage->GetArchive();
 }
+
+HelpCommand::HelpCommand(Storage* store_, Parser* parser_){
+	storage = store_;
+	parser = parser_;
+}
+
+HelpCommand::HelpCommand(){
+
+}
+
+string HelpCommand::Execute(string input){
+	return storage->Help();
+}

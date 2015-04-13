@@ -11,7 +11,7 @@ const string Logic::_FEEDBACK_EDIT = "Task edited.";
 const string Logic::_FEEDBACK_SEARCH = "Displaying search results.";
 const string Logic::_FEEDBACK_UNDO = "Undo previous command.";
 const string Logic::_FEEDBACK_INVALID_COMMAND = "Invalid command entered.";
-const string Logic::_MESSAGE_WELCOME = "Welcome to I_Schedule.";
+const string Logic::_MESSAGE_WELCOME = "Welcome. Type help to get started.";
 ostringstream Logic::fout; //floating task display stream
 ostringstream Logic::tout; //timed task display stream
 ostringstream Logic::dout; //deadline task display stream
@@ -116,6 +116,11 @@ Command* Logic::GetCommand(Smartstring::COMMAND command){
 		}
 		case (Smartstring::COMMAND::ARCHIVED) : {
 			cmd_o = new ArchivedCommand(storage, parser);
+			break;
+		}
+		
+		case (Smartstring::COMMAND::HELP) : {
+			cmd_o = new HelpCommand(storage, parser);
 			break;
 		}
 		case(Smartstring::COMMAND::INVALID_CMD) : {       

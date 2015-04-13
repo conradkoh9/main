@@ -16,7 +16,7 @@ private:
 
 public:
 	string information;
-	enum COMMAND { ARCHIVED, ADD, CLEAR, COMPLETE, DELETE, DISPLAY, EDIT, FREE, LOAD, UNDO, SAVE, SEARCH, INVALID_CMD };
+	enum COMMAND { ARCHIVED, ADD, CLEAR, COMPLETE, DELETE, DISPLAY, EDIT, FREE, LOAD, UNDO, SAVE, SEARCH, HELP, INVALID_CMD };
 	enum FIELD { DESCRIPTION, STARTDATE, ENDDATE, PRIORITY, STATUS, INVALID_FLD };
 	enum LIST{ TIMED, DEADLINE, FLOAT, DEFAULT };
 
@@ -40,6 +40,8 @@ public:
 	static const string COMMAND_UNDO;
 	static const string COMMAND_SAVE;
 	static const string COMMAND_SEARCH;
+	static const string COMMAND_HELP;
+
 
 	static const string KEYWORD_ENDDATE_1;
 	static const string KEYWORD_ENDDATE_2;

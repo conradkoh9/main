@@ -139,6 +139,14 @@ public:
 	string Execute(string) override;
 };
 
+class HelpCommand : public Command{
+public:
+	HelpCommand();
+	HelpCommand(Storage* store_, Parser* parser_);
+	~HelpCommand();
+	string Execute(string) override;
+};
+
 class Invalid_cmdCommand : public Command{
 public:
 	Invalid_cmdCommand();

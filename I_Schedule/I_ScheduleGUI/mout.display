@@ -1,4 +1,4 @@
 {\rtf1\ansi\ansicpg1252\deff0\nouicompat{ \fonttbl{ \f0\fnil\fcharset0 Calibri; } }
 {\colortbl; \red0\green77\blue187; \red255\green0\blue0; }
 {\*\generator Riched20 6.3.9600}\viewkind4\uc1
-\pard\sa200\sl276\slmult1\b\f0\fs20\lang9 No results found.}
+\pard\sa200\sl276\slmult1\b\f0\fs20\lang9 \cf1 Add: \b0\cf0 "\b\cf1 add \b0\cf0 <task description> \b\cf1 s:\b0\cf0 <startdate> \b\cf1 at\b0\cf0 <starttime> \b\cf1 e:\b0\cf0 <enddate> \b\cf1 at\b0\cf0 <endtime>"\line  \line  \b\cf1 Delete: \b0\cf0 "\b\cf1 delete \b0\cf0 <task index>"\line  \line  \b\cf1 Mark complete: \b0\cf0 " \b\cf1 complete \b0\cf0 <task index>"\line  \line  \b\cf1 Edit: \b0\cf0 "\b\cf1 edit \b0\cf0 <task index> \b\cf1 s:\b0\cf0 <startdate> \b\cf1 e:\b0\cf0 <enddate>", similar to adding\line  \line  \b\cf1 Undo: \b0\cf0 "undo"\line  \line  \b\cf1 Load: \b0\cf0 "\b\cf1 load \b0\cf0 <filename>.txt." Note that only TXT file formats are supported.\line  \line  \b\cf1 Save: \b0\cf0 "\b\cf1 save \b0\cf0 <filename>.txt"\line  \line  \b\cf1 View compeleted: \b0\cf0 "\b\cf1 archived\b0\cf0"\line  \line  \b\cf1 View timed tasks: \b0\cf0 "\b\cf1 display \b0\cf0"\line  \line  }

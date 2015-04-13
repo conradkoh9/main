@@ -24,6 +24,7 @@ const string Smartstring::COMMAND_LOAD = "load";
 const string Smartstring::COMMAND_UNDO = "undo";
 const string Smartstring::COMMAND_SAVE = "save";
 const string Smartstring::COMMAND_SEARCH = "search";
+const string Smartstring::COMMAND_HELP = "help";
 
 const string Smartstring::KEYWORD_ENDDATE_1 = "date:";
 const string Smartstring::KEYWORD_ENDDATE_2 = "by:";
@@ -132,6 +133,10 @@ Smartstring::COMMAND Smartstring::Command(){
 		return Smartstring::COMMAND::SAVE;
 	}
 
+	if (information == COMMAND_HELP){
+		return Smartstring::COMMAND::HELP;
+	}
+
 	assert(!IsCommand()); //takes care of the case when we add cases to field but did not update static list commands[];
 	return Smartstring::COMMAND::INVALID_CMD;
 }
@@ -181,6 +186,7 @@ void Smartstring::Initialize(){
 		commands.push_back(COMMAND_UNDO);
 		commands.push_back(COMMAND_SAVE);
 		commands.push_back(COMMAND_SEARCH);
+		commands.push_back(COMMAND_HELP);
 
 
 		keywords.push_back(KEYWORD_ENDDATE_1);
