@@ -329,12 +329,12 @@ string Task::ToTimedString(){
 	}
 	else{
 		//this section covers all the cases in the else block
-		if (standardStartdt->isValidFormat){
-			if (standardStartdt->isTimeSet){
-				endstrm << _rtfcolorredprefix << startdate << "," << starttime << _rtfcolorredsuffix;
+		if (standardEnddt->isValidFormat){
+			if (standardEnddt->isTimeSet){
+				endstrm << _rtfcolorredprefix << enddate << "," << endtime << _rtfcolorredsuffix;
 			}
 			else{
-				endstrm << _rtfcolorredprefix << startdate << _rtfcolorredsuffix;
+				endstrm << _rtfcolorredprefix << enddate << _rtfcolorredsuffix;
 			}
 			
 		}
