@@ -3,86 +3,6 @@
 
 
 	/**
-	 * origin: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\DateTime.cpp
-	 */
-
-int DateTime::CalculateOffset(DAY startday, DAY endday){
-	int result;
-
-	if (startday > endday){
-		result = endday - startday + 7;
-	}
-	else{
-		result = endday - startday;
-	}
-
-	return result;
-}
-
-string DateTime::GetDayFromTime(time_t time){
-	struct tm timeinfo;
-	localtime_s(&timeinfo, &time);
-	char output[80];
-	strftime(output, 80, "%A", &timeinfo);
-	return output;
-}
-
-string DateTime::GetStandardDate(time_t time){
-	struct tm timeinfo;
-	localtime_s(&timeinfo, &time);
-	char output[80];
-	strftime(output, 80, "%d/%m/%Y", &timeinfo);
-	return output;
-}
-
-string DateTime::GetStandardTime(time_t time){
-	struct tm timeinfo;
-	localtime_s(&timeinfo, &time);
-	char output[80];
-	strftime(output, 80, "%I:%M%p", &timeinfo);
-	return output;
-}
-	// End of segment: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\DateTime.cpp
-
-
-
-
-
-	/**
-	 * origin: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\DateTime.cpp
-	 */
-
-time_t DateTime::OffsetByDay(time_t timeReference, time_t offset_in_days){
-	time_t output;
-	time_t offset_in_seconds = offset_in_days * 24 * 60 * 60;
-	output = timeReference + offset_in_seconds;
-	return output;
-}
-
-	// End of segment: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\DateTime.cpp
-
-
-
-
-
-	/**
-	 * origin: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\DateTime.cpp
-	 */
-
-DateTime* DateTime::GetDefaultEndDate(){
-	DateTime* dt = new DateTime();
-	*dt = *this;
-	dt->_hours++;
-	return dt;
-}
-
-	// End of segment: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\DateTime.cpp
-
-
-
-
-
-	/**
 	 * origin: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_Schedule\Logger.cpp
 	 */
 
@@ -276,8 +196,8 @@ void Storage::Delete(int position){
 		Update();
 		UpdateStatus(feedback);
 	}
-	catch (out_of_range){
-		status << _FEEDBACK_DELETE_FAILURE;
+	catch (InvalidIndex){
+		UpdateStatus(_FEEDBACK_DELETE_FAILURE);
 	}
 	return;
 }
@@ -2253,6 +2173,30 @@ private: System::Void DISPLAY_TASK_DEADLINE_TextChanged(System::Object^  sender,
 			Assert::AreEqual("1", vectTask->GetPriority().c_str());
 			Assert::AreEqual("Incomplete", vectTask->GetStatus().c_str());
 			
+		}
+
+	// End of segment: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_ScheduleLibraryTest\Libtest.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_ScheduleLibraryTest\Libtest.cpp
+	 */
+
+		TEST_METHOD(LOGIC){
+			Logic* logic = new Logic();
+			logic->mout.clear();
+			logic->mout.str("");
+			logic->storage->Reset();
+			string file = logic->storage->GetFileName();
+			string myinput = "add homework from: 07/04/2015 till: 08/04/2015 p: 1";
+			string expected = "Description: homework\nStart: 07/04/2015\nEnd: 08/04/2015\nPriority: 1\nStatus: Incomplete";
+			logic->Run(myinput);
+			string output = logic->mout.str();
+
+			Assert::AreEqual(expected, output);
 		}
 
 	// End of segment: C:\Users\conra_000\Desktop\Collate Tool\I_Schedule source\I_ScheduleLibraryTest\Libtest.cpp

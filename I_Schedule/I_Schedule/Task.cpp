@@ -78,7 +78,7 @@ Task::Task(vector<string> input){
 		endDateTime = standardEnddt->GetTime() + " on " + standardStartdt->GetDate();
 	}
 }
-//@author A119491B
+//@author A0119491B
 Task::Task(Task* task){
 	startDateTime = "";
 	startdate = "";
@@ -536,7 +536,7 @@ bool Task::isNearMatch(string input, string des){
 	return match;
 }
 
-//@author A0119491B
+//@author A0119491B-reused
 size_t Task::LevenshteinDistance(const std::string &s1, const std::string &s2){
 	const size_t m(s1.size());
 	const size_t n(s2.size());
